@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Category {
+  id          String     @id @default(uuid())
+  name        String     @unique
+  slug        String     @unique
+  image       String?
+  description String?
+  parentId    String?
+  parent      Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryToCategory")
+  products    Product[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Product {
+  id             String      @id @default(uuid())
+  name           String
+  slug           String      @unique
+  description    String
+  price          Decimal     @db.Decimal(10, 2)
+  compareAtPrice Decimal?    @db.Decimal(10, 2)
+  cost           Decimal?    @db.Decimal(10, 2)
+  images         String[]
+  stock          Int         @default(0)
+  categoryId     String
+  category       Category    @relation(fields: [categoryId], references: [id])
+  featured       Boolean     @default(false)
+  technicalSpecs Json?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  orderItems     OrderItem[]
+}
+
+model Order {
+  id            String      @id @default(uuid())
+  status        OrderStatus @default(PENDING)
+  total         Decimal     @db.Decimal(10, 2)
+  userId        String?
+  user          User?       @relation(fields: [userId], references: [id])
+  items         OrderItem[]
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  customerName  String?
+  customerEmail String?
+  customerPhone String?
+  address       String?
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model OrderItem {
+  id        String  @id @default(uuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id])
+  productId String
+  product   Product @relation(fields: [productId], references: [id])
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+}
+
+model DailyStat {
+  id       String   @id @default(uuid())
+  date     DateTime @unique @db.Date
+  views    Int      @default(0)
+  visitors Int      @default(0)
+}
+
+model VisitLog {
+  id        String   @id @default(uuid())
+  ipHash    String
+  userAgent String?
+  path      String
+  userId    String?
+  createdAt DateTime @default(now())
+}
