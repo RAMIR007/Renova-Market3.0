@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { createOrder } from '@/actions/checkout';
-import { loadStripe } from '@stripe/stripe-js';
+// import { loadStripe } from '@stripe/stripe-js';
 
 // Placeholder for Stripe (not fully implemented yet, focusing on cash first as per request)
 // const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -32,7 +32,11 @@ export default function CartPage() {
             email: formData.email,
             name: formData.name,
             address: `${formData.address}, ${formData.city}`,
-            items: items.map(item => ({ productId: item.id, quantity: item.quantity })),
+            items: items.map(item => ({
+                productId: item.id,
+                quantity: item.quantity,
+                price: item.price
+            })),
             total: cartTotal,
         });
 

@@ -18,10 +18,23 @@ export type CheckoutResponse = {
     error?: string;
 }
 
-export async function createOrder(
-    items: CartItem[],
-    customerDetails: { name: string; email: string; address: string }
-): Promise<CheckoutResponse> {
+interface CreateOrderInput {
+    items: CartItem[];
+    name: string;
+    email: string;
+    address: string;
+    total: number;
+}
+
+export async function createOrder({
+    items,
+    name,
+    email,
+    address
+}: CreateOrderInput): Promise<CheckoutResponse> {
+
+    // Construct customerDetails internally for compatibility with existing logic
+    const customerDetails = { name, email, address };
 
     try {
         // Store product details for the email/PDF later
