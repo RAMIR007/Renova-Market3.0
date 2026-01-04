@@ -32,18 +32,18 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                 <h1 className="text-2xl font-bold text-gray-900">Nuevo Producto</h1>
             </div>
 
-            <form action={createProduct} className="space-y-6">
-                <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
+            <form action={createProduct} className="space-y-6 pb-20">
+                <div className="bg-white p-4 md:p-6 rounded-xl border border-gray-200 shadow-sm space-y-6">
 
                     {/* Basic Info */}
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2 md:gap-6">
                         <div className="col-span-2">
                             <label className="block text-sm font-medium text-gray-700 mb-2">Nombre del Producto</label>
                             <input
                                 type="text"
                                 name="name"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base"
                                 placeholder="Ej. Vestido Zara Floral"
                             />
                         </div>
@@ -54,7 +54,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                                 name="description"
                                 rows={4}
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base"
                                 placeholder="Detalles sobre el material, estado, medidas..."
                             />
                         </div>
@@ -66,7 +66,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                                 name="price"
                                 step="0.01"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
                                 placeholder="0.00"
                             />
                         </div>
@@ -77,7 +77,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                                 type="number"
                                 name="compareAtPrice"
                                 step="0.01"
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
                                 placeholder="0.00"
                             />
                         </div>
@@ -86,13 +86,13 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                     <div className="border-t border-gray-100 pt-6"></div>
 
                     {/* Details */}
-                    <div className="grid gap-6 md:grid-cols-2">
+                    <div className="grid gap-4 md:grid-cols-2 md:gap-6">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Categoría</label>
                             <select
                                 name="categoryId"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none bg-white"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none bg-white text-base"
                             >
                                 <option value="">Seleccionar...</option>
                                 {categories.map(cat => (
@@ -106,7 +106,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                             <select
                                 name="condition"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none bg-white"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none bg-white text-base"
                             >
                                 <option value="EXCELENTE">Excelente</option>
                                 <option value="NUEVO">Nuevo con etiqueta</option>
@@ -120,7 +120,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                             <input
                                 type="text"
                                 name="size"
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
                                 placeholder="M, 38, Única"
                             />
                         </div>
@@ -130,7 +130,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                             <input
                                 type="text"
                                 name="color"
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
                                 placeholder="Rojo, Estampado..."
                             />
                         </div>
@@ -142,7 +142,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                                 defaultValue="1"
                                 min="0"
                                 required
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
                             />
                             <p className="text-xs text-gray-500 mt-1">Para productos únicos, mantener en 1.</p>
                         </div>
@@ -163,7 +163,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-end gap-3 sticky bottom-4">
+                <div className="flex items-center justify-end gap-3 sticky bottom-4 bg-white/80 backdrop-blur-md p-4 rounded-xl border border-gray-200 shadow-lg z-10">
                     <Link
                         href="/admin/products"
                         className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50 bg-white shadow-sm transition-colors"
@@ -175,7 +175,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                         className="px-6 py-2.5 rounded-lg bg-black text-white font-medium hover:bg-gray-800 shadow-md transition-all flex items-center gap-2"
                     >
                         <Save size={18} />
-                        Guardar Producto
+                        Guardar
                     </button>
                 </div>
             </form>
