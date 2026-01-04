@@ -5,7 +5,10 @@ import { PrismaPg } from '@prisma/adapter-pg'
 
 const connectionString = process.env.DATABASE_URL
 
-const pool = new Pool({ connectionString })
+const pool = new Pool({
+    connectionString,
+    ssl: true,
+})
 const adapter = new PrismaPg(pool)
 const prisma = new PrismaClient({ adapter })
 
@@ -31,30 +34,30 @@ async function main() {
     })
 
     // 3. Create Categories
-    const catSala = await prisma.category.create({
+    const catRopa = await prisma.category.create({
         data: {
-            name: 'Sala',
-            slug: 'sala',
-            description: 'Muebles para tu sala de estar',
-            image: '/images/categories/sala.jpg',
+            name: 'Ropa',
+            slug: 'ropa',
+            description: 'Tendencias y moda para toda ocasión',
+            image: '/images/categories/ropa.jpg',
         },
     })
 
-    const catComedor = await prisma.category.create({
+    const catZapatos = await prisma.category.create({
         data: {
-            name: 'Comedor',
-            slug: 'comedor',
-            description: 'Mesas y sillas para compartir',
-            image: '/images/categories/comedor.jpg',
+            name: 'Zapatos',
+            slug: 'zapatos',
+            description: 'Calzado cómodo y con estilo',
+            image: '/images/categories/zapatos.jpg',
         },
     })
 
-    const catDormitorio = await prisma.category.create({
+    const catCarteras = await prisma.category.create({
         data: {
-            name: 'Dormitorio',
-            slug: 'dormitorio',
-            description: 'Descanso y confort',
-            image: '/images/categories/dormitorio.jpg',
+            name: 'Carteras',
+            slug: 'carteras',
+            description: 'El complemento perfecto para tu look',
+            image: '/images/categories/carteras.jpg',
         },
     })
 
@@ -62,49 +65,49 @@ async function main() {
     const products = await Promise.all([
         prisma.product.create({
             data: {
-                name: 'Sofá Modular Gris',
-                slug: 'sofa-modular-gris',
-                description: 'Sofá moderno y cómodo, ideal para espacios amplios.',
-                price: 850.00,
-                stock: 10,
-                categoryId: catSala.id,
-                images: ['/images/products/sofa1.jpg'],
+                name: 'Vestido Floral Verano',
+                slug: 'vestido-floral-verano',
+                description: 'Vestido ligero con estampado floral, ideal para días soleados.',
+                price: 45.00,
+                stock: 20,
+                categoryId: catRopa.id,
+                images: ['/images/products/vestido1.jpg'],
                 featured: true,
             }
         }),
         prisma.product.create({
             data: {
-                name: 'Mesa de Centro Madera',
-                slug: 'mesa-centro-madera',
-                description: 'Mesa de centro minimalista en madera de roble.',
-                price: 220.00,
+                name: 'Jeans Slim Fit',
+                slug: 'jeans-slim-fit',
+                description: 'Jeans de corte ajustado y tela elástica para mayor comodidad.',
+                price: 35.00,
+                stock: 30,
+                categoryId: catRopa.id,
+                images: ['/images/products/jeans1.jpg'],
+            }
+        }),
+        prisma.product.create({
+            data: {
+                name: 'Zapatillas Urbanas',
+                slug: 'zapatillas-urbanas',
+                description: 'Zapatillas deportivas con diseño moderno.',
+                price: 65.00,
+                compareAtPrice: 80.00,
                 stock: 15,
-                categoryId: catSala.id,
-                images: ['/images/products/mesa1.jpg'],
-            }
-        }),
-        prisma.product.create({
-            data: {
-                name: 'Comedor 6 Sillas',
-                slug: 'comedor-6-sillas',
-                description: 'Juego de comedor elegante.',
-                price: 1200.00,
-                compareAtPrice: 1500.00,
-                stock: 5,
-                categoryId: catComedor.id,
-                images: ['/images/products/comedor1.jpg'],
+                categoryId: catZapatos.id,
+                images: ['/images/products/zapatillas1.jpg'],
                 featured: true,
             }
         }),
         prisma.product.create({
             data: {
-                name: 'Cama King Size',
-                slug: 'cama-king-size',
-                description: 'Cama tapizada con cabecera alta.',
-                price: 950.00,
-                stock: 8,
-                categoryId: catDormitorio.id,
-                images: ['/images/products/cama1.jpg'],
+                name: 'Bolso de Cuero Negro',
+                slug: 'bolso-cuero-negro',
+                description: 'Bolso elegante de cuero sintético con compartimentos.',
+                price: 55.00,
+                stock: 12,
+                categoryId: catCarteras.id,
+                images: ['/images/products/bolso1.jpg'],
             }
         })
     ])
@@ -123,7 +126,7 @@ async function main() {
     await prisma.order.create({
         data: {
             status: 'PROCESSING',
-            total: 1070.00,
+            total: 80.00,
             customerName: 'Juan Pérez',
             customerEmail: 'juan@example.com',
             createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
@@ -132,12 +135,12 @@ async function main() {
                     {
                         productId: products[0].id,
                         quantity: 1,
-                        price: 850.00
+                        price: 45.00
                     },
                     {
                         productId: products[1].id,
                         quantity: 1,
-                        price: 220.00
+                        price: 35.00
                     }
                 ]
             }
@@ -147,7 +150,7 @@ async function main() {
     await prisma.order.create({
         data: {
             status: 'DELIVERED',
-            total: 1200.00,
+            total: 65.00,
             customerName: 'Maria Garcia',
             customerEmail: 'maria@example.com',
             createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
@@ -156,7 +159,7 @@ async function main() {
                     {
                         productId: products[2].id,
                         quantity: 1,
-                        price: 1200.00
+                        price: 65.00
                     }
                 ]
             }

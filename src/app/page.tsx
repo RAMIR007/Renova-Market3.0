@@ -38,13 +38,13 @@ export default async function Home() {
             Renova Market
           </h1>
           <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            Transforma tu hogar con nuestra colección exclusiva de muebles modernos y elegantes.
+            Renueva tu estilo con nuestra colección exclusiva de ropa, zapatos y accesorios de temporada.
           </p>
           <Link
             href="/shop"
             className="inline-block bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg"
           >
-            Ver Catálogo
+            Ver Colección
           </Link>
         </div>
       </section>
@@ -53,7 +53,7 @@ export default async function Home() {
       <section className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Categorías Populares</h2>
-          <p className="text-gray-600 dark:text-gray-400">Encuentra lo que necesitas para cada espacio</p>
+          <p className="text-gray-600 dark:text-gray-400">Todo lo que necesitas para completar tu outfit</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -137,9 +137,9 @@ export default async function Home() {
 
       {/* Footer Teaser */}
       <section className="py-20 bg-gray-900 text-white text-center px-4">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">¿Listo para renovar tu espacio?</h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">¿Listo para renovar tu look?</h2>
         <p className="text-gray-300 max-w-2xl mx-auto mb-8 text-lg">
-          Descubre nuestra selección completa y aprovecha nuestras ofertas especiales de temporada.
+          Descubre las últimas tendencias y encuentra tu estilo único.
         </p>
         <Link
           href="/shop"
