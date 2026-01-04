@@ -30,14 +30,15 @@ export function Navbar() {
         { name: 'Inicio', href: '/' },
         { name: 'Tienda', href: '/shop' },
         { name: 'Liquidación', href: '/shop?sort=price_asc', highlight: true },
+        { name: 'Pedidos', href: '/orders' },
         { name: 'Nosotros', href: '/about' },
     ];
 
     return (
         <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                    ? 'bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20'
-                    : 'bg-transparent'
+                ? 'bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20'
+                : 'bg-transparent'
                 }`}
         >
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -57,8 +58,8 @@ export function Navbar() {
                                 key={link.href}
                                 href={link.href}
                                 className={`text-sm font-medium transition-colors hover:text-blue-500 ${link.highlight
-                                        ? 'text-red-500 hover:text-red-600'
-                                        : isScrolled ? 'text-gray-700' : 'text-gray-200 hover:text-white'
+                                    ? 'text-red-500 hover:text-red-600'
+                                    : isScrolled ? 'text-gray-700' : 'text-gray-200 hover:text-white'
                                     }`}
                             >
                                 {link.name}
