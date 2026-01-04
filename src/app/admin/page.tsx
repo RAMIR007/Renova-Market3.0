@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import {
     Users,
     DollarSign,
@@ -57,12 +58,19 @@ export default function AdminDashboard() {
                     <p className="text-gray-500 mt-1">Bienvenido de nuevo, aquí tienes el resumen de hoy.</p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-colors">
-                        Descargar Reporte
-                    </button>
-                    <button className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-all hover:scale-[1.02]">
-                        Nueva Orden
-                    </button>
+                    <Link
+                        href="/admin/products"
+                        className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 shadow-sm transition-colors flex items-center gap-2"
+                    >
+                        <ShoppingBag className="w-4 h-4" />
+                        Productos
+                    </Link>
+                    <Link
+                        href="/"
+                        className="px-4 py-2 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 shadow-md shadow-indigo-200 transition-all hover:scale-[1.02]"
+                    >
+                        Ver Tienda
+                    </Link>
                 </div>
             </div>
 
