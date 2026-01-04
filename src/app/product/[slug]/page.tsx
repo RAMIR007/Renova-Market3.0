@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { AddToCartButton } from "@/components/shop/AddToCartButton";
 
 export const revalidate = 3600; // ISR: Revalidate every hour
 export const dynamicParams = true; // Allow generating new pages on demand
@@ -112,15 +113,10 @@ export default async function ProductPage({ params }: Props) {
                             <p>{product.description}</p>
                         </div>
 
-                        <button
-                            className={`w-full py-4 px-8 rounded-full font-bold text-lg transition-all shadow-lg hover:shadow-xl ${product.stock > 0
-                                    ? 'bg-gray-900 text-white hover:bg-black dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'
-                                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                                }`}
-                            disabled={product.stock <= 0}
-                        >
-                            {product.stock > 0 ? 'Añadir al Carrito' : 'Vendido'}
-                        </button>
+                        <AddToCartButton product={{
+                            ...product,
+                            price: Number(product.price)
+                        }} />
 
                         <p className="text-xs text-center text-gray-500 mt-4">
                             Envío disponible a toda Cuba • Garantía de devolución

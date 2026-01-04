@@ -4,11 +4,13 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { ShoppingBag, Menu, X, Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useCart } from '@/context/CartContext';
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const pathname = usePathname();
+    const { cartCount } = useCart();
 
     // Handle scroll effect for glassmorphism
     useEffect(() => {
@@ -71,9 +73,11 @@ export function Navbar() {
                         </button>
                         <Link href="/cart" className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-gray-700' : 'text-gray-700 md:text-white'}`}>
                             <ShoppingBag className="w-5 h-5" />
-                            <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-blue-600 rounded-full">
-                                0
-                            </span>
+                            {cartCount > 0 && (
+                                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-blue-600 rounded-full">
+                                    {cartCount}
+                                </span>
+                            )}
                         </Link>
 
                         {/* Mobile Menu Button */}
