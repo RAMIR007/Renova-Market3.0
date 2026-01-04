@@ -41,21 +41,21 @@ Mejorar la velocidad de carga para ahorrar datos móviles a los usuarios.
 ## Paso 4: Admin Panel y Lógica de Negocio 💼
 Gestión robusta del inventario y prevención de errores en ventas.
 
-- [ ] **Panel de Administración (`/admin`):**
-    - [ ] Crear Server Actions para: Crear, Editar, Eliminar productos.
-    - [ ] Implementar subida de imágenes (actualmente simulada, evaluar Cloudinary free tier si es viable o mantener assets locales optimizados).
-- [ ] **Lógica de "Sistema de Apartado" (Concurrency):**
-    - [ ] Implementar chequeo de stock atómico con Prisma antes de confirmar orden.
-    - [ ] Evitar que dos personas compren el mismo par de zapatos únicos al mismo tiempo.
+- [x] **Panel de Administración (`/admin`):**
+    - [x] Crear Server Actions para: Crear, Editar, Eliminar productos.
+    - [x] Implementar subida de imágenes (Simulada con URL para MVP, listo para escalar).
+- [x] **Lógica de "Sistema de Apartado" (Concurrency):**
+    - [x] Implementar chequeo de stock atómico con Prisma antes de confirmar orden (`prisma.$transaction`).
+    - [x] Evitar que dos personas compren el mismo par de zapatos únicos al mismo tiempo.
 
 ## Paso 5: Experiencia Post-Venta (Emails y PDF) 📧
 Confirmación profesional sin costo recurrente.
 
-- [ ] **Integración con Resend (Email):**
-    - [ ] Configurar cuenta y API Key.
-    - [ ] Crear template de email de confirmación de compra (React Email).
-    - [ ] Server Action para enviar correo tras compra exitosa.
-- [ ] **Generación de Vale PDF:**
-    - [ ] Instalar `@react-pdf/renderer`.
-    - [ ] Diseñar el documento PDF (Factura/Vale).
-    - [ ] Generar y adjuntar el PDF al correo o permitir descarga directa.
+- [x] **Integración con Resend (Email):**
+    - [x] Configurar cuenta y API Key (Lógica implementada, falta key en .env del usuario).
+    - [x] Crear template de email de confirmación de compra (React Email).
+    - [x] Server Action para enviar correo tras compra exitosa.
+- [x] **Generación de Vale PDF:**
+    - [x] Instalar `@react-pdf/renderer`.
+    - [x] Diseñar el documento PDF (Factura/Vale).
+    - [x] Generar y adjuntar el PDF al correo o permitir descarga directa.
