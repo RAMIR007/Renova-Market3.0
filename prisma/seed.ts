@@ -69,10 +69,13 @@ async function main() {
                 slug: 'vestido-floral-verano',
                 description: 'Vestido ligero con estampado floral, ideal para días soleados.',
                 price: 45.00,
-                stock: 20,
+                stock: 1, // Pieza única
                 categoryId: catRopa.id,
                 images: ['/images/products/vestido1.jpg'],
                 featured: true,
+                size: 'M',
+                color: 'Multicolor',
+                condition: 'NUEVO'
             }
         }),
         prisma.product.create({
@@ -81,9 +84,12 @@ async function main() {
                 slug: 'jeans-slim-fit',
                 description: 'Jeans de corte ajustado y tela elástica para mayor comodidad.',
                 price: 35.00,
-                stock: 30,
+                stock: 1,
                 categoryId: catRopa.id,
                 images: ['/images/products/jeans1.jpg'],
+                size: '32',
+                color: 'Azul',
+                condition: 'EXCELENTE'
             }
         }),
         prisma.product.create({
@@ -93,10 +99,13 @@ async function main() {
                 description: 'Zapatillas deportivas con diseño moderno.',
                 price: 65.00,
                 compareAtPrice: 80.00,
-                stock: 15,
+                stock: 1,
                 categoryId: catZapatos.id,
                 images: ['/images/products/zapatillas1.jpg'],
                 featured: true,
+                size: '42',
+                color: 'Azul/Naranja',
+                condition: 'NUEVO'
             }
         }),
         prisma.product.create({
@@ -105,9 +114,12 @@ async function main() {
                 slug: 'bolso-cuero-negro',
                 description: 'Bolso elegante de cuero sintético con compartimentos.',
                 price: 55.00,
-                stock: 12,
+                stock: 1,
                 categoryId: catCarteras.id,
                 images: ['/images/products/bolso1.jpg'],
+                size: 'Única',
+                color: 'Negro',
+                condition: 'EXCELENTE'
             }
         })
     ])

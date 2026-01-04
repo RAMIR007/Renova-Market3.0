@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 
+export const revalidate = 3600; // Update every hour (ISR)
+
 
 
 async function getCategories() {
@@ -75,10 +77,13 @@ export default async function Home() {
             >
               {category.image ? (
                 <div className="absolute inset-0 bg-gray-200">
-                  {/* We use a simple div placeholder for images that might not exist locally yet to avoid broken img icons if files are missing */}
-                  <div className="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500">
-                    IMG: {category.name}
-                  </div>
+                  <Image
+                    src={category.image || '/images/placeholder.jpg'}
+                    alt={category.name}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-110"
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                  />
                 </div>
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900" />
@@ -118,8 +123,17 @@ export default async function Home() {
                 className="group bg-gray-50 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-zinc-800"
               >
                 <div className="relative aspect-square bg-gray-200 dark:bg-zinc-800 flex items-center justify-center text-gray-400">
-                  {/* Placeholder since we don't have real images yet */}
-                  <span>{product.name}</span>
+                  {product.images[0] ? (
+                    <Image
+                      src={product.images[0]}
+                      alt={product.name}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                    />
+                  ) : (
+                    <span>{product.name}</span>
+                  )}
                 </div>
                 <div className="p-4">
                   <p className="text-xs text-gray-500 mb-1">{product.category.name}</p>

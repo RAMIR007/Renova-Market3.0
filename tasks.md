@@ -23,20 +23,20 @@ El objetivo es que la web cargue instantáneamente y funcione incluso si se va l
 ## Paso 2: Modelado de Datos Avanzado (Prisma & Neon) 🗄️
 Adaptaremos la base de datos para vender ropa de segunda mano (piezas únicas) y controlar el inventario rigurosamente.
 
-- [ ] **Refinar Esquema de Prisma (`schema.prisma`):**
-    - [ ] Agregar campos para "Pieza Única": `talla` (String), `color` (String), `condicion` (Enum: NUEVO, EXCELENTE, BUENO).
-    - [ ] Asegurar que el manejo de `stock` soporte la lógica de "1 item único".
-    - [ ] Agregar relaciones para manejo de direcciones de envío (crucial para delivery en Cuba).
+- [x] **Refinar Esquema de Prisma (`schema.prisma`):**
+    - [x] Agregar campos para "Pieza Única": `talla` (String), `color` (String), `condicion` (Enum: NUEVO, EXCELENTE, BUENO).
+    - [x] Asegurar que el manejo de `stock` soporte la lógica de "1 item único" (Default 1).
+    - [x] Agregar relaciones para manejo de direcciones de envío (crucial para delivery en Cuba).
 
 ## Paso 3: Catálogo y Optimización (Rendimiento Extremo) 🚀
 Mejorar la velocidad de carga para ahorrar datos móviles a los usuarios.
 
-- [ ] **Implementar ISR (Revalidación):**
-    - [ ] Configurar `revalidate` en `page.tsx` y páginas de producto (ej. actualizar cada 1 hora o 24 horas).
-    - [ ] Explicación: Servir HTML estático pre-generado en lugar de calcularlo en cada visita.
-- [ ] **Optimización de Imágenes:**
-    - [ ] Asegurar uso correcto de `<Image />` component de Next.js.
-    - [ ] Definir tamaños (`sizes` prop) para móviles vs escritorio.
+- [x] **Implementar ISR (Revalidación):**
+    - [x] Configurar `revalidate` en `page.tsx` y páginas de producto (ej. actualizar cada 1 hora o 24 horas).
+    - [x] Explicación: Servir HTML estático pre-generado en lugar de calcularlo en cada visita.
+- [x] **Optimización de Imágenes:**
+    - [x] Asegurar uso correcto de `<Image />` component de Next.js.
+    - [x] Definir tamaños (`sizes` prop) para móviles vs escritorio.
 
 ## Paso 4: Admin Panel y Lógica de Negocio 💼
 Gestión robusta del inventario y prevención de errores en ventas.
