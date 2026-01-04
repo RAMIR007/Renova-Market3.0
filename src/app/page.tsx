@@ -2,21 +2,31 @@ import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 
-export const dynamic = 'force-dynamic';
+
 
 async function getCategories() {
-  return await prisma.category.findMany({
-    take: 3,
-    orderBy: { name: 'asc' }
-  });
+  try {
+    return await prisma.category.findMany({
+      take: 3,
+      orderBy: { name: 'asc' }
+    });
+  } catch (error) {
+    console.error("Database Error (Categories):", error);
+    return [];
+  }
 }
 
 async function getFeaturedProducts() {
-  return await prisma.product.findMany({
-    where: { featured: true },
-    take: 4,
-    include: { category: true }
-  });
+  try {
+    return await prisma.product.findMany({
+      where: { featured: true },
+      take: 4,
+      include: { category: true }
+    });
+  } catch (error) {
+    console.error("Database Error (Products):", error);
+    return [];
+  }
 }
 
 export default async function Home() {
