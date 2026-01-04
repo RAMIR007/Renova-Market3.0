@@ -10,6 +10,16 @@ const withPWA = require("next-pwa")({
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'res.cloudinary.com',
+        port: '',
+        pathname: '/**',
+      },
+    ],
+  },
 };
 
 export default withPWA(nextConfig);
