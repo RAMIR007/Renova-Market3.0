@@ -38,35 +38,42 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     </div>
                 ))}
             </div>
-            <CldUploadWidget
-                onSuccess={onUpload}
-                uploadPreset="renova_preset"
-                options={{
-                    sources: ['local', 'url'],
-                }}
-            >
-                {({ open }) => {
-                    const onClick = () => {
-                        if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
-                            console.warn("Falta NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME. El widget no funcionará.");
-                            alert("Error de configuración: Falta Cloud Name");
-                            return;
+            {process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? (
+                <CldUploadWidget
+                    onSuccess={onUpload}
+                    uploadPreset="renova_preset"
+                    options={{
+                        sources: ['local', 'url'],
+                    }}
+                >
+                    {({ open }) => {
+                        const onClick = () => {
+                            open();
                         }
-                        open();
-                    }
 
-                    return (
-                        <button
-                            type="button"
-                            onClick={onClick}
-                            className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-200 transition"
-                        >
-                            <ImagePlus className="h-4 w-4 mr-2" />
-                            Subir Imagen
-                        </button>
-                    )
-                }}
-            </CldUploadWidget>
+                        return (
+                            <button
+                                type="button"
+                                onClick={onClick}
+                                className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-200 transition"
+                            >
+                                <ImagePlus className="h-4 w-4 mr-2" />
+                                Subir Imagen
+                            </button>
+                        )
+                    }}
+                </CldUploadWidget>
+            ) : (
+                <button
+                    type="button"
+                    onClick={() => alert("Cloudinary no configurado. Falta NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME en .env")}
+                    className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 rounded-md px-4 py-2 hover:bg-red-100 transition"
+                    title="Configuración faltante"
+                >
+                    <ImagePlus className="h-4 w-4 mr-2" />
+                    Subir Imagen (Deshabilitado)
+                </button>
+            )}
         </div>
     );
 }
