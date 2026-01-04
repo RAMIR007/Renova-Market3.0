@@ -40,10 +40,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             </div>
             <CldUploadWidget
                 onSuccess={onUpload}
-                uploadPreset="renova_preset" // You will need to create this in Cloudinary
+                uploadPreset="renova_preset"
+                options={{
+                    sources: ['local', 'url'],
+                }}
             >
                 {({ open }) => {
                     const onClick = () => {
+                        if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
+                            console.warn("Falta NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME. El widget no funcionará.");
+                            alert("Error de configuración: Falta Cloud Name");
+                            return;
+                        }
                         open();
                     }
 
