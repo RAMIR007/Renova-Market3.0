@@ -3,7 +3,7 @@
 import { getAnalyticsData } from "@/actions/analytics";
 import { useEffect, useState } from "react";
 import { DollarSign, ShoppingBag, Package, AlertTriangle } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+// import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function AdminAnalyticsPage() {
     const [data, setData] = useState<any>(null);
