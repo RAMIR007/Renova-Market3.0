@@ -19,13 +19,26 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         onChange(result.info.secure_url);
     };
 
+    // Debugging
+    console.log("Cloudinary Config:", process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME);
+
+    if (!process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME) {
+        return (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
+                <p className="font-bold">Error de Configuración:</p>
+                <p>No se encontró <code>NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME</code>.</p>
+                <p className="mt-1 text-xs">Asegúrate de reiniciar el servidor tras editar el .env</p>
+            </div>
+        )
+    }
+
     return (
         <div>
-            <div className="mb-4 flex items-center gap-4">
+            <div className="mb-4 flex items-center gap-4 flex-wrap">
                 {value.map((url) => (
-                    <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden">
+                    <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden border border-gray-200">
                         <div className="z-10 absolute top-2 right-2">
-                            <button type="button" onClick={() => onRemove(url)} className="bg-red-500 text-white p-1 rounded-full hover:bg-red-600 transition">
+                            <button type="button" onClick={() => onRemove(url)} className="bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition shadow-sm">
                                 <Trash className="h-4 w-4" />
                             </button>
                         </div>
@@ -38,42 +51,32 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                     </div>
                 ))}
             </div>
-            {process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? (
-                <CldUploadWidget
-                    onSuccess={onUpload}
-                    uploadPreset="renova_preset"
-                    options={{
-                        sources: ['local', 'url'],
-                    }}
-                >
-                    {({ open }) => {
-                        const onClick = () => {
-                            open();
-                        }
 
-                        return (
-                            <button
-                                type="button"
-                                onClick={onClick}
-                                className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-200 transition"
-                            >
-                                <ImagePlus className="h-4 w-4 mr-2" />
-                                Subir Imagen
-                            </button>
-                        )
-                    }}
-                </CldUploadWidget>
-            ) : (
-                <button
-                    type="button"
-                    onClick={() => alert("Cloudinary no configurado. Falta NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME en .env")}
-                    className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 rounded-md px-4 py-2 hover:bg-red-100 transition"
-                    title="Configuración faltante"
-                >
-                    <ImagePlus className="h-4 w-4 mr-2" />
-                    Subir Imagen (Deshabilitado)
-                </button>
-            )}
+            <CldUploadWidget
+                onSuccess={onUpload}
+                uploadPreset="renova_preset" // IMPORTANT: User must create this in Cloudinary Settings > Upload > Add Upload Preset (Unsigned)
+                options={{
+                    maxFiles: 1,
+                    sources: ['local', 'camera', 'url'],
+                }}
+            >
+                {({ open }) => {
+                    const onClick = () => {
+                        open();
+                    }
+
+                    return (
+                        <button
+                            type="button"
+                            onClick={onClick}
+                            className="flex items-center gap-2 bg-gray-100 border border-gray-300 rounded-lg px-4 py-2 hover:bg-gray-200 transition text-gray-700 font-medium"
+                        >
+                            <ImagePlus className="h-4 w-4 mr-2" />
+                            Subir Imagen
+                        </button>
+                    )
+                }}
+            </CldUploadWidget>
         </div>
     );
 }
