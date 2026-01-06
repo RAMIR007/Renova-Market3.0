@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/context/CartContext";
+import WhatsAppButton from "@/components/common/WhatsAppButton";
 
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -37,6 +38,7 @@ export default function RootLayout({
           <main className="flex-grow">
             {children}
           </main>
+          <WhatsAppButton />
           <Footer />
         </CartProvider>
       </body>

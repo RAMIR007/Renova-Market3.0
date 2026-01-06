@@ -23,6 +23,7 @@ export default function AdminSidebar() {
         { name: 'Productos', href: '/admin/products', icon: Package },
         { name: 'Categorías', href: '/admin/categories', icon: ShoppingBag },
         { name: 'Órdenes', href: '/admin/orders', icon: ShoppingBag },
+        { name: 'Vendedores', href: '/admin/sellers', icon: Users },
         { name: 'Clientes', href: '/admin/customers', icon: Users },
         { name: 'Analítica', href: '/admin/analytics', icon: BarChart3 },
         { name: 'Configuración', href: '/admin/settings', icon: Settings },

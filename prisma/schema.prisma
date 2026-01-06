@@ -7,20 +7,29 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(uuid())
-  email     String    @unique
-  password  String
-  name      String?
-  role      Role      @default(USER)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  orders    Order[]
-  addresses Address[]
+  id           String    @id @default(uuid())
+  email        String    @unique
+  password     String
+  name         String?
+  role         Role      @default(USER)
+  whatsapp     String?   // For Sellers
+  referralCode String?   @unique // For Sellers
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  orders       Order[]
+  addresses    Address[]
 }
 
 enum Role {
   USER
   ADMIN
+  SELLER
+}
+
+model SystemSetting {
+  id    String @id @default(uuid())
+  key   String @unique // e.g. "STORE_WHATSAPP"
+  value String
 }
 
 model Address {
