@@ -91,13 +91,15 @@ export default function AdminSidebar() {
                                 <p className="text-xs text-gray-500">admin@renova.cu</p>
                             </div>
                         </div>
-                        <form action={async () => {
-                            'use server';
-                            const { logout } = await import('@/actions/auth');
-                            await logout();
-                        }}>
-                            <button type="submit" className="text-xs text-red-500 hover:underline mt-1">Cerrar Sesión</button>
-                        </form>
+                        <button
+                            onClick={async () => {
+                                const { logout } = await import('@/actions/auth');
+                                await logout();
+                            }}
+                            className="text-xs text-red-500 hover:underline mt-1"
+                        >
+                            Cerrar Sesión
+                        </button>
                     </div>
                 </div>
             </div>
