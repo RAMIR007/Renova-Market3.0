@@ -3,6 +3,7 @@
 import { updateSystemSettings } from "@/actions/settings";
 import { Save, Phone } from "lucide-react";
 import { useState } from "react";
+import ChangePasswordForm from "@/components/admin/ChangePasswordForm";
 
 export default function AdminSettingsPage() {
     const [loading, setLoading] = useState(false);
@@ -57,6 +58,12 @@ export default function AdminSettingsPage() {
                         {loading ? 'Guardando...' : 'Guardar Cambios'}
                     </button>
                 </form>
+            </div>
+
+            {/* Change Password Section */}
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h2 className="text-lg font-semibold mb-6">Seguridad de la Cuenta</h2>
+                <ChangePasswordForm />
             </div>
         </div>
     );

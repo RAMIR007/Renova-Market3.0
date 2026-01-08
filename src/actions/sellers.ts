@@ -8,21 +8,24 @@ export async function createSeller(prevState: any, formData: FormData) {
     const email = formData.get('email') as string;
     const phone = formData.get('phone') as string;
     const referralCode = formData.get('referralCode') as string;
+    const role = (formData.get('role') as 'SELLER' | 'ADMIN') || 'SELLER';
 
-    if (!name || !email || !referralCode) {
+    if (!name || !email) {
         return { success: false, error: 'Faltan campos requeridos' };
     }
+    // referralCode mandatory only for sellers? Let's keep it generally consistent or optional for admins.
+    // For now, mandating it as unique identifier/username extension isn't bad.
 
     try {
-        console.log("Creating seller:", { name, email, phone, referralCode });
+        console.log("Creating user:", { name, email, role });
         await prisma.user.create({
             data: {
                 name,
                 email,
                 password: 'temp_password_123', // In a real app, send invite email
-                role: 'SELLER', // Make sure this enum exists in DB
+                role: role,
                 whatsapp: phone,
-                referralCode: referralCode.toUpperCase(),
+                referralCode: referralCode?.toUpperCase() || null, // Optional for Admin potentially
             }
         });
 
@@ -40,10 +43,11 @@ export async function createSeller(prevState: any, formData: FormData) {
 export async function getSellers() {
     try {
         return await prisma.user.findMany({
-            where: { role: 'SELLER' },
+            where: { role: { in: ['ADMIN', 'SELLER'] } },
             orderBy: { createdAt: 'desc' },
             include: {
                 _count: {
+                    // @ts-ignore
                     select: { products: true }
                 }
             }
