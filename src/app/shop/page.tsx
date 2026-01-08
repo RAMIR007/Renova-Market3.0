@@ -1,7 +1,6 @@
 import { prisma } from "@/lib/prisma";
-import Image from "next/image";
 import Link from "next/link";
-import { AddToCartButton } from "@/components/shop/AddToCartButton";
+import ProductCard from "@/components/shop/ProductCard";
 
 export const revalidate = 3600;
 
@@ -54,45 +53,9 @@ export default async function ShopPage({ searchParams }: Props) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10">
                     {products.map(product => (
-                        <div key={product.id} className="group bg-white dark:bg-zinc-800 rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all flex flex-col h-full">
-                            <Link href={`/product/${product.slug}`} className="relative aspect-[4/5] bg-gray-200 dark:bg-zinc-700 block overflow-hidden">
-                                {product.images[0] ? (
-                                    <Image
-                                        src={product.images[0]}
-                                        alt={product.name}
-                                        fill
-                                        className="object-cover transition-transform duration-500 group-hover:scale-105"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                                    />
-                                ) : (
-                                    <div className="flex items-center justify-center h-full text-gray-400">
-                                        Sin Imagen
-                                    </div>
-                                )}
-                            </Link>
-                            <div className="p-4 flex flex-col flex-grow">
-                                <Link href={`/category/${product.category.slug}`} className="text-xs text-gray-500 mb-1 hover:underline">
-                                    {product.category.name}
-                                </Link>
-                                <Link href={`/product/${product.slug}`}>
-                                    <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 hover:text-blue-600 transition-colors">
-                                        {product.name}
-                                    </h3>
-                                </Link>
-                                <div className="mt-auto pt-4 flex items-center justify-between">
-                                    <span className="font-bold text-lg">${Number(product.price).toFixed(2)}</span>
-                                    {/* We could add the Quick Add but let's encourage visiting the product page for details */}
-                                    <Link
-                                        href={`/product/${product.slug}`}
-                                        className="text-sm font-medium bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-colors"
-                                    >
-                                        Ver Detalles
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
+                        <ProductCard key={product.id} product={product} />
                     ))}
                 </div>
 

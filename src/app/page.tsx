@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { prisma } from "@/lib/prisma";
+import ProductCard from "@/components/shop/ProductCard";
 
 export const revalidate = 3600; // Update every hour (ISR)
 
@@ -40,24 +41,61 @@ export default async function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
       {/* Hero Section */}
-      <section className="relative w-full h-[500px] flex items-center justify-center bg-gray-900 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-40">
-          {/* Placeholder for a hero background if we had one. For now just dark bg */}
-          <div className="w-full h-full bg-gradient-to-r from-gray-900 to-gray-800" />
+      <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center bg-gray-900 text-white overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
+            alt="Hero Fashion"
+            fill
+            priority
+            className="object-cover opacity-60"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
         </div>
-        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
-            Renova Market
+
+        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto animate-in fade-in zoom-in duration-700">
+          <span className="inline-block py-1 px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium tracking-wide mb-6">
+            MODA SOSTENIBLE EN CUBA
+          </span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6 drop-shadow-2xl">
+            RENOVA <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">MARKET</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 mb-8 max-w-2xl mx-auto">
-            Renueva tu estilo con nuestra colección exclusiva de ropa, zapatos y accesorios de temporada.
+          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
+            Redefiniendo el estilo con piezas únicas y exclusivas.<br /> Lujo accesible a un clic de distancia.
           </p>
-          <Link
-            href="/shop"
-            className="inline-block bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition-colors shadow-lg"
-          >
-            Ver Colección
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/shop"
+              className="inline-flex items-center justify-center bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]"
+            >
+              Ver Colección
+            </Link>
+            <Link
+              href="/about"
+              className="inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-lg border border-white/30 bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all text-white"
+            >
+              Nuestra Historia
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Banner */}
+      <section className="bg-black text-white py-12 border-b border-gray-800">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-800">
+          <div className="p-4">
+            <h3 className="font-bold text-xl mb-2">💎 Calidad Premium</h3>
+            <p className="text-gray-400">Selección curada de las mejores marcas y estados.</p>
+          </div>
+          <div className="p-4">
+            <h3 className="font-bold text-xl mb-2">🌿 100% Sostenible</h3>
+            <p className="text-gray-400">Dale una segunda vida a la moda y cuida el planeta.</p>
+          </div>
+          <div className="p-4">
+            <h3 className="font-bold text-xl mb-2">🚀 Envíos en La Habana</h3>
+            <p className="text-gray-400">Entrega rápida y segura a todos los municipios.</p>
+          </div>
         </div>
       </section>
 
@@ -103,57 +141,27 @@ export default async function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-white dark:bg-zinc-800/50">
+      <section className="py-24 bg-white dark:bg-zinc-800/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-10">
+          <div className="flex justify-between items-end mb-12">
             <div>
               <h2 className="text-3xl font-bold mb-2">Destacados</h2>
               <p className="text-gray-600 dark:text-gray-400">Nuestros productos favoritos del mes</p>
             </div>
-            <Link href="/shop" className="text-blue-600 dark:text-blue-400 hover:underline hidden sm:block">
+            <Link href="/shop" className="text-black dark:text-white font-medium hover:underline hidden sm:block decoration-2 underline-offset-4">
               Ver todo &rarr;
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
             {featuredProducts.map((product) => (
-              <Link
-                key={product.id}
-                href={`/product/${product.slug}`}
-                className="group bg-gray-50 dark:bg-zinc-900 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-gray-100 dark:border-zinc-800"
-              >
-                <div className="relative aspect-square bg-gray-200 dark:bg-zinc-800 flex items-center justify-center text-gray-400">
-                  {product.images[0] ? (
-                    <Image
-                      src={product.images[0]}
-                      alt={product.name}
-                      fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                    />
-                  ) : (
-                    <span>{product.name}</span>
-                  )}
-                </div>
-                <div className="p-4">
-                  <p className="text-xs text-gray-500 mb-1">{product.category.name}</p>
-                  <h3 className="font-semibold truncate group-hover:text-blue-600 transition-colors">{product.name}</h3>
-                  <div className="flex items-center justify-between mt-3">
-                    <span className="font-bold text-lg">${Number(product.price).toFixed(2)}</span>
-                    {product.stock > 0 ? (
-                      <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">En stock</span>
-                    ) : (
-                      <span className="text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">Agotado</span>
-                    )}
-                  </div>
-                </div>
-              </Link>
+              <ProductCard key={product.id} product={product} />
             ))}
           </div>
 
-          <div className="mt-8 text-center sm:hidden">
-            <Link href="/shop" className="text-blue-600 dark:text-blue-400 font-medium hover:underline">
-              Ver todos los productos &rarr;
+          <div className="mt-12 text-center sm:hidden">
+            <Link href="/shop" className="inline-block border border-gray-300 px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors">
+              Ver todos los productos
             </Link>
           </div>
         </div>
