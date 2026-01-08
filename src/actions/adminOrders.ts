@@ -1,8 +1,10 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth-check";
 
 export async function getAdminOrders() {
+    await requireAdmin();
     try {
         const orders = await prisma.order.findMany({
             orderBy: { createdAt: 'desc' },
@@ -19,6 +21,7 @@ export async function getAdminOrders() {
 }
 
 export async function updateOrderStatus(orderId: string, status: 'PENDING' | 'PROCESSING' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED') {
+    await requireAdmin();
     try {
         await prisma.order.update({
             where: { id: orderId },

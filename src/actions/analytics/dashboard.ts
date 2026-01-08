@@ -1,8 +1,10 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/auth-check";
 
 export async function getDashboardStats() {
+    await requireAdmin();
     try {
         // 1. Total Revenue (from non-cancelled orders)
         // Since sqlite/postgres differences in decimal aggregation can be tricky, we fetch and sum or use aggregate if supported

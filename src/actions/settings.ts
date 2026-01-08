@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/auth-check";
 
 export async function getSystemSettings() {
     try {
@@ -16,6 +17,7 @@ export async function getSystemSettings() {
 }
 
 export async function updateSystemSettings(formData: FormData) {
+    await requireAdmin();
     const whatsapp = formData.get('whatsapp') as string;
 
     try {
