@@ -104,11 +104,25 @@ export default function AdminDashboard() {
 
             {/* Recent Activity Section */}
             <div className="grid gap-6 lg:grid-cols-3">
-                {/* Main Chart Area (Placeholder) */}
-                <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-100 shadow-sm block min-h-[400px]">
-                    <h3 className="font-semibold text-gray-900 mb-6">Resumen de Ventas</h3>
-                    <div className="h-[300px] w-full bg-gray-50 rounded-lg flex items-center justify-center border border-dashed border-gray-200 text-gray-400">
-                        Gráfico de Ventas (Aquí iría un componente Recharts)
+                {/* Main Chart Area (Simple CSS Bar Chart) */}
+                <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-100 shadow-sm min-h-[400px]">
+                    <h3 className="font-semibold text-gray-900 mb-6">Resumen de Ventas (Semanal)</h3>
+                    <div className="h-[300px] w-full flex items-end justify-between gap-2 px-4">
+                        {[40, 70, 45, 90, 60, 80, 50].map((h, i) => (
+                            <div key={i} className="w-full bg-blue-50 rounded-t-lg relative group transition-all hover:bg-blue-100">
+                                <div
+                                    style={{ height: `${h}%` }}
+                                    className="absolute bottom-0 w-full bg-black rounded-t-lg transition-all duration-500 group-hover:bg-indigo-600"
+                                >
+                                    <div className="opacity-0 group-hover:opacity-100 absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded whitespace-nowrap transition-opacity">
+                                        ${h * 10}.00
+                                    </div>
+                                </div>
+                                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-gray-400">
+                                    {['L', 'M', 'X', 'J', 'V', 'S', 'D'][i]}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
 
@@ -117,8 +131,8 @@ export default function AdminDashboard() {
                     <h3 className="font-semibold text-gray-900 mb-6">Órdenes Recientes</h3>
                     <div className="space-y-6">
                         {[1, 2, 3, 4, 5].map((_, i) => (
-                            <div key={i} className="flex items-center gap-4">
-                                <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                            <Link key={i} href="/admin/orders" className="flex items-center gap-4 hover:bg-gray-50 p-2 -mx-2 rounded-lg transition-colors group">
+                                <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600 font-bold text-sm group-hover:bg-indigo-100 transition-colors">
                                     OM
                                 </div>
                                 <div className="flex-1">
@@ -126,12 +140,12 @@ export default function AdminDashboard() {
                                     <p className="text-xs text-gray-500">hace {i * 5 + 2} min</p>
                                 </div>
                                 <span className="text-sm font-medium text-emerald-600">+$120.00</span>
-                            </div>
+                            </Link>
                         ))}
                     </div>
-                    <button className="w-full mt-6 py-2 text-sm text-indigo-600 font-medium hover:bg-indigo-50 rounded-lg transition-colors">
+                    <Link href="/admin/orders" className="block w-full mt-6 py-2 text-center text-sm text-indigo-600 font-medium hover:bg-indigo-50 rounded-lg transition-colors">
                         Ver todas
-                    </button>
+                    </Link>
                 </div>
             </div>
         </div>
