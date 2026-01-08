@@ -14,12 +14,13 @@ export async function createSeller(prevState: any, formData: FormData) {
     }
 
     try {
+        console.log("Creating seller:", { name, email, phone, referralCode });
         await prisma.user.create({
             data: {
                 name,
                 email,
                 password: 'temp_password_123', // In a real app, send invite email
-                role: 'SELLER',
+                role: 'SELLER', // Make sure this enum exists in DB
                 whatsapp: phone,
                 referralCode: referralCode.toUpperCase(),
             }
@@ -28,10 +29,11 @@ export async function createSeller(prevState: any, formData: FormData) {
         revalidatePath('/admin/sellers');
         return { success: true };
     } catch (error: any) {
+        console.error("Error creating seller:", error);
         if (error.code === 'P2002') { // Unique constraint violation
             return { success: false, error: 'El email o código de referido ya existe.' };
         }
-        return { success: false, error: 'Error al crear vendedor.' };
+        return { success: false, error: 'Error al crear vendedor: ' + (error.message || error) };
     }
 }
 

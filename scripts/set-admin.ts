@@ -1,10 +1,21 @@
-import { prisma } from "@/lib/prisma";
+import { PrismaClient } from '@prisma/client';
+
+// Bypass the shared instance with pg adapter to avoid SSL issues in script execution.
+// We explicitly set the datasource URL because the schema might be relying on the adapter.
+const prisma = new PrismaClient({
+    datasources: {
+        db: {
+            url: process.env.DATABASE_URL
+        }
+    }
+});
 
 async function main() {
     const email = 'admin@renova.cu';
-    const newPassword = 'tu_nueva_clave_secreta'; // ¡CÁMBIAME ANTES DE EJECUTAR!
+    const newPassword = 'Renova2025';
 
-    // Check if user exists
+    console.log(`Conectando a BD...`);
+
     const existingUser = await prisma.user.findUnique({
         where: { email }
     });
@@ -14,7 +25,7 @@ async function main() {
         await prisma.user.update({
             where: { email },
             data: {
-                password: newPassword, // En un sistema real, ¡hashea esto!
+                password: newPassword,
                 role: 'ADMIN'
             }
         });
@@ -24,13 +35,15 @@ async function main() {
             data: {
                 name: 'Super Admin',
                 email: email,
-                password: newPassword, // En un sistema real, ¡hashea esto!
+                password: newPassword,
                 role: 'ADMIN'
             }
         });
     }
 
-    console.log("¡Listo! Ahora puedes loguearte con la nueva credencial.");
+    console.log("¡Éxito! 🚀");
+    console.log(`Usuario: ${email}`);
+    console.log(`Contraseña: ${newPassword}`);
 }
 
 main()
