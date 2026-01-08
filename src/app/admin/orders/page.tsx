@@ -37,7 +37,12 @@ export default function AdminOrdersPage() {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">Órdenes</h1>
+            <div className="flex justify-between items-center">
+                <h1 className="text-3xl font-bold tracking-tight text-gray-900">Órdenes</h1>
+                <a href="/admin/orders/new" className="bg-black text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 flex items-center gap-2">
+                    <Package size={16} /> Nueva Orden
+                </a>
+            </div>
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
                 <div className="overflow-x-auto">
