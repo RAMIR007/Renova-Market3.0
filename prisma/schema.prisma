@@ -18,6 +18,7 @@ model User {
   updatedAt    DateTime  @updatedAt
   orders       Order[]
   addresses    Address[]
+  products     Product[] @relation("SellerProducts")
 }
 
 enum Role {
@@ -83,6 +84,9 @@ model Product {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   orderItems     OrderItem[]
+  
+  sellerId       String?
+  seller         User?       @relation("SellerProducts", fields: [sellerId], references: [id])
 }
 
 enum Condition {

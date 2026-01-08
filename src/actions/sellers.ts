@@ -44,7 +44,7 @@ export async function getSellers() {
             orderBy: { createdAt: 'desc' },
             include: {
                 _count: {
-                    select: { orders: true } // Assuming we link orders later, for now just placeholder stats
+                    select: { products: true }
                 }
             }
         });

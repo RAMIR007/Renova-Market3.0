@@ -109,11 +109,12 @@ export default function AdminSellersPage() {
                             <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Nombre</th>
                             <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Código</th>
                             <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">WhatsApp</th>
+                            <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Productos</th>
                             <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase">Estado</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-gray-100">
-                        {sellers.map((seller) => (
+                        {sellers.map((seller: any) => (
                             <tr key={seller.id} className="hover:bg-gray-50 transition-colors">
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
@@ -131,6 +132,9 @@ export default function AdminSellersPage() {
                                 </td>
                                 <td className="px-6 py-4 text-sm text-gray-600">
                                     {seller.whatsapp || '-'}
+                                </td>
+                                <td className="px-6 py-4 text-sm font-medium text-gray-900">
+                                    {seller._count?.products || 0} items
                                 </td>
                                 <td className="px-6 py-4">
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
