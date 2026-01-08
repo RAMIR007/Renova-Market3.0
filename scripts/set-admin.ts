@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 // Bypass the shared instance with pg adapter to avoid SSL issues in script execution.
 // We explicitly set the datasource URL because the schema might be relying on the adapter.
 const prisma = new PrismaClient({
+    // @ts-ignore - Explicit datasource override for script context
     datasources: {
         db: {
             url: process.env.DATABASE_URL
