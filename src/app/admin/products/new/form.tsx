@@ -14,9 +14,10 @@ interface Category {
 
 interface NewProductFormProps {
     categories: Category[];
+    userRole: string;
 }
 
-export default function NewProductForm({ categories }: NewProductFormProps) {
+export default function NewProductForm({ categories, userRole }: NewProductFormProps) {
     // Local state
     const [imageUrl, setImageUrl] = useState("");
     const [localCategories, setLocalCategories] = useState(categories);
@@ -26,6 +27,8 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
     const [loadingCategory, setLoadingCategory] = useState(false);
+
+    const isAdmin = userRole === 'ADMIN';
 
     const handleCreateCategory = async () => {
         if (!newCategoryName.trim()) return;
@@ -99,7 +102,9 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                                 placeholder="Detalles sobre el material, estado, medidas..."
                             />
                         </div>
+                    </div>
 
+                    <div className="grid grid-cols-2 gap-4">
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Precio ($)</label>
                             <input
@@ -113,7 +118,7 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Precio Comparación ($) <span className="text-gray-400 font-normal">(Opcional)</span></label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Precio Comparación <span className="text-gray-400 font-normal">(Opcional)</span></label>
                             <input
                                 type="number"
                                 name="compareAtPrice"
@@ -121,6 +126,41 @@ export default function NewProductForm({ categories }: NewProductFormProps) {
                                 className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
                                 placeholder="0.00"
                             />
+                        </div>
+
+                        <div className="bg-amber-50 p-4 rounded-lg border border-amber-100 col-span-2 grid grid-cols-2 gap-4">
+                            {isAdmin && (
+                                <div>
+                                    <label className="block text-sm font-medium text-amber-900 mb-2">Costo Real ($) <span className="text-xs font-normal">(Interno)</span></label>
+                                    <input
+                                        type="number"
+                                        name="cost"
+                                        step="0.01"
+                                        className="w-full px-4 py-2 rounded-lg border border-amber-200 focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white"
+                                        placeholder="0.00"
+                                    />
+                                </div>
+                            )}
+                            <div className={isAdmin ? "" : "col-span-2"}>
+                                <label className="block text-sm font-medium text-amber-900 mb-2">Ganancia Vendedor ($)</label>
+                                <input
+                                    type="number"
+                                    name="sellerProfit"
+                                    step="0.01"
+                                    className="w-full px-4 py-2 rounded-lg border border-amber-200 focus:ring-2 focus:ring-amber-500 focus:outline-none text-base bg-white"
+                                    placeholder="0.00"
+                                />
+                            </div>
+                            {!isAdmin && (
+                                <p className="col-span-2 text-xs text-amber-700">
+                                    * Define tu ganancia esperada para este producto.
+                                </p>
+                            )}
+                            {isAdmin && (
+                                <p className="col-span-2 text-xs text-amber-700">
+                                    * El 'Costo Real' es privado. El vendedor solo verá la 'Ganancia'.
+                                </p>
+                            )}
                         </div>
                     </div>
 

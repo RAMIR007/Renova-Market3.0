@@ -16,6 +16,10 @@ export async function createProduct(formData: FormData) {
     const condition = formData.get("condition") as "NUEVO" | "EXCELENTE" | "BUENO" | "USADO"
     const image = formData.get("image") as string // In a real app we'd handle file upload here
 
+    // New finance fields
+    const cost = formData.get("cost") ? parseFloat(formData.get("cost") as string) : null
+    const sellerProfit = formData.get("sellerProfit") ? parseFloat(formData.get("sellerProfit") as string) : null
+
     // Generate slug from name
     const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') + '-' + Date.now()
 
@@ -31,6 +35,8 @@ export async function createProduct(formData: FormData) {
             size,
             color,
             condition,
+            cost,
+            sellerProfit,
             images: image ? [image] : [],
             featured: false
         }

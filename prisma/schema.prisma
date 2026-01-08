@@ -67,6 +67,7 @@ model Product {
   price          Decimal     @db.Decimal(10, 2)
   compareAtPrice Decimal?    @db.Decimal(10, 2)
   cost           Decimal?    @db.Decimal(10, 2)
+  sellerProfit   Decimal?    @db.Decimal(10, 2)
   images         String[]
   stock          Int         @default(1) // Default 1 for unique items
   categoryId     String
