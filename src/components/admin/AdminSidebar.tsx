@@ -10,7 +10,9 @@ import {
     BarChart3,
     Package,
     Menu,
-    X
+    X,
+    ShoppingCart, // Added based on usage in navigation array
+    FileClock // Added as per instruction
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -24,11 +26,9 @@ export default function AdminSidebar() {
     const navigation = [
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
         { name: 'Productos', href: '/admin/products', icon: Package },
-        { name: 'Categorías', href: '/admin/categories', icon: ShoppingBag },
-        { name: 'Órdenes', href: '/admin/orders', icon: ShoppingBag },
-        { name: 'Vendedores', href: '/admin/sellers', icon: Users },
-        { name: 'Clientes', href: '/admin/customers', icon: Users },
-        { name: 'Analítica', href: '/admin/analytics', icon: BarChart3 },
+        { name: 'Pedidos', href: '/admin/orders', icon: ShoppingCart },
+        { name: 'Usuarios', href: '/admin/users', icon: Users },
+        { name: 'Historial', href: '/admin/history', icon: FileClock }, // New Link
         { name: 'Configuración', href: '/admin/settings', icon: Settings },
     ];
 

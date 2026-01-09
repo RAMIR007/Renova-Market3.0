@@ -167,3 +167,14 @@ model VisitLog {
   userId    String?
   createdAt DateTime @default(now())
 }
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  action    String   // e.g. "CREATE_PRODUCT", "UPDATE_ORDER", "LOGIN"
+  entity    String   // e.g. "Product", "Order"
+  entityId  String?
+  details   Json?    // Store changed fields or relevant data
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}

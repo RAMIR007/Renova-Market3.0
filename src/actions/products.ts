@@ -28,7 +28,7 @@ export async function createProduct(formData: FormData) {
     // Generate slug from name
     const slug = name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, '') + '-' + Date.now()
 
-    await prisma.product.create({
+    const product = await prisma.product.create({
         data: {
             name,
             slug,
@@ -48,6 +48,13 @@ export async function createProduct(formData: FormData) {
             featured: false
         }
     })
+
+    await import("@/lib/audit").then(m => m.createAuditLog(
+        "CREATE_PRODUCT",
+        "Product",
+        product.id,
+        { name, price, stock }
+    ));
 
     revalidatePath("/admin/products")
     revalidatePath("/")
@@ -97,6 +104,13 @@ export async function updateProduct(id: string, formData: FormData) {
         }
     })
 
+    await import("@/lib/audit").then(m => m.createAuditLog(
+        "UPDATE_PRODUCT",
+        "Product",
+        id,
+        { name, price, stock }
+    ));
+
     revalidatePath("/admin/products")
     revalidatePath("/")
     redirect("/admin/products")
@@ -107,6 +121,13 @@ export async function deleteProduct(id: string) {
     await prisma.product.delete({
         where: { id }
     })
+
+    await import("@/lib/audit").then(m => m.createAuditLog(
+        "DELETE_PRODUCT",
+        "Product",
+        id,
+        {}
+    ));
     revalidatePath("/admin/products")
     revalidatePath("/")
 }
