@@ -19,11 +19,9 @@ interface NewProductFormProps {
 
 export default function NewProductForm({ categories, userRole }: NewProductFormProps) {
     // Local state
-    const [imageUrl, setImageUrl] = useState("");
+    const [images, setImages] = useState<string[]>([]);
     const [localCategories, setLocalCategories] = useState(categories);
     const [selectedCategory, setSelectedCategory] = useState("");
-
-    // Inline Category Creation State
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
     const [loadingCategory, setLoadingCategory] = useState(false);
@@ -295,12 +293,17 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Imágenes del Producto</label>
                         <ImageUpload
-                            value={imageUrl ? [imageUrl] : []}
-                            onChange={(url) => setImageUrl(url)}
-                            onRemove={() => setImageUrl("")}
+                            value={images}
+                            onChange={(url) => setImages([...images, url])}
+                            onRemove={(url) => setImages(images.filter((current) => current !== url))}
+                            onImageUpdate={(oldUrl, newUrl) => {
+                                setImages(images.map(img => img === oldUrl ? newUrl : img));
+                            }}
                         />
-                        {/* Hidden input to ensure the URL is submitted with the form */}
-                        <input type="hidden" name="image" value={imageUrl} />
+                        {/* Hidden inputs to ensure the URLs are submitted with the form */}
+                        {images.map((url, index) => (
+                            <input key={index} type="hidden" name="images" value={url} />
+                        ))}
                     </div>
                 </div>
 

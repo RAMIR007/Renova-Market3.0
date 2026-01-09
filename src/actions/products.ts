@@ -18,7 +18,8 @@ export async function createProduct(formData: FormData) {
     const brand = formData.get("brand") as string
     const model = formData.get("model") as string
     const condition = formData.get("condition") as "NUEVO" | "EXCELENTE" | "BUENO" | "USADO"
-    const image = formData.get("image") as string // In a real app we'd handle file upload here
+    // Handle multiple images
+    const images = formData.getAll("images") as string[];
 
     // New finance fields
     const cost = formData.get("cost") ? parseFloat(formData.get("cost") as string) : null
@@ -43,7 +44,7 @@ export async function createProduct(formData: FormData) {
             condition,
             cost,
             sellerProfit,
-            images: image ? [image] : [],
+            images: images,
             featured: false
         }
     })
@@ -66,7 +67,8 @@ export async function updateProduct(id: string, formData: FormData) {
     const brand = formData.get("brand") as string
     const model = formData.get("model") as string
     const condition = formData.get("condition") as "NUEVO" | "EXCELENTE" | "BUENO" | "USADO"
-    const image = formData.get("image") as string
+    // Handle multiple images
+    const images = formData.getAll("images") as string[];
 
     // Note: We are NOT updating slug to preserve SEO URLs if name changes, 
     // unless explicitly requested, but usually safest to keep slug.
@@ -91,7 +93,7 @@ export async function updateProduct(id: string, formData: FormData) {
             brand,
             model,
             condition,
-            images: image ? [image] : undefined // simple replace logic
+            images: images // Replace all images with current list
         }
     })
 

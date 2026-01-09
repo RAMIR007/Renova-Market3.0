@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
 import SearchBar from '@/components/common/SearchBar';
+import InstallPrompt from '@/components/common/InstallPrompt';
 
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -45,6 +46,7 @@ export function Navbar() {
                 : 'bg-transparent'
                 }`}
         >
+            <InstallPrompt />
             <SearchBar isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
 
             <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${isSearchOpen ? 'invisible' : ''}`}>

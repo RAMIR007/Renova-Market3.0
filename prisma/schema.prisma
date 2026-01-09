@@ -14,6 +14,7 @@ model User {
   role         Role      @default(USER)
   whatsapp     String?   // For Sellers
   referralCode String?   @unique // For Sellers
+  marketingOptIn Boolean @default(true)
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   orders       Order[]

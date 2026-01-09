@@ -1,22 +1,55 @@
 "use client";
 
 import { CldUploadWidget } from 'next-cloudinary';
-import { ImagePlus, Trash } from 'lucide-react';
+import { ImagePlus, Trash, RotateCw } from 'lucide-react';
 import Image from 'next/image';
 
 interface ImageUploadProps {
     value: string[];
     onChange: (value: string) => void;
     onRemove: (value: string) => void;
+    onImageUpdate?: (oldUrl: string, newUrl: string) => void;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({
     value,
     onChange,
-    onRemove
+    onRemove,
+    onImageUpdate
 }) => {
     const onUpload = (result: any) => {
         onChange(result.info.secure_url);
+    };
+
+    const handleRotate = (url: string) => {
+        let newUrl = url;
+        if (url.includes('/a_90/')) {
+            newUrl = url.replace('/a_90/', '/a_180/');
+        } else if (url.includes('/a_180/')) {
+            newUrl = url.replace('/a_180/', '/a_270/');
+        } else if (url.includes('/a_270/')) {
+            newUrl = url.replace('/a_270/', '/');
+        } else {
+            newUrl = url.replace('/upload/', '/upload/a_90/');
+        }
+
+        // Remove the old URL and add the new one
+        // Note: This matches the parent's generic onChange which often just setUrl(newVal)
+        // But the parent is using value array?
+        // Let's check the props usage.
+        // value is string[] in interface, but onChange takes (value: string).
+        // createProduct form usage: 
+        //   onChange={(url) => setImageUrl(url)}
+        //   value={imageUrl ? [imageUrl] : []}
+        // It seems typically meant for single image although array prop.
+        // If it's single image logic in parent, calling onChange with new URL works.
+
+        if (onImageUpdate) {
+            onImageUpdate(url, newUrl);
+        } else {
+            // Fallback for single image mode or if prop not provided
+            onChange(newUrl);
+        }
     };
 
     // Debugging
@@ -37,8 +70,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             <div className="mb-4 flex items-center gap-4 flex-wrap">
                 {value.map((url) => (
                     <div key={url} className="relative w-[200px] h-[200px] rounded-md overflow-hidden border border-gray-200">
-                        <div className="z-10 absolute top-2 right-2">
-                            <button type="button" onClick={() => onRemove(url)} className="bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition shadow-sm">
+                        <div className="z-10 absolute top-2 right-2 flex gap-2">
+                            <button type="button" onClick={() => handleRotate(url)} className="bg-blue-500 text-white p-1.5 rounded-full hover:bg-blue-600 transition shadow-sm" title="Rotar 90°">
+                                <RotateCw className="h-4 w-4" />
+                            </button>
+                            <button type="button" onClick={() => onRemove(url)} className="bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition shadow-sm" title="Eliminar">
                                 <Trash className="h-4 w-4" />
                             </button>
                         </div>
