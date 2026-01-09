@@ -70,3 +70,32 @@ export async function getFavorites() {
         return [];
     }
 }
+
+export async function getFavoriteProducts() {
+    const cookieStore = await cookies();
+    const sessionToken = cookieStore.get('session_token')?.value;
+
+    if (!sessionToken) return [];
+
+    try {
+        const session = JSON.parse(sessionToken);
+        const userId = session.id;
+
+        const favorites = await prisma.favorite.findMany({
+            where: { userId },
+            include: {
+                product: {
+                    include: {
+                        category: true // needed for card
+                    }
+                }
+            },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        return favorites.map(f => f.product);
+    } catch (error) {
+        console.error("Error fetching favorite products:", error);
+        return [];
+    }
+}

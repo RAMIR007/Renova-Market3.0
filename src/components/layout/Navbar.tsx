@@ -35,6 +35,7 @@ export function Navbar() {
         { name: 'Inicio', href: '/' },
         { name: 'Tienda', href: '/shop' },
         { name: 'Liquidación', href: '/shop?sort=price_asc', highlight: true },
+        { name: 'Deseos ❤️', href: '/wishlist' }, // Added Wishlist
         { name: 'Pedidos', href: '/orders' },
         { name: 'Nosotros', href: '/about' },
     ];
