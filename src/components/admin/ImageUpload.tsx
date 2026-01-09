@@ -23,14 +23,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
     const handleRotate = (url: string) => {
         let newUrl = url;
-        if (url.includes('/a_90/')) {
-            newUrl = url.replace('/a_90/', '/a_180/');
-        } else if (url.includes('/a_180/')) {
-            newUrl = url.replace('/a_180/', '/a_270/');
-        } else if (url.includes('/a_270/')) {
-            newUrl = url.replace('/a_270/', '/');
+        const angleRegex = /\/a_(\d+)\//;
+        const match = url.match(angleRegex);
+
+        if (match) {
+            const currentAngle = parseInt(match[1]);
+            const newAngle = (currentAngle + 90) % 360;
+            if (newAngle === 0) {
+                newUrl = url.replace(angleRegex, '/');
+            } else {
+                newUrl = url.replace(angleRegex, `/a_${newAngle}/`);
+            }
         } else {
-            newUrl = url.replace('/upload/', '/upload/a_90/');
+            // Insert after /upload/
+            newUrl = url.replace(/\/upload\//, '/upload/a_90/');
         }
 
         // Remove the old URL and add the new one

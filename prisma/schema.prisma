@@ -15,6 +15,9 @@ model User {
   whatsapp     String?   // For Sellers
   referralCode String?   @unique // For Sellers
   marketingOptIn Boolean @default(true)
+  reservationBanUntil DateTime?
+  failedReservationsCount Int @default(0)
+  reservations Reservation[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   orders       Order[]
@@ -84,12 +87,26 @@ model Product {
   condition      Condition?  @default(EXCELENTE)
   
   technicalSpecs Json?
+  reservations   Reservation[]
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   orderItems     OrderItem[]
   
   sellerId       String?
   seller         User?       @relation("SellerProducts", fields: [sellerId], references: [id])
+}
+
+model Reservation {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  productId String
+  product   Product  @relation(fields: [productId], references: [id])
+  quantity  Int      @default(1)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([expiresAt])
 }
 
 enum Condition {

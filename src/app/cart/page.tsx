@@ -148,7 +148,22 @@ export default function CartPage() {
 
                         {!isCheckingOut ? (
                             <button
-                                onClick={() => setIsCheckingOut(true)}
+                                onClick={async () => {
+                                    // Try to reserve all items
+                                    const { createReservation } = await import('@/actions/reservations');
+
+                                    for (const item of items) {
+                                        const res = await createReservation(item.id);
+                                        if (res.error) {
+                                            alert(`Error reservando ${item.name}: ${res.error}. Inicia sesión si no lo has hecho.`);
+                                            return;
+                                        }
+                                    }
+
+                                    setIsCheckingOut(true);
+                                    // Start 15 min timer locally for UI effect?
+                                    // For now just show the form.
+                                }}
                                 className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-all shadow-lg flex items-center justify-center gap-2"
                             >
                                 Proceder al Pago <ArrowRight size={20} />
