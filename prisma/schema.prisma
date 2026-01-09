@@ -9,6 +9,7 @@ datasource db {
 model User {
   id           String    @id @default(uuid())
   email        String    @unique
+  favorites    Favorite[]
   password     String
   name         String?
   role         Role      @default(USER)
@@ -95,6 +96,7 @@ model Product {
   
   sellerId       String?
   seller         User?       @relation("SellerProducts", fields: [sellerId], references: [id])
+  favorites      Favorite[]
 }
 
 model Reservation {

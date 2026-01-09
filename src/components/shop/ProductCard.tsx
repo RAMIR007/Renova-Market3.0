@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ShoppingBag } from "lucide-react";
 import { AddToCartButton } from "./AddToCartButton";
+import FavoriteButton from "./FavoriteButton";
 
 interface ProductCardProps {
     product: {
@@ -43,7 +44,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                 )}
 
                 {/* Badges */}
-                <div className="absolute top-3 left-3 flex flex-col gap-2">
+                <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
                     {isOutOfStock && (
                         <span className="bg-black/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                             Agotado
@@ -54,6 +55,11 @@ export default function ProductCard({ product }: ProductCardProps) {
                             -{discount}%
                         </span>
                     )}
+                </div>
+
+                {/* Favorite Button */}
+                <div className="absolute top-3 right-3 z-10">
+                    <FavoriteButton productId={product.id} initialIsFavorite={false} />
                 </div>
 
                 {/* Quick Action (Desktop) */}
