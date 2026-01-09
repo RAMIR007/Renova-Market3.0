@@ -1,10 +1,11 @@
-'use client';
 
 import { MessageCircle } from 'lucide-react';
 import { getSystemSettings } from '@/actions/settings';
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
 export default function WhatsAppButton() {
+    const pathname = usePathname();
     const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
 
     useEffect(() => {
@@ -14,6 +15,10 @@ export default function WhatsAppButton() {
             }
         });
     }, []);
+
+    if (pathname?.startsWith('/admin')) {
+        return null;
+    }
 
     if (!phoneNumber) return null;
 

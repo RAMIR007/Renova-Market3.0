@@ -15,6 +15,8 @@ export async function createProduct(formData: FormData) {
     const stock = parseInt(formData.get("stock") as string, 10)
     const size = formData.get("size") as string
     const color = formData.get("color") as string
+    const brand = formData.get("brand") as string
+    const model = formData.get("model") as string
     const condition = formData.get("condition") as "NUEVO" | "EXCELENTE" | "BUENO" | "USADO"
     const image = formData.get("image") as string // In a real app we'd handle file upload here
 
@@ -36,6 +38,8 @@ export async function createProduct(formData: FormData) {
             categoryId,
             size,
             color,
+            brand,
+            model,
             condition,
             cost,
             sellerProfit,
@@ -59,6 +63,8 @@ export async function updateProduct(id: string, formData: FormData) {
     const stock = parseInt(formData.get("stock") as string, 10)
     const size = formData.get("size") as string
     const color = formData.get("color") as string
+    const brand = formData.get("brand") as string
+    const model = formData.get("model") as string
     const condition = formData.get("condition") as "NUEVO" | "EXCELENTE" | "BUENO" | "USADO"
     const image = formData.get("image") as string
 
@@ -82,6 +88,8 @@ export async function updateProduct(id: string, formData: FormData) {
             categoryId,
             size,
             color,
+            brand,
+            model,
             condition,
             images: image ? [image] : undefined // simple replace logic
         }

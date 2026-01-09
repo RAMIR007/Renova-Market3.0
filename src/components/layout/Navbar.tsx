@@ -6,9 +6,12 @@ import { ShoppingBag, Menu, X, Search } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
+import SearchBar from '@/components/common/SearchBar';
+
 export function Navbar() {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
     const pathname = usePathname();
     const { cartCount } = useCart();
 
@@ -24,6 +27,7 @@ export function Navbar() {
     // Close mobile menu on route change
     useEffect(() => {
         setIsMobileMenuOpen(false);
+        setIsSearchOpen(false);
     }, [pathname]);
 
     const navLinks = [
@@ -41,7 +45,9 @@ export function Navbar() {
                 : 'bg-transparent'
                 }`}
         >
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <SearchBar isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+
+            <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${isSearchOpen ? 'invisible' : ''}`}>
                 <div className="flex items-center justify-between h-16 md:h-20">
 
                     {/* Logo */}
@@ -69,7 +75,10 @@ export function Navbar() {
 
                     {/* Icons */}
                     <div className="flex items-center space-x-4">
-                        <button className={`p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-gray-700' : 'text-gray-700 md:text-white'}`}>
+                        <button
+                            onClick={() => setIsSearchOpen(true)}
+                            className={`p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-gray-700' : 'text-gray-700 md:text-white'}`}
+                        >
                             <Search className="w-5 h-5" />
                         </button>
                         <Link href="/cart" className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-gray-700' : 'text-gray-700 md:text-white'}`}>

@@ -12,15 +12,26 @@ export default async function ShopPage({ searchParams }: Props) {
     const params = await searchParams;
     const sort = typeof params.sort === 'string' ? params.sort : undefined;
 
+    const query = typeof params.q === 'string' ? params.q : undefined;
+
     // Build orderBy clause
     let orderBy: any = { createdAt: 'desc' };
     if (sort === 'price_asc') orderBy = { price: 'asc' };
     if (sort === 'price_desc') orderBy = { price: 'desc' };
 
+    const where: any = {
+        stock: { gt: 0 } // Default to showing available items
+    };
+
+    if (query) {
+        where.OR = [
+            { name: { contains: query, mode: 'insensitive' } },
+            { description: { contains: query, mode: 'insensitive' } }
+        ];
+    }
+
     const products = await prisma.product.findMany({
-        where: {
-            stock: { gt: 0 } // Default to showing available items
-        },
+        where,
         orderBy,
         include: {
             category: true
@@ -32,8 +43,12 @@ export default async function ShopPage({ searchParams }: Props) {
             <div className="max-w-7xl mx-auto">
                 <div className="flex flex-col md:flex-row justify-between items-end mb-8 gap-4">
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tienda Completa</h1>
-                        <p className="text-gray-500 mt-2">Explora todas nuestras piezas únicas.</p>
+                        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                            {query ? `Busqueda: "${query}"` : 'Tienda Completa'}
+                        </h1>
+                        <p className="text-gray-500 mt-2">
+                            {query ? `Resultados para su búsqueda` : 'Explora todas nuestras piezas únicas.'}
+                        </p>
                     </div>
 
                     <div className="flex gap-2 text-sm">

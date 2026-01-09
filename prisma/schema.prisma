@@ -78,6 +78,8 @@ model Product {
   // Fashion specific fields (Step 2)
   size           String?     // e.g. "M", "42", "Única"
   color          String?     // e.g. "Rojo", "Azul Marino"
+  brand          String?     // e.g. "Zara", "H&M"
+  model          String?     // e.g. "Slim Fit", "Vintage 90s"
   condition      Condition?  @default(EXCELENTE)
   
   technicalSpecs Json?

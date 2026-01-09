@@ -245,6 +245,7 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
                             />
                         </div>
 
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Color</label>
                             <input
@@ -254,6 +255,27 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
                                 placeholder="Rojo, Estampado..."
                             />
                         </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Marca <span className="text-gray-400 font-normal">(Opcional)</span></label>
+                            <input
+                                type="text"
+                                name="brand"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
+                                placeholder="Zara, H&M, Shein..."
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Modelo <span className="text-gray-400 font-normal">(Opcional)</span></label>
+                            <input
+                                type="text"
+                                name="model"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
+                                placeholder="Slim Fit, Vintage..."
+                            />
+                        </div>
+
                         <div>
                             <label className="block text-sm font-medium text-gray-700 mb-2">Stock</label>
                             <input
