@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
+import ShareButton from "@/components/shop/ShareButton";
 
 export const revalidate = 3600; // ISR: Revalidate every hour
 export const dynamicParams = true; // Allow generating new pages on demand
@@ -127,10 +128,16 @@ export default async function ProductPage({ params }: Props) {
                             <p>{product.description}</p>
                         </div>
 
-                        <AddToCartButton product={{
-                            ...product,
-                            price: Number(product.price)
-                        }} />
+                        <div className="flex flex-col gap-3">
+                            <AddToCartButton product={{
+                                ...product,
+                                price: Number(product.price)
+                            }} />
+                            <ShareButton
+                                title={`Mira este increíble hallazgo en Renova: ${product.name}`}
+                                text={`He encontrado este ${product.name} genial. ¡Es pieza única!`}
+                            />
+                        </div>
 
                         <p className="text-xs text-center text-gray-500 mt-4">
                             Envío disponible a toda Cuba • Garantía de devolución
