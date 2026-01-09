@@ -2,7 +2,7 @@
 
 import { updateProduct } from "@/actions/products";
 import Link from "next/link";
-import { ArrowLeft, Save, Trash2 } from "lucide-react";
+import { ArrowLeft, Save } from "lucide-react";
 import { useState } from "react";
 import ImageUpload from "@/components/admin/ImageUpload";
 
@@ -14,13 +14,13 @@ interface Category {
 interface Product {
     id: string;
     name: string;
-    description: string;
-    price: number | string;
-    compareAtPrice: number | string | null;
+    description: string | null;
+    price: number | object; // Prisma decimal might be object-like on client boundary if not careful, but usually string/number
+    compareAtPrice: number | object | null;
     stock: number;
     size: string | null;
     color: string | null;
-    condition: string | null;
+    condition: "NUEVO" | "EXCELENTE" | "BUENO" | "USADO" | null; // Match Prisma enum
     categoryId: string;
     images: string[];
 }
@@ -31,8 +31,8 @@ interface EditProductFormProps {
 }
 
 export default function EditProductForm({ product, categories }: EditProductFormProps) {
-    // Initialize with existing product image
-    const [imageUrl, setImageUrl] = useState(product.images[0] || "");
+    // Initialize with existing product images
+    const [images, setImages] = useState<string[]>(product.images || []);
     const updateWithId = updateProduct.bind(null, product.id);
 
     return (
@@ -68,8 +68,7 @@ export default function EditProductForm({ product, categories }: EditProductForm
                             <textarea
                                 name="description"
                                 rows={4}
-                                required
-                                defaultValue={product.description}
+                                defaultValue={product.description || ""}
                                 className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base"
                             />
                         </div>
@@ -170,11 +169,19 @@ export default function EditProductForm({ product, categories }: EditProductForm
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">Imágenes del Producto</label>
                         <ImageUpload
-                            value={imageUrl ? [imageUrl] : []}
-                            onChange={(url) => setImageUrl(url)}
-                            onRemove={() => setImageUrl("")}
+                            value={images}
+                            onChange={(url) => setImages([...images, url])}
+                            onRemove={(url) => setImages(images.filter((current) => current !== url))}
+                            onImageUpdate={(oldUrl, newUrl) => {
+                                setImages(images.map(img => img === oldUrl ? newUrl : img));
+                            }}
                         />
-                        <input type="hidden" name="image" value={imageUrl} />
+                        {/* Hidden inputs to ensure ALL images are submitted */}
+                        {images.map((url, index) => (
+                            <input key={index} type="hidden" name="images" value={url} />
+                        ))}
+                        {/* Fallback to ensure 'images' is defined even if empty (though getAll handles empty fine) */}
+                        {images.length === 0 && <input type="hidden" name="images" value="" disabled />}
                     </div>
                 </div>
 
