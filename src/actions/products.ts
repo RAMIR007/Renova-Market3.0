@@ -8,7 +8,7 @@ import { requireAdmin } from "@/lib/auth-check"
 export async function createProduct(formData: FormData) {
     await requireAdmin();
     const name = formData.get("name") as string
-    const description = formData.get("description") as string
+    const description = formData.get("description") as string | null
     const price = parseFloat(formData.get("price") as string)
     const compareAtPrice = formData.get("compareAtPrice") ? parseFloat(formData.get("compareAtPrice") as string) : null
     const categoryId = formData.get("categoryId") as string
@@ -56,7 +56,7 @@ export async function createProduct(formData: FormData) {
 export async function updateProduct(id: string, formData: FormData) {
     await requireAdmin();
     const name = formData.get("name") as string
-    const description = formData.get("description") as string
+    const description = formData.get("description") as string | null
     const price = parseFloat(formData.get("price") as string)
     const compareAtPrice = formData.get("compareAtPrice") ? parseFloat(formData.get("compareAtPrice") as string) : null
     const categoryId = formData.get("categoryId") as string

@@ -93,11 +93,10 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
                         </div>
 
                         <div className="col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Descripción <span className="text-gray-400 font-normal">(Opcional)</span></label>
                             <textarea
                                 name="description"
                                 rows={4}
-                                required
                                 className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base"
                                 placeholder="Detalles sobre el material, estado, medidas..."
                             />
