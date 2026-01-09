@@ -18,6 +18,7 @@ model User {
   reservationBanUntil DateTime?
   failedReservationsCount Int @default(0)
   reservations Reservation[]
+  auditLogs    AuditLog[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   orders       Order[]
