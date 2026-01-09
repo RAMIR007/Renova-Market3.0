@@ -144,7 +144,52 @@ export default async function ProductPage({ params }: Props) {
                         </p>
                     </div>
                 </div>
+
+                {/* Related Products */}
+                <div className="mt-20 border-t border-gray-100 dark:border-zinc-800 pt-10">
+                    <h2 className="text-2xl font-bold mb-6">Completa el Look</h2>
+                    <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
+                </div>
             </div>
+        </div>
+    );
+}
+
+// Component to fetch and display related products
+async function RelatedProducts({ categoryId, currentProductId }: { categoryId: string, currentProductId: string }) {
+    const related = await prisma.product.findMany({
+        where: {
+            categoryId,
+            id: { not: currentProductId },
+            stock: { gt: 0 }
+        },
+        take: 4,
+        include: { category: true }
+    });
+
+    if (related.length === 0) return null;
+
+    return (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {related.map(p => (
+                <div key={p.id} className="h-full">
+                    {/* @ts-ignore */}
+                    <Link href={`/product/${p.slug}`} className="group block h-full">
+                        <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-[4/5] mb-3">
+                            {p.images[0] && (
+                                <Image
+                                    src={p.images[0]}
+                                    alt={p.name}
+                                    fill
+                                    className="object-cover transition-transform group-hover:scale-105"
+                                />
+                            )}
+                        </div>
+                        <h3 className="font-medium text-sm text-gray-900 line-clamp-1">{p.name}</h3>
+                        <p className="font-bold text-sm text-gray-900">${Number(p.price).toFixed(2)}</p>
+                    </Link>
+                </div>
+            ))}
         </div>
     );
 }
