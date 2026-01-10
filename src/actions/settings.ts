@@ -29,6 +29,15 @@ export async function updateSystemSettings(formData: FormData) {
             });
         }
 
+        const deliveryPrice = formData.get('deliveryPricePerKm') as string;
+        if (deliveryPrice) {
+            await prisma.systemSetting.upsert({
+                where: { key: 'DELIVERY_PRICE_PER_KM' },
+                update: { value: deliveryPrice },
+                create: { key: 'DELIVERY_PRICE_PER_KM', value: deliveryPrice }
+            });
+        }
+
         revalidatePath('/admin/settings');
         revalidatePath('/'); // Revalidate home for the link
         return { success: true };

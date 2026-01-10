@@ -4,10 +4,11 @@ import { useCart } from '@/context/CartContext';
 import { Minus, Plus, Trash2, ArrowRight, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { createOrder } from '@/actions/checkout';
 import { getSellerPhoneByCode } from '@/actions/referral';
 import { getSystemSettings } from '@/actions/settings';
+import { MUNICIPALITY_DISTANCES, DEFAULT_DISTANCE } from '@/lib/delivery-zones';
 // import { loadStripe } from '@stripe/stripe-js';
 
 // Placeholder for Stripe (not fully implemented yet, focusing on cash first as per request)
@@ -33,6 +34,30 @@ export default function CartPage() {
     // To simplify: I'll keep email field but maybe optional or auto-fill? 
     // Wait, createOrder SCHEME requires email. I will keep the field.
 
+    const [deliveryCost, setDeliveryCost] = useState(0);
+    const [pricePerKm, setPricePerKm] = useState(100); // Default
+
+    // Fetch delivery price setting
+    useEffect(() => {
+        getSystemSettings().then(settings => {
+            if (settings['DELIVERY_PRICE_PER_KM']) {
+                setPricePerKm(Number(settings['DELIVERY_PRICE_PER_KM']));
+            }
+        });
+    }, []);
+
+    // Recalculate delivery cost when city changes
+    useEffect(() => {
+        if (!formData.city || formData.city === 'La Habana' || formData.city === 'Otro') {
+            setDeliveryCost(0); // If generic or unknown, maybe 0 or warn? Let's say 0 (negotiable fallback)
+            return;
+        }
+
+        const distance = MUNICIPALITY_DISTANCES[formData.city] || DEFAULT_DISTANCE;
+        setDeliveryCost(distance * pricePerKm);
+
+    }, [formData.city, pricePerKm]);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleWhatsAppCheckout = async (e: React.FormEvent) => {
@@ -40,6 +65,11 @@ export default function CartPage() {
         setIsSubmitting(true);
 
         try {
+            // Include Delivery in Total logic? 
+            // Usually order total is products. Delivery is separate line item.
+            // But for the total message we should sum it.
+            const finalTotal = cartTotal + deliveryCost;
+
             // 1. Create Order in DB (Guest mode)
             // We use a dummy email if user didn't provide one? No, let's ask for it or phone.
             // The User requested "fill a form... data to send delivery".
@@ -54,7 +84,12 @@ export default function CartPage() {
                     quantity: item.quantity,
                     price: item.price
                 })),
-                total: cartTotal,
+                total: cartTotal, // Use total including delivery? Or just products? 
+                // Let's use Product Total for DB to be consistent with Item Sum, 
+                // OR save shipping separately? 
+                // DB schema doesn't have shippingCost. 
+                // I will save the RAW product total in DB for now to avoid mismatch with item sum check.
+                // And handle the "Total to Pay" in the WhatsApp message.
             });
 
             if (result.success && result.orderId) {
@@ -70,12 +105,12 @@ export default function CartPage() {
                 message += `*Teléfono:* ${formData.phone}%0A`;
                 message += `*Dirección:* ${formData.address}, ${formData.city}%0A%0A`;
                 message += `*Pedido:*%0A${itemsList}%0A%0A`;
-                message += `*Total Productos:* $${cartTotal.toFixed(2)}%0A`;
+                message += `*Subtotal Productos:* $${cartTotal.toFixed(2)}%0A`;
+                message += `*Costo Envío (~${MUNICIPALITY_DISTANCES[formData.city] || '?'}km):* $${deliveryCost.toFixed(2)}%0A`;
+                message += `*TOTAL A PAGAR:* $${finalTotal.toFixed(2)}%0A%0A`;
 
                 if (cartTotal > 30000) {
-                    message += `_Nota: Compra mayor a $30,000. Solicito negociar mensajería._%0A`;
-                } else {
-                    message += `_Mensajería a acordar._%0A`;
+                    message += `_Nota: Compra > $30,000. Precio de envío sujeto a descuento._%0A`;
                 }
 
                 // Phone number logic (handled by referral or system default)
