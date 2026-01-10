@@ -116,15 +116,19 @@ export default function CartPage() {
                 const orderIdShort = result.orderId.slice(0, 8);
                 const itemsList = items.map(i => `• ${i.name} (x${i.quantity})`).join('%0A');
 
+                // Get Base URL correctly (window.location.origin is fine in client)
+                const voucherLink = `${window.location.origin}/voucher/${result.orderId}`;
+
                 let message = `*¡Nuevo Pedido! (#${orderIdShort})*%0A%0A`;
                 message += `*Cliente:* ${formData.name}%0A`;
                 message += `*Teléfono:* ${formData.phone}%0A`;
                 message += `*Dirección:* ${formData.address}, ${formData.city}%0A%0A`;
                 message += `*Pedido:*%0A${itemsList}%0A%0A`;
                 message += `*Total Productos:* $${cartTotal.toFixed(2)}%0A`;
-                // message += `*Costo Envío:* $${deliveryCost.toFixed(2)}%0A`;
                 message += `*Mensajería:* A coordinar%0A`;
                 message += `*TOTAL A PAGAR:* $${finalTotal.toFixed(2)}%0A%0A`;
+
+                message += `📄 *VER VALE DE ENTREGA (FOTO):*%0A${voucherLink}%0A%0A`;
 
                 if (negotiationThreshold !== null && cartTotal > negotiationThreshold) {
                     message += `_Nota: Compra > $${negotiationThreshold}. Precio de envío sujeto a descuento._%0A`;

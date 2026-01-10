@@ -29,6 +29,25 @@ export async function getOrdersByEmail(email: string) {
         return { success: true, orders: user.orders };
     } catch (error) {
         console.error("Error fetching orders:", error);
-        return { success: false, error: "Error al buscar las órdenes." };
+    }
+}
+
+
+export async function getOrderById(orderId: string) {
+    try {
+        const order = await prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                items: {
+                    include: {
+                        product: true
+                    }
+                }
+            }
+        });
+        return order;
+    } catch (error) {
+        console.error("Error fetching order:", error);
+        return null;
     }
 }
