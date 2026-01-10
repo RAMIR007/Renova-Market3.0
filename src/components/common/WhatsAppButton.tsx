@@ -5,17 +5,24 @@ import { getSystemSettings } from '@/actions/settings';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
-export default function WhatsAppButton() {
+export default function WhatsAppButton({ initialPhoneNumber }: { initialPhoneNumber?: string | null }) {
     const pathname = usePathname();
-    const [phoneNumber, setPhoneNumber] = useState<string | null>(null);
+    const [phoneNumber, setPhoneNumber] = useState<string | null>(initialPhoneNumber || null);
 
     useEffect(() => {
-        getSystemSettings().then(settings => {
-            if (settings['STORE_WHATSAPP']) {
-                setPhoneNumber(settings['STORE_WHATSAPP']);
-            }
-        });
-    }, []);
+        // Only fetch if not provided or if we want to ensure latest system setting fallback
+        // But if we have a referral number (initialPhoneNumber), we should probably stick to it?
+        // Actually, if initialPhoneNumber is passed (triggered by ref cookie), use it.
+        // If NOT passed, fetch system default.
+
+        if (!initialPhoneNumber) {
+            getSystemSettings().then(settings => {
+                if (settings['STORE_WHATSAPP']) {
+                    setPhoneNumber(settings['STORE_WHATSAPP']);
+                }
+            });
+        }
+    }, [initialPhoneNumber]);
 
     if (pathname?.startsWith('/admin')) {
         return null;

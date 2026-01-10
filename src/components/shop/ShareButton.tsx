@@ -1,8 +1,9 @@
 'use client';
 
 import { Share2, Check } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { getCurrentUserReferralInfo } from "@/actions/referral";
 
 interface ShareButtonProps {
     title: string;
@@ -12,12 +13,34 @@ interface ShareButtonProps {
 
 export default function ShareButton({ title, text, url }: ShareButtonProps) {
     const [copied, setCopied] = useState(false);
+    const [shareUrl, setShareUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Fetch referral code on mount
+        getCurrentUserReferralInfo().then((info: any) => {
+            // Base URL
+            const baseUrl = url || window.location.href;
+            try {
+                const urlObj = new URL(baseUrl);
+
+                if (info && info.code) {
+                    urlObj.searchParams.set('ref', info.code);
+                }
+                setShareUrl(urlObj.toString());
+            } catch (e) {
+                // Invalid URL, fallback to raw
+                setShareUrl(baseUrl);
+            }
+        });
+    }, [url]);
 
     const handleShare = async () => {
+        const finalUrl = shareUrl || url || window.location.href;
+
         const shareData = {
             title,
             text,
-            url: url || window.location.href,
+            url: finalUrl,
         };
 
         if (navigator.share) {

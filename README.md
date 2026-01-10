@@ -9,13 +9,20 @@ Renova Market is a modern e-commerce platform designed for the second-hand fashi
 
 ### For Customers
 *   **Browsing & Search**: Advanced client-side search, filtering by categories, price, and condition.
+*   **Product Reservation System**: 
+    *   **15-Minute Lock**: Products are reserved for 15 minutes as soon as checkout begins to prevent race conditions.
+    *   **Anti-Abuse**: System temporarily bans users who repeatedly fail to complete reserved orders.
+*   **Wishlist (Lista de Deseos)**: ❤️ Users can save their favorite unique items to track them.
+*   **Social & Sharing**: 
+    *   **WhatsApp Integration**: "Send Order via WhatsApp" button for immediate confirmation and contact.
+    *   **Native Share**: Easily share product finds with friends via native device dialogs.
+*   **Smart Recommendations**: "Complete the Look" section showing related products.
 *   **PWA Support**: Installable as a native-like app on mobile and desktop.
 *   **User Accounts**: Secure registration and login.
-*   **Shopping Experience**: Seamless cart management and checkout process.
-*   **Responsive Design**: Fully optimized for mobile devices.
 
 ### For Administrators & Sellers
 *   **Comprehensive Dashboard**: Manage products, orders, and users.
+*   **Audit Log & History**: 🕒 Complete tracking of who changed what and when (Product Creations, Updates, Deletions) in `/admin/history`.
 *   **Advanced Product Management**: 
     *   Upload multiple images per product.
     *   **Image Editor**: Built-in tool to rotate images 90° directly in the browser.

@@ -24,11 +24,25 @@ export const metadata: Metadata = {
   description: "La mejor tienda de ropa de segunda mano en Cuba.",
 };
 
-export default function RootLayout({
+import { cookies } from "next/headers";
+import { getSellerPhoneByCode } from "@/actions/referral";
+import ReferralTracker from "@/components/common/ReferralTracker";
+
+// ... (Metadata export remains)
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const referralCode = cookieStore.get('referral_code')?.value;
+  let whatsappNumber = null;
+
+  if (referralCode) {
+    whatsappNumber = await getSellerPhoneByCode(referralCode);
+  }
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -36,11 +50,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <CartProvider>
+          <ReferralTracker />
           <Navbar />
           <main className="flex-grow">
             {children}
           </main>
-          <WhatsAppButton />
+          <WhatsAppButton initialPhoneNumber={whatsappNumber} />
           <Footer />
           <Toaster position="top-center" richColors />
         </CartProvider>

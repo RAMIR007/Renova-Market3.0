@@ -23,6 +23,7 @@ export default function CartPage() {
     });
     const [orderStatus, setOrderStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
     const [lastOrderId, setLastOrderId] = useState<string | null>(null);
+    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
 
     const handleCreateOrder = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -165,14 +166,17 @@ export default function CartPage() {
                                     for (const item of items) {
                                         const res = await createReservation(item.id);
                                         if (res.error) {
-                                            alert(`Error reservando ${item.name}: ${res.error}. Inicia sesión si no lo has hecho.`);
+                                            if (res.error.toLowerCase().includes('iniciar sesión') || res.error.toLowerCase().includes('debes iniciar sesión')) {
+                                                setShowLoginPrompt(true);
+                                                return;
+                                            }
+
+                                            alert(`Lo sentimos, no pudimos reservar ${item.name}: ${res.error}`);
                                             return;
                                         }
                                     }
 
                                     setIsCheckingOut(true);
-                                    // Start 15 min timer locally for UI effect?
-                                    // For now just show the form.
                                 }}
                                 className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-all shadow-lg flex items-center justify-center gap-2"
                             >
@@ -250,6 +254,38 @@ export default function CartPage() {
                     </div>
                 </div>
             </div>
+            {/* Login Prompt Modal */}
+            {showLoginPrompt && (
+                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
+                    <div className="bg-white dark:bg-zinc-800 p-8 rounded-2xl max-w-sm w-full shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
+                        <div className="text-center mb-6">
+                            <div className="w-16 h-16 bg-gray-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                </svg>
+                            </div>
+                            <h3 className="text-xl font-bold mb-2">Inicia Sesión</h3>
+                            <p className="text-gray-500 dark:text-gray-400">
+                                Para asegurar tu reserva y completar el pedido, necesitamos que inicies sesión.
+                            </p>
+                        </div>
+                        <div className="space-y-3">
+                            <Link
+                                href="/login"
+                                className="block w-full bg-black text-white text-center py-3 rounded-xl font-bold hover:bg-gray-800 transition-colors"
+                            >
+                                Iniciar Sesión Ahora
+                            </Link>
+                            <button
+                                onClick={() => setShowLoginPrompt(false)}
+                                className="block w-full py-3 rounded-xl font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

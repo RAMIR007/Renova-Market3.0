@@ -60,25 +60,22 @@ export async function changePassword(formData: FormData) {
     try {
         let userId = '';
 
-        // Handle Hardcoded Admin vs DB User
+        // Handle Token
         if (token === 'admin_token_secure') {
-            // Hardcoded admin cannot verify change via DB unless we insert the hardcoded admin INTO the DB first.
-            // For now, let's block hardcoded admin from changing pass via UI, or prompt them to migrate.
-            // Better approach: Find the admin by email 'admin@renova.cu' and update if exists.
-            const adminUser = await prisma.user.findUnique({ where: { email: 'admin@renova.cu' } });
-            if (adminUser) {
-                userId = adminUser.id;
-            } else {
-                return { success: false, error: "El usuario Administrador inicial no puede cambiar su contraseña aquí. Crea un usuario admin real." };
-            }
+            // If user somehow still has this old token, tell them to relogin
+            return { success: false, error: "Sesión antigua. Por favor cierra sesión y vuelve a entrar." };
         } else {
             const session = JSON.parse(token);
             userId = session.id;
         }
 
+        // Hash the new password
+        const bcrypt = (await import("bcryptjs")).default;
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+
         await prisma.user.update({
             where: { id: userId },
-            data: { password: newPassword } // TODO: Hash this in production!
+            data: { password: hashedPassword }
         });
 
         return { success: true };
