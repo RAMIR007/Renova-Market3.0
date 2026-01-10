@@ -49,26 +49,6 @@ export default function AdminSettingsPage() {
                         </p>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-100">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Precio de Entrega por Km (CUP)
-                        </label>
-                        <div className="flex gap-2">
-                            <span className="inline-flex items-center px-3 rounded-l-lg border border-r-0 border-gray-300 bg-gray-50 text-gray-500">
-                                $
-                            </span>
-                            <input
-                                type="number"
-                                name="deliveryPricePerKm"
-                                placeholder="100"
-                                className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-gray-300 focus:ring-black focus:border-black sm:text-sm"
-                            />
-                        </div>
-                        <p className="text-xs text-gray-500 mt-1">
-                            Este valor se usará para calcular el costo de envío basado en el municipio.
-                        </p>
-                    </div>
-
                     <button
                         type="submit"
                         disabled={loading}

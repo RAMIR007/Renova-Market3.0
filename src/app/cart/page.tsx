@@ -34,10 +34,11 @@ export default function CartPage() {
     // To simplify: I'll keep email field but maybe optional or auto-fill? 
     // Wait, createOrder SCHEME requires email. I will keep the field.
 
-    const [deliveryCost, setDeliveryCost] = useState(0);
-    const [pricePerKm, setPricePerKm] = useState(100); // Default
+    // const [deliveryCost, setDeliveryCost] = useState(0); // Disabled for now
+    // const [pricePerKm, setPricePerKm] = useState(100);
 
     // Fetch delivery price setting
+    /*
     useEffect(() => {
         getSystemSettings().then(settings => {
             if (settings['DELIVERY_PRICE_PER_KM']) {
@@ -45,18 +46,21 @@ export default function CartPage() {
             }
         });
     }, []);
+    */
 
+    /*
     // Recalculate delivery cost when city changes
     useEffect(() => {
         if (!formData.city || formData.city === 'La Habana' || formData.city === 'Otro') {
-            setDeliveryCost(0); // If generic or unknown, maybe 0 or warn? Let's say 0 (negotiable fallback)
+            setDeliveryCost(0); 
             return;
         }
-
+        
         const distance = MUNICIPALITY_DISTANCES[formData.city] || DEFAULT_DISTANCE;
         setDeliveryCost(distance * pricePerKm);
 
     }, [formData.city, pricePerKm]);
+    */
 
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -68,7 +72,8 @@ export default function CartPage() {
             // Include Delivery in Total logic? 
             // Usually order total is products. Delivery is separate line item.
             // But for the total message we should sum it.
-            const finalTotal = cartTotal + deliveryCost;
+            // const finalTotal = cartTotal + deliveryCost;
+            const finalTotal = cartTotal; // Just products for now
 
             // 1. Create Order in DB (Guest mode)
             // We use a dummy email if user didn't provide one? No, let's ask for it or phone.
@@ -84,7 +89,7 @@ export default function CartPage() {
                     quantity: item.quantity,
                     price: item.price
                 })),
-                total: cartTotal, // Use total including delivery? Or just products? 
+                total: finalTotal, // Use total including delivery? Or just products? 
                 // Let's use Product Total for DB to be consistent with Item Sum, 
                 // OR save shipping separately? 
                 // DB schema doesn't have shippingCost. 
@@ -105,8 +110,9 @@ export default function CartPage() {
                 message += `*Teléfono:* ${formData.phone}%0A`;
                 message += `*Dirección:* ${formData.address}, ${formData.city}%0A%0A`;
                 message += `*Pedido:*%0A${itemsList}%0A%0A`;
-                message += `*Subtotal Productos:* $${cartTotal.toFixed(2)}%0A`;
-                message += `*Costo Envío (~${MUNICIPALITY_DISTANCES[formData.city] || '?'}km):* $${deliveryCost.toFixed(2)}%0A`;
+                message += `*Total Productos:* $${cartTotal.toFixed(2)}%0A`;
+                // message += `*Costo Envío:* $${deliveryCost.toFixed(2)}%0A`;
+                message += `*Mensajería:* A coordinar%0A`;
                 message += `*TOTAL A PAGAR:* $${finalTotal.toFixed(2)}%0A%0A`;
 
                 if (cartTotal > 30000) {
