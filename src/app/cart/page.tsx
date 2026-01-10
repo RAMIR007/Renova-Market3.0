@@ -20,6 +20,7 @@ export default function CartPage() {
     const [formData, setFormData] = useState({
         name: '',
         address: '',
+        neighborhood: '',
         city: 'La Habana',
         phone: '',
         email: 'pedido@whatsapp.temp', // Default stub if email is optional in this flow, but good to keep if possible. Let's ask user.
@@ -94,7 +95,7 @@ export default function CartPage() {
             const result = await createOrder({
                 email: formData.email || `guest-${Date.now()}@renova.cu`, // Fallback if we make it optional
                 name: formData.name,
-                address: `${formData.address}, ${formData.city}`,
+                address: `${formData.address}, ${formData.neighborhood}, ${formData.city}`,
                 items: items.map(item => ({
                     productId: item.id, // Fixed: item.id holds the product ID in CartContext
                     quantity: item.quantity,
@@ -122,7 +123,9 @@ export default function CartPage() {
                 let message = `*¡Nuevo Pedido! (#${orderIdShort})*%0A%0A`;
                 message += `*Cliente:* ${formData.name}%0A`;
                 message += `*Teléfono:* ${formData.phone}%0A`;
-                message += `*Dirección:* ${formData.address}, ${formData.city}%0A%0A`;
+                message += `*Dirección:* ${formData.address}%0A`;
+                message += `*Reparto:* ${formData.neighborhood}%0A`;
+                message += `*Municipio:* ${formData.city}%0A%0A`;
                 message += `*Pedido:*%0A${itemsList}%0A%0A`;
                 message += `*Total Productos:* $${cartTotal.toFixed(2)}%0A`;
                 message += `*Mensajería:* A coordinar%0A`;
@@ -283,15 +286,25 @@ export default function CartPage() {
                                         placeholder="Ej. 5xxxxxxx"
                                     />
                                 </div>
-                                <div>
                                     <label className="block text-sm font-medium mb-1">Dirección de Entrega</label>
                                     <input
                                         required
                                         type="text"
                                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
-                                        placeholder="Calle, Número, e/ Calles"
+                                        placeholder="Calle y Número (ej. Calle 23 #1234)"
                                         value={formData.address}
                                         onChange={e => setFormData({ ...formData, address: e.target.value })}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Reparto</label>
+                                    <input
+                                        required
+                                        type="text"
+                                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                        placeholder="Ej. Vedado, Alamar, Miramar"
+                                        value={formData.neighborhood}
+                                        onChange={e => setFormData({ ...formData, neighborhood: e.target.value })}
                                     />
                                 </div>
                                 <div>
@@ -302,52 +315,62 @@ export default function CartPage() {
                                         onChange={e => setFormData({ ...formData, city: e.target.value })}
                                     >
                                         <option value="">Seleccionar...</option>
-                                        <option>La Habana</option>
-                                        <option>Playa</option>
-                                        <option>Plaza</option>
+                                        <option>Arroyo Naranjo</option>
+                                        <option>Boyeros</option>
                                         <option>Centro Habana</option>
+                                        <option>Cerro</option>
+                                        <option>Cotorro</option>
+                                        <option>Diez de Octubre</option>
+                                        <option>Guanabacoa</option>
+                                        <option>Habana del Este</option>
                                         <option>Habana Vieja</option>
+                                        <option>La Lisa</option>
+                                        <option>Marianao</option>
+                                        <option>Playa</option>
+                                        <option>Plaza de la Revolución</option>
+                                        <option>Regla</option>
+                                        <option>San Miguel del Padrón</option>
                                         <option>Otro</option>
                                     </select>
                                 </div>
 
                                 {/* Hidden email field for compatibility if needed, or optional visible */}
-                                <div className="hidden">
-                                    <input
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    />
-                                </div>
+                        <div className="hidden">
+                            <input
+                                type="email"
+                                value={formData.email}
+                                onChange={e => setFormData({ ...formData, email: e.target.value })}
+                            />
+                        </div>
 
-                                <div className="pt-4 flex gap-3">
-                                    <button
-                                        type="button"
-                                        onClick={() => setIsFormVisible(false)}
-                                        className="px-4 py-3 rounded-xl border border-gray-300 font-medium hover:bg-white transition-colors"
-                                    >
-                                        Cancelar
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                        className="flex-1 bg-green-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg flex items-center justify-center gap-2 disabled:opacity-70"
-                                    >
-                                        {isSubmitting ? 'Procesando...' : (
-                                            <>
-                                                Enviar por WhatsApp <MessageCircle size={20} />
-                                            </>
-                                        )}
-                                    </button>
-                                </div>
-                                <p className="text-xs text-center text-gray-500 mt-2">
-                                    Al enviar, serás redirigido a WhatsApp para finalizar la entrega y el pago.
-                                </p>
-                            </form>
+                        <div className="pt-4 flex gap-3">
+                            <button
+                                type="button"
+                                onClick={() => setIsFormVisible(false)}
+                                className="px-4 py-3 rounded-xl border border-gray-300 font-medium hover:bg-white transition-colors"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="flex-1 bg-green-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg flex items-center justify-center gap-2 disabled:opacity-70"
+                            >
+                                {isSubmitting ? 'Procesando...' : (
+                                    <>
+                                        Enviar por WhatsApp <MessageCircle size={20} />
+                                    </>
+                                )}
+                            </button>
+                        </div>
+                        <p className="text-xs text-center text-gray-500 mt-2">
+                            Al enviar, serás redirigido a WhatsApp para finalizar la entrega y el pago.
+                        </p>
+                    </form>
                         )}
-                    </div>
                 </div>
             </div>
         </div>
+        </div >
     );
 }
