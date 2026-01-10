@@ -89,6 +89,7 @@ export default function NewOrderForm({ products }: { products: Product[] }) {
             })),
             name: customer.name,
             email: customer.email || "no-email@renova.store", // Fallback for manual orders if not provided
+            phone: customer.phone,
             address: customer.address || "Recogida en Tienda",
             total: calculateTotal()
         };
