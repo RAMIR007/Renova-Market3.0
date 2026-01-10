@@ -82,7 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
                         {product.category && (
                             <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{product.category.name}</p>
                         )}
-                        <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                        <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
                             {product.name}
                         </h3>
                     </div>
