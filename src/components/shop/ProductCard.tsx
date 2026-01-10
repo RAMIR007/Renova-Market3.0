@@ -15,8 +15,8 @@ interface ProductCardProps {
         category?: { name: string };
         stock: number;
         // New fields
-        size?: string;
-        condition?: string;
+        size?: string | null;
+        condition?: string | null;
     };
 }
 
