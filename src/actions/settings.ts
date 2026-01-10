@@ -29,6 +29,24 @@ export async function updateSystemSettings(formData: FormData) {
             });
         }
 
+        const negotiationThreshold = formData.get('negotiationThreshold') as string;
+        // If empty, we might want to delete it or set it to 0/empty to disable.
+        // For simplicity, let's treat empty string as disable/don't exist.
+        if (negotiationThreshold) {
+            await prisma.systemSetting.upsert({
+                where: { key: 'NEGOTIATION_THRESHOLD' },
+                update: { value: negotiationThreshold },
+                create: { key: 'NEGOTIATION_THRESHOLD', value: negotiationThreshold }
+            });
+        } else {
+            // Optional: Delete if cleared? Or just leave as is. 
+            // If user explicitly clears it, they might want to disable it.
+            // Let's safe delete if key exists.
+            try {
+                await prisma.systemSetting.delete({ where: { key: 'NEGOTIATION_THRESHOLD' } });
+            } catch (e) { }
+        }
+
         const deliveryPrice = formData.get('deliveryPricePerKm') as string;
         if (deliveryPrice) {
             await prisma.systemSetting.upsert({

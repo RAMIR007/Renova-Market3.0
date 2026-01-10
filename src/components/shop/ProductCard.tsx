@@ -9,11 +9,14 @@ interface ProductCardProps {
         id: string;
         name: string;
         slug: string;
-        price: number | string | any; // Handle Decimal
+        price: number | string | any;
         compareAtPrice?: number | string | any | null;
         images: string[];
         category?: { name: string };
         stock: number;
+        // New fields
+        size?: string;
+        condition?: string;
     };
 }
 
@@ -73,14 +76,32 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
 
             {/* Info */}
-            <div className="mt-4 space-y-1">
-                {product.category && (
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">{product.category.name}</p>
-                )}
-                <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
-                    {product.name}
-                </h3>
-                <div className="flex items-center gap-2">
+            <div className="mt-4 space-y-2">
+                <div className="flex justify-between items-start">
+                    <div>
+                        {product.category && (
+                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{product.category.name}</p>
+                        )}
+                        <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                            {product.name}
+                        </h3>
+                    </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2 text-xs text-gray-600">
+                    {product.size && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded border border-gray-200 bg-gray-50">
+                            Talla: {product.size}
+                        </span>
+                    )}
+                    {product.condition && (
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded border ${product.condition.toLowerCase() === 'nuevo' ? 'border-blue-100 bg-blue-50 text-blue-700' : 'border-amber-100 bg-amber-50 text-amber-700'}`}>
+                            {product.condition}
+                        </span>
+                    )}
+                </div>
+
+                <div className="flex items-center gap-2 pt-1">
                     <span className="font-bold text-gray-900">${price.toFixed(2)}</span>
                     {comparePrice && comparePrice > price && (
                         <span className="text-sm text-gray-400 line-through">${comparePrice.toFixed(2)}</span>

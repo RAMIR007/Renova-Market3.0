@@ -62,6 +62,17 @@ export default function CartPage() {
     }, [formData.city, pricePerKm]);
     */
 
+    const [negotiationThreshold, setNegotiationThreshold] = useState<number | null>(null);
+
+    // Fetch settings
+    useEffect(() => {
+        getSystemSettings().then(settings => {
+            if (settings['NEGOTIATION_THRESHOLD']) {
+                setNegotiationThreshold(Number(settings['NEGOTIATION_THRESHOLD']));
+            }
+        });
+    }, []);
+
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleWhatsAppCheckout = async (e: React.FormEvent) => {
@@ -115,8 +126,8 @@ export default function CartPage() {
                 message += `*Mensajería:* A coordinar%0A`;
                 message += `*TOTAL A PAGAR:* $${finalTotal.toFixed(2)}%0A%0A`;
 
-                if (cartTotal > 30000) {
-                    message += `_Nota: Compra > $30,000. Precio de envío sujeto a descuento._%0A`;
+                if (negotiationThreshold !== null && cartTotal > negotiationThreshold) {
+                    message += `_Nota: Compra > $${negotiationThreshold}. Precio de envío sujeto a descuento._%0A`;
                 }
 
                 // Phone number logic (handled by referral or system default)
