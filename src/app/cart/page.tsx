@@ -116,37 +116,31 @@ export default function CartPage() {
 
                 // 3. Redirect to WhatsApp
                 const orderIdShort = result.orderId.slice(0, 8);
-                const itemsList = items.map(i => `• ${i.name} (x${i.quantity})`).join('%0A');
+                const itemsList = items.map(i => `• ${i.name} (x${i.quantity})`).join('\n');
 
                 // Get Base URL correctly (window.location.origin is fine in client)
                 const voucherLink = `${window.location.origin}/voucher/${result.orderId}`;
 
-                let message = `*¡Nuevo Pedido! (#${orderIdShort})*%0A%0A`;
-                message += `*Cliente:* ${formData.name}%0A`;
-                message += `*Teléfono:* ${formData.phone}%0A`;
-                message += `*Dirección:* ${formData.address}%0A`;
-                message += `*Reparto:* ${formData.neighborhood}%0A`;
-                message += `*Municipio:* ${formData.city}%0A%0A`;
-                message += `*Pedido:*%0A${itemsList}%0A%0A`;
-                message += `*Total Productos:* $${cartTotal.toFixed(2)}%0A`;
-                message += `*Mensajería:* A coordinar%0A`;
-                message += `*TOTAL A PAGAR:* $${finalTotal.toFixed(2)}%0A%0A`;
+                let message = `*¡Nuevo Pedido! (#${orderIdShort})*\n\n`;
+                message += `*Cliente:* ${formData.name}\n`;
+                message += `*Teléfono:* ${formData.phone}\n`;
+                message += `*Dirección:* ${formData.address}\n`;
+                message += `*Reparto:* ${formData.neighborhood}\n`;
+                message += `*Municipio:* ${formData.city}\n\n`;
+                message += `*Pedido:*\n${itemsList}\n\n`;
+                message += `*Total Productos:* $${cartTotal.toFixed(2)}\n`;
+                message += `*Mensajería:* A coordinar\n`;
+                message += `*TOTAL A PAGAR:* $${finalTotal.toFixed(2)}\n\n`;
 
-                message += `📄 *VER VALE DE ENTREGA (FOTO):*%0A${voucherLink}%0A%0A`;
+                message += `📄 *VER VALE DE ENTREGA (FOTO):*\n${voucherLink}\n\n`;
 
                 if (negotiationThreshold !== null && cartTotal > negotiationThreshold) {
-                    message += `_Nota: Compra > $${negotiationThreshold}. Precio de envío sujeto a descuento._%0A`;
+                    message += `_Nota: Compra > $${negotiationThreshold}. Precio de envío sujeto a descuento._\n`;
                 }
 
                 // Phone number logic (handled by referral or system default)
                 // We need the number here. Since we are inside a client component, 
                 // we'll rely on the WhatsAppButton logic or just fetch it here.
-                // A simpler way: Just put a generic link and let the user send it?
-                // Or better: Re-use the number from the floating button context? 
-                // We don't have that context easily. 
-                // Let's just fetch the referral/system number again or use a hardcoded fallback interaction.
-
-                // For now, I will use a Client Action to get the number to send to.
 
                 // Check cookies for referral
                 let targetPhone = "5350000000"; // Fallback
@@ -160,7 +154,7 @@ export default function CartPage() {
                     if (settings['STORE_WHATSAPP']) targetPhone = settings['STORE_WHATSAPP'];
                 }
 
-                const waUrl = `https://wa.me/53${targetPhone}?text=${message}`;
+                const waUrl = `https://wa.me/53${targetPhone}?text=${encodeURIComponent(message)}`;
                 window.location.href = waUrl;
             } else {
                 alert(result.error || "Error al procesar el pedido.");
