@@ -286,6 +286,7 @@ export default function CartPage() {
                                         placeholder="Ej. 5xxxxxxx"
                                     />
                                 </div>
+                                <div>
                                     <label className="block text-sm font-medium mb-1">Dirección de Entrega</label>
                                     <input
                                         required
@@ -335,42 +336,42 @@ export default function CartPage() {
                                 </div>
 
                                 {/* Hidden email field for compatibility if needed, or optional visible */}
-                        <div className="hidden">
-                            <input
-                                type="email"
-                                value={formData.email}
-                                onChange={e => setFormData({ ...formData, email: e.target.value })}
-                            />
-                        </div>
+                                <div className="hidden">
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                    />
+                                </div>
 
-                        <div className="pt-4 flex gap-3">
-                            <button
-                                type="button"
-                                onClick={() => setIsFormVisible(false)}
-                                className="px-4 py-3 rounded-xl border border-gray-300 font-medium hover:bg-white transition-colors"
-                            >
-                                Cancelar
-                            </button>
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="flex-1 bg-green-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg flex items-center justify-center gap-2 disabled:opacity-70"
-                            >
-                                {isSubmitting ? 'Procesando...' : (
-                                    <>
-                                        Enviar por WhatsApp <MessageCircle size={20} />
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                        <p className="text-xs text-center text-gray-500 mt-2">
-                            Al enviar, serás redirigido a WhatsApp para finalizar la entrega y el pago.
-                        </p>
-                    </form>
+                                <div className="pt-4 flex gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsFormVisible(false)}
+                                        className="px-4 py-3 rounded-xl border border-gray-300 font-medium hover:bg-white transition-colors"
+                                    >
+                                        Cancelar
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        disabled={isSubmitting}
+                                        className="flex-1 bg-green-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg flex items-center justify-center gap-2 disabled:opacity-70"
+                                    >
+                                        {isSubmitting ? 'Procesando...' : (
+                                            <>
+                                                Enviar por WhatsApp <MessageCircle size={20} />
+                                            </>
+                                        )}
+                                    </button>
+                                </div>
+                                <p className="text-xs text-center text-gray-500 mt-2">
+                                    Al enviar, serás redirigido a WhatsApp para finalizar la entrega y el pago.
+                                </p>
+                            </form>
                         )}
+                    </div>
                 </div>
             </div>
         </div>
-        </div >
     );
 }
