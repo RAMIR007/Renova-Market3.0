@@ -29,6 +29,7 @@ export async function getOrdersByEmail(email: string) {
         return { success: true, orders: user.orders };
     } catch (error) {
         console.error("Error fetching orders:", error);
+        return { success: false, error: "Error al buscar las órdenes." };
     }
 }
 
