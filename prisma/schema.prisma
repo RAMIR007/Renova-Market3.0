@@ -87,6 +87,7 @@ model Product {
   brand          String?     // e.g. "Zara", "H&M"
   model          String?     // e.g. "Slim Fit", "Vintage 90s"
   condition      Condition?  @default(EXCELENTE)
+  status         ProductStatus @default(AVAILABLE)
   
   technicalSpecs Json?
   reservations   Reservation[]
@@ -135,6 +136,8 @@ model Order {
   addressLine1  String?
   city          String?
   province      String?
+  cancelledBy   String? // User ID who cancelled
+  cancellationReason String?
 }
 
 enum OrderStatus {
@@ -143,6 +146,12 @@ enum OrderStatus {
   SHIPPED
   DELIVERED
   CANCELLED
+}
+
+enum ProductStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
 }
 
 model OrderItem {
