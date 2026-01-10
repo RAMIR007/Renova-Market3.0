@@ -71,7 +71,7 @@ export async function createOrder({
                     data: {
                         stock: { decrement: item.quantity },
                         status: 'RESERVED'
-                    }
+                    } as any
                 })
             }
 

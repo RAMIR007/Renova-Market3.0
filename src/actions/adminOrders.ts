@@ -40,7 +40,7 @@ export async function updateOrderStatus(orderId: string, status: 'PENDING' | 'PR
                         data: {
                             stock: { increment: item.quantity },
                             status: 'AVAILABLE'
-                        }
+                        } as any
                     });
                 }
             }
@@ -50,7 +50,7 @@ export async function updateOrderStatus(orderId: string, status: 'PENDING' | 'PR
                 for (const item of order.items) {
                     await tx.product.update({
                         where: { id: item.productId },
-                        data: { status: 'SOLD' }
+                        data: { status: 'SOLD' } as any
                     });
                 }
             }
