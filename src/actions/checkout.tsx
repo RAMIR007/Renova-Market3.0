@@ -65,10 +65,13 @@ export async function createOrder({
                     price: Number(product.price)
                 });
 
-                // 2. Decrement Stock
+                // 2. Reserve Product (Decrement stock AND set status)
                 await tx.product.update({
                     where: { id: item.productId },
-                    data: { stock: { decrement: item.quantity } }
+                    data: {
+                        stock: { decrement: item.quantity },
+                        status: 'RESERVED'
+                    }
                 })
             }
 

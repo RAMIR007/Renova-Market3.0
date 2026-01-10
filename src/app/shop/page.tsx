@@ -20,7 +20,8 @@ export default async function ShopPage({ searchParams }: Props) {
     if (sort === 'price_desc') orderBy = { price: 'desc' };
 
     const where: any = {
-        stock: { gt: 0 } // Default to showing available items
+        // Show all products (Available, Reserved, Sold)
+        // stock: { gt: 0 } // Removed to allow showing reserved/sold items
     };
 
     if (query) {

@@ -17,6 +17,7 @@ interface ProductCardProps {
         // New fields
         size?: string | null;
         condition?: string | null;
+        status?: string; // AVAILABLE, RESERVED, SOLD
     };
 }
 
@@ -48,12 +49,25 @@ export default function ProductCard({ product }: ProductCardProps) {
 
                 {/* Badges */}
                 <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
-                    {isOutOfStock && (
+                    {/* Status Badges */}
+                    {product.status === 'SOLD' && (
+                        <span className="bg-red-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                            Vendido
+                        </span>
+                    )}
+                    {product.status === 'RESERVED' && (
+                        <span className="bg-orange-500/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                            Reservado
+                        </span>
+                    )}
+                    {product.status === 'AVAILABLE' && isOutOfStock && (
                         <span className="bg-black/80 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
                             Agotado
                         </span>
                     )}
-                    {!isOutOfStock && discount > 0 && (
+
+                    {/* Discount Badge */}
+                    {product.status === 'AVAILABLE' && !isOutOfStock && discount > 0 && (
                         <span className="bg-red-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full">
                             -{discount}%
                         </span>
