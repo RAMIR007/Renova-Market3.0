@@ -27,6 +27,7 @@ export default function AdminSidebar() {
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
         { name: 'Productos', href: '/admin/products', icon: Package },
         { name: 'Pedidos', href: '/admin/orders', icon: ShoppingCart },
+        { name: 'Vendedores', href: '/admin/sellers', icon: Users },
         { name: 'Usuarios', href: '/admin/users', icon: Users },
         { name: 'Historial', href: '/admin/history', icon: FileClock }, // New Link
         { name: 'Configuración', href: '/admin/settings', icon: Settings },
