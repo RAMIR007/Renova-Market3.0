@@ -1,11 +1,13 @@
 'use client';
 
 import { useCart } from '@/context/CartContext';
-import { Minus, Plus, Trash2, ArrowRight } from 'lucide-react';
+import { Minus, Plus, Trash2, ArrowRight, MessageCircle } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { createOrder } from '@/actions/checkout';
+import { getSellerPhoneByCode } from '@/actions/referral';
+import { getSystemSettings } from '@/actions/settings';
 // import { loadStripe } from '@stripe/stripe-js';
 
 // Placeholder for Stripe (not fully implemented yet, focusing on cash first as per request)
@@ -13,45 +15,105 @@ import { createOrder } from '@/actions/checkout';
 
 export default function CartPage() {
     const { items, removeItem, clearCart, cartTotal } = useCart();
-    const [isCheckingOut, setIsCheckingOut] = useState(false);
+    const [isFormVisible, setIsFormVisible] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
-        email: '',
         address: '',
-        city: 'La Habana', // Defaulting to Havana
+        city: 'La Habana',
         phone: '',
+        email: 'pedido@whatsapp.temp', // Default stub if email is optional in this flow, but good to keep if possible. Let's ask user.
+        // Actually user said "fill form with their data to send delivery". 
+        // Email might be less important for WhatsApp deal, but useful for DB.
+        // Let's keep email as optional or hidden if user strictly wants "simple".
+        // The user said "remove registration". Not necessarily email field.
+        // But let's keep it simple. If we want no registration, maybe email is skippable?
+        // createOrder takes email. Let's require it for receipt or just put dummy if they don't care.
+        // Let's keep it but maybe not emphasize account creation.
     });
-    const [orderStatus, setOrderStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-    const [lastOrderId, setLastOrderId] = useState<string | null>(null);
-    const [showLoginPrompt, setShowLoginPrompt] = useState(false);
+    // To simplify: I'll keep email field but maybe optional or auto-fill? 
+    // Wait, createOrder SCHEME requires email. I will keep the field.
 
-    const handleCreateOrder = async (e: React.FormEvent) => {
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleWhatsAppCheckout = async (e: React.FormEvent) => {
         e.preventDefault();
-        setOrderStatus('loading');
+        setIsSubmitting(true);
 
-        const result = await createOrder({
-            email: formData.email,
-            name: formData.name,
-            address: `${formData.address}, ${formData.city}`,
-            items: items.map(item => ({
-                productId: item.id,
-                quantity: item.quantity,
-                price: item.price
-            })),
-            total: cartTotal,
-        });
+        try {
+            // 1. Create Order in DB (Guest mode)
+            // We use a dummy email if user didn't provide one? No, let's ask for it or phone.
+            // The User requested "fill a form... data to send delivery".
+            // Name, Address, Phone are critical. Email is good for receipt.
 
-        if (result.success && result.orderId) {
-            setOrderStatus('success');
-            setLastOrderId(result.orderId);
-            clearCart();
-        } else {
-            setOrderStatus('error');
-            alert(result.error || "Ocurrió un error al crear la orden.");
+            const result = await createOrder({
+                email: formData.email || `guest-${Date.now()}@renova.cu`, // Fallback if we make it optional
+                name: formData.name,
+                address: `${formData.address}, ${formData.city}`,
+                items: items.map(item => ({
+                    productId: item.id, // Fixed: item.id holds the product ID in CartContext
+                    quantity: item.quantity,
+                    price: item.price
+                })),
+                total: cartTotal,
+            });
+
+            if (result.success && result.orderId) {
+                // 2. Clear Cart
+                clearCart();
+
+                // 3. Redirect to WhatsApp
+                const orderIdShort = result.orderId.slice(0, 8);
+                const itemsList = items.map(i => `• ${i.name} (x${i.quantity})`).join('%0A');
+
+                let message = `*¡Nuevo Pedido! (#${orderIdShort})*%0A%0A`;
+                message += `*Cliente:* ${formData.name}%0A`;
+                message += `*Teléfono:* ${formData.phone}%0A`;
+                message += `*Dirección:* ${formData.address}, ${formData.city}%0A%0A`;
+                message += `*Pedido:*%0A${itemsList}%0A%0A`;
+                message += `*Total Productos:* $${cartTotal.toFixed(2)}%0A`;
+
+                if (cartTotal > 30000) {
+                    message += `_Nota: Compra mayor a $30,000. Solicito negociar mensajería._%0A`;
+                } else {
+                    message += `_Mensajería a acordar._%0A`;
+                }
+
+                // Phone number logic (handled by referral or system default)
+                // We need the number here. Since we are inside a client component, 
+                // we'll rely on the WhatsAppButton logic or just fetch it here.
+                // A simpler way: Just put a generic link and let the user send it?
+                // Or better: Re-use the number from the floating button context? 
+                // We don't have that context easily. 
+                // Let's just fetch the referral/system number again or use a hardcoded fallback interaction.
+
+                // For now, I will use a Client Action to get the number to send to.
+
+                // Check cookies for referral
+                let targetPhone = "5350000000"; // Fallback
+                const match = document.cookie.match(new RegExp('(^| )referral_code=([^;]+)'));
+                if (match) {
+                    const code = match[2];
+                    const refPhone = await getSellerPhoneByCode(code);
+                    if (refPhone) targetPhone = refPhone;
+                } else {
+                    const settings = await getSystemSettings();
+                    if (settings['STORE_WHATSAPP']) targetPhone = settings['STORE_WHATSAPP'];
+                }
+
+                const waUrl = `https://wa.me/53${targetPhone}?text=${message}`;
+                window.location.href = waUrl;
+            } else {
+                alert(result.error || "Error al procesar el pedido.");
+                setIsSubmitting(false);
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Ocurrió un error inesperado.");
+            setIsSubmitting(false);
         }
     };
 
-    if (items.length === 0 && orderStatus !== 'success') {
+    if (items.length === 0) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center p-4">
                 <h1 className="text-3xl font-bold mb-4">Tu carrito está vacío</h1>
@@ -64,40 +126,6 @@ export default function CartPage() {
                 </Link>
             </div>
         );
-    }
-
-    if (orderStatus === 'success') {
-        return (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center p-4 text-center max-w-lg mx-auto">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-6">
-                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
-                </div>
-                <h1 className="text-3xl font-bold mb-4">¡Orden Confirmada!</h1>
-                <p className="text-gray-600 mb-8">
-                    Gracias por tu compra, {formData.name}. Hemos enviado un correo de confirmación a <strong>{formData.email}</strong> con tu recibo PDF.
-                </p>
-                <div className="bg-blue-50 border border-blue-100 p-4 rounded-lg text-sm text-blue-800 mb-8">
-                    <p className="font-semibold mb-1">Pago en Efectivo</p>
-                    <p>Recuerda tener el efectivo listo al momento de la entrega en {formData.city}.</p>
-                </div>
-
-                <a
-                    href={`https://wa.me/5350000000?text=${encodeURIComponent(`Hola, acabo de hacer el pedido #ORD-${lastOrderId ? lastOrderId.slice(0, 8) : '000'} en Renova. A nombre de ${formData.name}.`)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mb-4 w-full bg-green-500 text-white px-8 py-3 rounded-full font-medium hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-                >
-                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" /></svg>
-                    Enviar Pedido por WhatsApp
-                </a>
-                <Link
-                    href="/"
-                    className="bg-black text-white px-8 py-3 rounded-full font-medium hover:bg-gray-800 transition-colors"
-                >
-                    Volver al Inicio
-                </Link>
-            </div>
-        )
     }
 
     return (
@@ -148,42 +176,35 @@ export default function CartPage() {
                             <span>Subtotal</span>
                             <span>${cartTotal.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between mb-4 text-gray-600">
+                        <div className="flex justify-between mb-2 text-gray-600">
                             <span>Envío</span>
-                            <span className="text-green-600 font-medium font-mono">GRATIS</span>
+                            <span className="text-gray-500 font-medium text-sm text-right">A coordinar por WhatsApp</span>
                         </div>
+
+                        {cartTotal > 30000 && (
+                            <div className="mb-4 bg-green-50 border border-green-200 p-3 rounded-lg">
+                                <p className="text-green-800 text-xs font-medium">
+                                    ¡Felicidades! Tu compra supera los $30,000.
+                                    <br />
+                                    <strong>La mensajería tiene un precio especial negociable.</strong>
+                                </p>
+                            </div>
+                        )}
+
                         <div className="border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between items-center mb-8">
                             <span className="text-xl font-bold">Total</span>
                             <span className="text-xl font-bold">${cartTotal.toFixed(2)}</span>
                         </div>
 
-                        {!isCheckingOut ? (
+                        {!isFormVisible ? (
                             <button
-                                onClick={async () => {
-                                    // Try to reserve all items
-                                    const { createReservation } = await import('@/actions/reservations');
-
-                                    for (const item of items) {
-                                        const res = await createReservation(item.id);
-                                        if (res.error) {
-                                            if (res.error.toLowerCase().includes('iniciar sesión') || res.error.toLowerCase().includes('debes iniciar sesión')) {
-                                                setShowLoginPrompt(true);
-                                                return;
-                                            }
-
-                                            alert(`Lo sentimos, no pudimos reservar ${item.name}: ${res.error}`);
-                                            return;
-                                        }
-                                    }
-
-                                    setIsCheckingOut(true);
-                                }}
+                                onClick={() => setIsFormVisible(true)}
                                 className="w-full bg-black text-white py-4 rounded-xl font-bold text-lg hover:bg-gray-800 transition-all shadow-lg flex items-center justify-center gap-2"
                             >
                                 Proceder al Pago <ArrowRight size={20} />
                             </button>
                         ) : (
-                            <form onSubmit={handleCreateOrder} className="space-y-4 animate-in slide-in-from-bottom-4 fade-in">
+                            <form onSubmit={handleWhatsAppCheckout} className="space-y-4 animate-in slide-in-from-bottom-4 fade-in">
                                 <div>
                                     <label className="block text-sm font-medium mb-1">Nombre Completo</label>
                                     <input
@@ -192,16 +213,18 @@ export default function CartPage() {
                                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
                                         value={formData.name}
                                         onChange={e => setFormData({ ...formData, name: e.target.value })}
+                                        placeholder="Ej. Juan Pérez"
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium mb-1">Correo Electrónico</label>
+                                    <label className="block text-sm font-medium mb-1">Teléfono / WhatsApp</label>
                                     <input
                                         required
-                                        type="email"
+                                        type="tel"
                                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
-                                        value={formData.email}
-                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                        value={formData.phone}
+                                        onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                                        placeholder="Ej. 5xxxxxxx"
                                     />
                                 </div>
                                 <div>
@@ -210,7 +233,7 @@ export default function CartPage() {
                                         required
                                         type="text"
                                         className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
-                                        placeholder="Calle, Número, Apto"
+                                        placeholder="Calle, Número, e/ Calles"
                                         value={formData.address}
                                         onChange={e => setFormData({ ...formData, address: e.target.value })}
                                     />
@@ -222,70 +245,53 @@ export default function CartPage() {
                                         value={formData.city}
                                         onChange={e => setFormData({ ...formData, city: e.target.value })}
                                     >
+                                        <option value="">Seleccionar...</option>
                                         <option>La Habana</option>
                                         <option>Playa</option>
                                         <option>Plaza</option>
                                         <option>Centro Habana</option>
                                         <option>Habana Vieja</option>
+                                        <option>Otro</option>
                                     </select>
+                                </div>
+
+                                {/* Hidden email field for compatibility if needed, or optional visible */}
+                                <div className="hidden">
+                                    <input
+                                        type="email"
+                                        value={formData.email}
+                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                    />
                                 </div>
 
                                 <div className="pt-4 flex gap-3">
                                     <button
                                         type="button"
-                                        onClick={() => setIsCheckingOut(false)}
-                                        className="flex-1 px-4 py-3 rounded-xl border border-gray-300 font-medium hover:bg-white transition-colors"
+                                        onClick={() => setIsFormVisible(false)}
+                                        className="px-4 py-3 rounded-xl border border-gray-300 font-medium hover:bg-white transition-colors"
                                     >
-                                        Volver
+                                        Cancelar
                                     </button>
                                     <button
                                         type="submit"
-                                        disabled={orderStatus === 'loading'}
-                                        className="flex-[2] bg-black text-white px-4 py-3 rounded-xl font-bold hover:bg-gray-800 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                                        disabled={isSubmitting}
+                                        className="flex-1 bg-green-600 text-white px-4 py-3 rounded-xl font-bold hover:bg-green-700 transition-colors shadow-lg flex items-center justify-center gap-2 disabled:opacity-70"
                                     >
-                                        {orderStatus === 'loading' ? 'Procesando...' : 'Confirmar Orden'}
+                                        {isSubmitting ? 'Procesando...' : (
+                                            <>
+                                                Enviar por WhatsApp <MessageCircle size={20} />
+                                            </>
+                                        )}
                                     </button>
                                 </div>
                                 <p className="text-xs text-center text-gray-500 mt-2">
-                                    Se enviará un recibo PDF a tu correo. Pago contra entrega.
+                                    Al enviar, serás redirigido a WhatsApp para finalizar la entrega y el pago.
                                 </p>
                             </form>
                         )}
                     </div>
                 </div>
             </div>
-            {/* Login Prompt Modal */}
-            {showLoginPrompt && (
-                <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in duration-200">
-                    <div className="bg-white dark:bg-zinc-800 p-8 rounded-2xl max-w-sm w-full shadow-2xl scale-100 animate-in zoom-in-95 duration-200">
-                        <div className="text-center mb-6">
-                            <div className="w-16 h-16 bg-gray-100 dark:bg-zinc-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-600 dark:text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                </svg>
-                            </div>
-                            <h3 className="text-xl font-bold mb-2">Inicia Sesión</h3>
-                            <p className="text-gray-500 dark:text-gray-400">
-                                Para asegurar tu reserva y completar el pedido, necesitamos que inicies sesión.
-                            </p>
-                        </div>
-                        <div className="space-y-3">
-                            <Link
-                                href="/login"
-                                className="block w-full bg-black text-white text-center py-3 rounded-xl font-bold hover:bg-gray-800 transition-colors"
-                            >
-                                Iniciar Sesión Ahora
-                            </Link>
-                            <button
-                                onClick={() => setShowLoginPrompt(false)}
-                                className="block w-full py-3 rounded-xl font-medium text-gray-500 hover:bg-gray-50 dark:hover:bg-zinc-700 transition-colors"
-                            >
-                                Cancelar
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }
