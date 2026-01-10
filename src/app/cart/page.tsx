@@ -95,6 +95,7 @@ export default function CartPage() {
             const result = await createOrder({
                 email: formData.email || `guest-${Date.now()}@renova.cu`, // Fallback if we make it optional
                 name: formData.name,
+                phone: formData.phone,
                 address: `${formData.address}, ${formData.neighborhood}, ${formData.city}`,
                 items: items.map(item => ({
                     productId: item.id, // Fixed: item.id holds the product ID in CartContext

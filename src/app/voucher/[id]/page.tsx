@@ -37,7 +37,10 @@ export default async function VoucherPage({
                             <span className="text-gray-500">Nombre:</span>
                             <span className="font-medium text-right">{order.customerName}</span>
                         </div>
-                        {/* Se puede agregar teléfono si se guardara en DB, por ahora se asume que está en el chat */}
+                        <div className="flex justify-between">
+                            <span className="text-gray-500">Teléfono:</span>
+                            <span className="font-medium text-right">{order.customerPhone || 'N/A'}</span>
+                        </div>
                         <div className="flex justify-between">
                             <span className="text-gray-500">Dirección:</span>
                             <span className="font-medium text-right max-w-[60%]">{order.addressLine1}</span>
