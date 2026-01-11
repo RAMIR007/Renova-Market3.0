@@ -138,6 +138,7 @@ model Order {
   province      String?
   cancelledBy   String? // User ID who cancelled
   cancellationReason String?
+  referralCode  String?     // Code of the seller who referred this order
 }
 
 enum OrderStatus {

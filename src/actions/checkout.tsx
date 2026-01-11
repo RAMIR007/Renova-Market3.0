@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
+import { cookies } from "next/headers"
 import { Resend } from 'resend';
 // We use dynamic import for react-pdf to avoid some build-time server/client conflicts in certain setups, 
 // though standard import works in many Next.js App Router cases.
@@ -78,6 +79,9 @@ export async function createOrder({
             }
 
             // 3. Create the Order Record
+            const cookieStore = await cookies();
+            const referralCode = cookieStore.get('referral_code')?.value;
+
             const newOrder = await tx.order.create({
                 data: {
                     status: 'PENDING',
@@ -86,6 +90,7 @@ export async function createOrder({
                     customerEmail: customerDetails.email,
                     customerPhone: customerDetails.phone,
                     addressLine1: customerDetails.address,
+                    referralCode: referralCode, // Link order to seller
                     items: {
                         create: items.map(item => ({
                             productId: item.productId,
