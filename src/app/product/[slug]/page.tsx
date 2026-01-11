@@ -96,62 +96,110 @@ export default async function ProductPage({ params }: Props) {
                             )}
                         </div>
 
-                        {/* Unique Piece Details */}
-                        <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-xl border border-gray-100 dark:border-zinc-700 space-y-4">
-                            <h3 className="font-semibold text-gray-900 dark:text-white">Detalles de la Pieza Única</h3>
-                            <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                    <span className="block text-gray-500">Talla</span>
-                                    <span className="font-medium text-gray-900 dark:text-white">{product.size || 'N/A'}</span>
+                        {/* Urgency & Social Proof Triggers */}
+                        <div className="flex flex-col gap-2">
+                            {/* Simulated View Counter */}
+                            <div className="flex items-center gap-2 text-sm text-amber-600 font-medium bg-amber-50 px-3 py-2 rounded-lg border border-amber-100">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                                </span>
+                                {Math.floor(Math.random() * 15) + 5} personas están viendo esta prenda ahora.
+                            </div>
+
+                            {/* Stock Warning */}
+                            {product.stock === 1 && (
+                                <div className="flex items-center gap-2 text-sm text-red-600 font-bold animate-pulse">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><line x1="12" x2="12" y1="8" y2="12" /><line x1="12" x2="12.01" y1="16" y2="16" /></svg>
+                                    ¡Solo queda 1 unidad! No la dejes escapar.
                                 </div>
-                                <div>
-                                    <span className="block text-gray-500">Color</span>
-                                    <span className="font-medium text-gray-900 dark:text-white">{product.color || 'N/A'}</span>
-                                </div>
-                                <div>
-                                    <span className="block text-gray-500">Condición</span>
-                                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 capitalize">
-                                        {product.condition ? product.condition.toLowerCase() : 'N/A'}
-                                    </span>
-                                </div>
-                                <div>
-                                    <span className="block text-gray-500">Stock</span>
-                                    <span className={`font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                        {product.stock > 0 ? 'Disponible' : 'Agotado'}
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Unique Piece Details */}
+                    <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-xl border border-gray-100 dark:border-zinc-700 space-y-4">
+                        <h3 className="font-semibold text-gray-900 dark:text-white">Detalles de la Pieza Única</h3>
+                        <div className="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span className="block text-gray-500">Talla</span>
+                                <span className="font-medium text-gray-900 dark:text-white">{product.size || 'N/A'}</span>
+                            </div>
+                            <div>
+                                <span className="block text-gray-500">Color</span>
+                                <span className="font-medium text-gray-900 dark:text-white">{product.color || 'N/A'}</span>
+                            </div>
+                            <div>
+                                <span className="block text-gray-500 mb-1">Condición</span>
+                                <div className="flex items-center gap-2">
+                                    {['Bueno', 'Muy Bueno', 'Excelente', 'Como Nuevo', 'Nuevo'].includes(product.condition || '') ? (
+                                        <div className="flex gap-0.5" title={`Condición: ${product.condition}`}>
+                                            {[1, 2, 3, 4, 5].map((star) => (
+                                                <svg
+                                                    key={star}
+                                                    className={`w-4 h-4 ${(product.condition === 'Nuevo' && star <= 5) ||
+                                                            (product.condition === 'Como Nuevo' && star <= 4) ||
+                                                            (product.condition === 'Excelente' && star <= 4) ||
+                                                            (product.condition === 'Muy Bueno' && star <= 3) ||
+                                                            (product.condition === 'Bueno' && star <= 3)
+                                                            ? "text-yellow-400 fill-yellow-400"
+                                                            : "text-gray-300 fill-gray-100"
+                                                        }`}
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                                </svg>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 capitalize">
+                                            {product.condition || 'Usado'}
+                                        </span>
+                                    )}
+                                    <span className="text-xs text-gray-400 font-medium">
+                                        {product.condition}
                                     </span>
                                 </div>
                             </div>
+                            <div>
+                                <span className="block text-gray-500">Stock</span>
+                                <span className={`font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                    {product.stock > 0 ? 'Disponible' : 'Agotado'}
+                                </span>
+                            </div>
                         </div>
-
-                        <div className="prose prose-sm dark:prose-invert text-gray-600 dark:text-gray-300">
-                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Descripción</h3>
-                            <p>{product.description}</p>
-                        </div>
-
-                        <div className="flex flex-col gap-3">
-                            <AddToCartButton product={{
-                                ...product,
-                                price: Number(product.price)
-                            }} />
-                            <ShareButton
-                                title={`Mira este increíble hallazgo en Renova: ${product.name}`}
-                                text={`He encontrado este ${product.name} genial. ¡Es pieza única!`}
-                            />
-                        </div>
-
-                        <p className="text-xs text-center text-gray-500 mt-4">
-                            Envío disponible a toda Cuba • Garantía de devolución
-                        </p>
                     </div>
-                </div>
 
-                {/* Related Products */}
-                <div className="mt-20 border-t border-gray-100 dark:border-zinc-800 pt-10">
-                    <h2 className="text-2xl font-bold mb-6">Completa el Look</h2>
-                    <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
+                    <div className="prose prose-sm dark:prose-invert text-gray-600 dark:text-gray-300">
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Descripción</h3>
+                        <p>{product.description}</p>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        <AddToCartButton product={{
+                            ...product,
+                            price: Number(product.price)
+                        }} />
+                        <ShareButton
+                            title={`Mira este increíble hallazgo en Renova: ${product.name}`}
+                            text={`He encontrado este ${product.name} genial. ¡Es pieza única!`}
+                        />
+                    </div>
+
+                    <p className="text-xs text-center text-gray-500 mt-4">
+                        Envío disponible a toda Cuba • Garantía de devolución
+                    </p>
                 </div>
             </div>
+
+            {/* Related Products */}
+            <div className="mt-20 border-t border-gray-100 dark:border-zinc-800 pt-10">
+                <h2 className="text-2xl font-bold mb-6">Completa el Look</h2>
+                <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
+            </div>
         </div>
+        </div >
     );
 }
 
