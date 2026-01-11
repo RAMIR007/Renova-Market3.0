@@ -8,27 +8,29 @@ Renova Market is a modern e-commerce platform designed for the second-hand fashi
 ## 🚀 Key Features
 
 ### For Customers
+*   **🛒 Frictionless Checkout**: 
+    *   **Buy via WhatsApp**: Direct integration to finalize orders via chat with pre-filled details.
+    *   **Lazy Registration**: Create an account *automatically* during checkout just by checking a box. No extra forms.
+    *   **Guest Checkout**: Purchase without forced persistent account creation.
+*   **📱 Social Commerce Experience**:
+    *   **Stories**: Instagram-style stories on the homepage showcasing the latest arrivals.
+    *   **Social Proof**: Real-time "View Counter" on products and "Sold/Reserved" badges to create urgency.
+    *   **Scarcity Triggers**: "Only 1 unit left" visual cues.
 *   **Browsing & Search**: Advanced client-side search, filtering by categories, price, and condition.
-*   **Product Reservation System**: 
-    *   **15-Minute Lock**: Products are reserved for 15 minutes as soon as checkout begins to prevent race conditions.
-    *   **Anti-Abuse**: System temporarily bans users who repeatedly fail to complete reserved orders.
-*   **Wishlist (Lista de Deseos)**: ❤️ Users can save their favorite unique items to track them.
-*   **Social & Sharing**: 
-    *   **WhatsApp Integration**: "Send Order via WhatsApp" button for immediate confirmation and contact.
-    *   **Native Share**: Easily share product finds with friends via native device dialogs.
-*   **Smart Recommendations**: "Complete the Look" section showing related products.
-*   **PWA Support**: Installable as a native-like app on mobile and desktop.
-*   **User Accounts**: Secure registration and login.
+*   **Wishlist (Lista de Deseos)**: ❤️ Track favorite unique items.
+*   **PWA Support**: Installable as a native-like app.
 
 ### For Administrators & Sellers
-*   **Comprehensive Dashboard**: Manage products, orders, and users.
-*   **Audit Log & History**: 🕒 Complete tracking of who changed what and when (Product Creations, Updates, Deletions) in `/admin/history`.
-*   **Advanced Product Management**: 
-    *   Upload multiple images per product.
-    *   **Image Editor**: Built-in tool to rotate images 90° directly in the browser.
-    *   Detailed fields: Brand, Model, Size, Color, Condition, and Cost analysis.
-*   **Category Management**: Create and organize product categories dynamically.
+*   **📈 Dashboard & Analytics**: Manage products, orders, and gain insights.
+*   **🤝 Referral System**: 
+    *   **Seller Toolbar**: Persistent toolbar for sellers to copy their unique referral links.
+    *   **Affiliate Tracking**: Automatic association of orders to sellers via link.
+    *   **Dynamic WhatsApp**: Orders are routed to the specific seller's WhatsApp if referred.
+*   **✍️ Content Management**: 
+    *   **Rich Text Editor**: Markdown support with a custom toolbar (Bold, Italic, Lists, Emojis) for beautiful product descriptions.
+    *   **Multi-Image Upload**: Drag & drop support via Cloudinary.
 *   **Business Intelligence**: Track "Seller Profit" vs "Real Cost".
+*   **Audit Log**: Complete history of changes.
 
 ## 🛠 Tech Stack
 
