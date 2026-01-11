@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
+import MobileStickyBar from "@/components/shop/MobileStickyBar";
 import ShareButton from "@/components/shop/ShareButton";
 
 export const revalidate = 3600; // ISR: Revalidate every hour
@@ -132,16 +133,14 @@ export default async function ProductPage({ params }: Props) {
                             <div>
                                 <span className="block text-gray-500 mb-1">Condición</span>
                                 <div className="flex items-center gap-2">
-                                    {['Bueno', 'Muy Bueno', 'Excelente', 'Como Nuevo', 'Nuevo'].includes(product.condition || '') ? (
+                                    {['BUENO', 'EXCELENTE', 'NUEVO'].includes(product.condition || '') ? (
                                         <div className="flex gap-0.5" title={`Condición: ${product.condition}`}>
                                             {[1, 2, 3, 4, 5].map((star) => (
                                                 <svg
                                                     key={star}
-                                                    className={`w-4 h-4 ${(product.condition === 'Nuevo' && star <= 5) ||
-                                                            (product.condition === 'Como Nuevo' && star <= 4) ||
-                                                            (product.condition === 'Excelente' && star <= 4) ||
-                                                            (product.condition === 'Muy Bueno' && star <= 3) ||
-                                                            (product.condition === 'Bueno' && star <= 3)
+                                                    className={`w-4 h-4 ${(product.condition === 'NUEVO' && star <= 5) ||
+                                                            (product.condition === 'EXCELENTE' && star <= 4) ||
+                                                            (product.condition === 'BUENO' && star <= 3)
                                                             ? "text-yellow-400 fill-yellow-400"
                                                             : "text-gray-300 fill-gray-100"
                                                         }`}
@@ -154,11 +153,11 @@ export default async function ProductPage({ params }: Props) {
                                         </div>
                                     ) : (
                                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 capitalize">
-                                            {product.condition || 'Usado'}
+                                            {product.condition?.toLowerCase() || 'Usado'}
                                         </span>
                                     )}
-                                    <span className="text-xs text-gray-400 font-medium">
-                                        {product.condition}
+                                    <span className="text-xs text-gray-400 font-medium capitalize">
+                                        {product.condition?.toLowerCase()}
                                     </span>
                                 </div>
                             </div>
@@ -199,6 +198,11 @@ export default async function ProductPage({ params }: Props) {
                 <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
             </div>
         </div>
+            {/* Mobile Actions */ }
+    <MobileStickyBar product={{
+        ...product,
+        price: Number(product.price)
+    }} />
         </div >
     );
 }
