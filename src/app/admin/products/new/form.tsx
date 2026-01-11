@@ -91,12 +91,20 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
                         </div>
 
                         <div className="col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Descripción <span className="text-gray-400 font-normal">(Opcional)</span></label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Descripción <span className="text-gray-400 font-normal">(Opcional)</span>
+                                <span className="ml-2 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Soporta Markdown y Emojis 🚀</span>
+                            </label>
                             <textarea
                                 name="description"
-                                rows={4}
-                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base"
-                                placeholder="Detalles sobre el material, estado, medidas..."
+                                rows={6}
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base font-mono text-sm"
+                                placeholder={`Ej:
+- Material: 100% Algodón
+- Estado: **Impecable**
+- Medidas: 
+  * Ancho: 50cm
+  * Largo: 70cm`}
                             />
                         </div>
                     </div>

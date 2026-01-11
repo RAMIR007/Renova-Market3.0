@@ -64,12 +64,18 @@ export default function EditProductForm({ product, categories }: EditProductForm
                         </div>
 
                         <div className="col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">Descripción</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Descripción <span className="ml-2 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Formatos soportados: Markdown y Emojis 🚀</span>
+                            </label>
                             <textarea
                                 name="description"
-                                rows={4}
+                                rows={6}
                                 defaultValue={product.description || ""}
-                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base"
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base font-mono text-sm"
+                                placeholder={`Ej:
+- **Estado**: Nuevo
+- *Material*: Seda
+- Envío incluido 📦`}
                             />
                         </div>
 
