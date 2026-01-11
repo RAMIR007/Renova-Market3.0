@@ -32,6 +32,8 @@ async function getFeaturedProducts() {
   }
 }
 
+import { Stories } from "@/components/shop/Stories";
+
 export default async function Home() {
   const [categories, featuredProducts] = await Promise.all([
     getCategories(),
@@ -40,6 +42,10 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
+      <div className="mt-16 md:mt-20"> {/* Spacer for fixed navbar */}
+        <Stories />
+      </div>
+
       {/* Hero Section */}
       <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center bg-gray-900 text-white overflow-hidden">
         {/* Background Image with Overlay */}
