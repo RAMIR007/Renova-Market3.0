@@ -139,10 +139,10 @@ export default async function ProductPage({ params }: Props) {
                                                 <svg
                                                     key={star}
                                                     className={`w-4 h-4 ${(product.condition === 'NUEVO' && star <= 5) ||
-                                                            (product.condition === 'EXCELENTE' && star <= 4) ||
-                                                            (product.condition === 'BUENO' && star <= 3)
-                                                            ? "text-yellow-400 fill-yellow-400"
-                                                            : "text-gray-300 fill-gray-100"
+                                                        (product.condition === 'EXCELENTE' && star <= 4) ||
+                                                        (product.condition === 'BUENO' && star <= 3)
+                                                        ? "text-yellow-400 fill-yellow-400"
+                                                        : "text-gray-300 fill-gray-100"
                                                         }`}
                                                     xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 24 24"
@@ -197,13 +197,13 @@ export default async function ProductPage({ params }: Props) {
                 <h2 className="text-2xl font-bold mb-6">Completa el Look</h2>
                 <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
             </div>
+
+            {/* Mobile Actions */}
+            <MobileStickyBar product={{
+                ...product,
+                price: Number(product.price)
+            }} />
         </div>
-            {/* Mobile Actions */ }
-    <MobileStickyBar product={{
-        ...product,
-        price: Number(product.price)
-    }} />
-        </div >
     );
 }
 
