@@ -181,6 +181,17 @@ model VisitLog {
   createdAt DateTime @default(now())
 }
 
+model AnalyticsEvent {
+  id        String   @id @default(uuid())
+  type      String   
+  target    String   
+  path      String
+  meta      Json?
+  userId    String?
+  sessionId String?
+  createdAt DateTime @default(now())
+}
+
 model AuditLog {
   id        String   @id @default(uuid())
   action    String   // e.g. "CREATE_PRODUCT", "UPDATE_ORDER", "LOGIN"

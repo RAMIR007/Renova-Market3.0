@@ -32,6 +32,7 @@ import ReferralTracker from "@/components/common/ReferralTracker";
 
 import { getCurrentUser } from "@/actions/user-session";
 import SellerToolbar from "@/components/admin/SellerToolbar";
+import PageTracker from "@/components/analytics/PageTracker";
 
 export default async function RootLayout({
   children,
@@ -61,6 +62,7 @@ export default async function RootLayout({
           )}
 
           <ReferralTracker />
+          <PageTracker />
           <Navbar currentUser={currentUser} />
           <main className="flex-grow">
             {children}

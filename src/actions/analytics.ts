@@ -16,7 +16,7 @@ export async function getAnalyticsData() {
             prisma.product.count(),
             // Low Stock Warning
             prisma.product.count({
-                where: { stock: { lt: 2 } } // Assuming 1 is normal for unique, 0 is sold out
+                where: { stock: { lt: 2 } }
             })
         ]);
 
@@ -33,15 +33,40 @@ export async function getAnalyticsData() {
             }
         });
 
-        // Top Selling Categories (Simplified)
-        // Prisma doesn't do deep relation aggregation easily in one query, so we might skip or do raw query
-        // For MVP, returning key stats
+        // Traffic Stats (Last 30 Days)
+        const dailyTraffic = await prisma.dailyStat.findMany({
+            take: 30,
+            orderBy: { date: 'asc' }
+        });
+
+        // Interaction Stats
+        const totalClicks = await prisma.analyticsEvent.count({
+            where: { type: 'CLICK' }
+        });
+
+        const topActions = await prisma.analyticsEvent.groupBy({
+            by: ['target'],
+            where: { type: 'CLICK' },
+            _count: { target: true },
+            orderBy: { _count: { target: 'desc' } },
+            take: 5
+        });
+
         return {
             revenue: Number(totalRevenue._sum.total || 0),
             orders: totalOrders,
             products: totalProducts,
             lowStock: lowStockProducts,
-            recentSales: recentSales.map(sale => ({ ...sale, total: Number(sale.total) }))
+            recentSales: recentSales.map(sale => ({ ...sale, total: Number(sale.total) })),
+            traffic: dailyTraffic.map(d => ({
+                date: d.date.toISOString().split('T')[0],
+                views: d.views
+            })),
+            totalClicks,
+            topActions: topActions.map(a => ({
+                target: a.target,
+                count: a._count.target
+            }))
         };
 
     } catch (error) {
