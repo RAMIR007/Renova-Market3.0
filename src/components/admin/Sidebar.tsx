@@ -10,7 +10,8 @@ import {
     BarChart,
     Settings,
     LogOut,
-    Layers
+    Layers,
+    User
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -21,6 +22,7 @@ const sidebarItems = [
     { icon: ShoppingBag, label: 'Órdenes', href: '/admin/orders' },
     { icon: Users, label: 'Clientes', href: '/admin/customers' },
     { icon: BarChart, label: 'Analíticas', href: '/admin/analytics' },
+    { icon: User, label: 'Perfil', href: '/admin/profile' },
     { icon: Settings, label: 'Configuración', href: '/admin/settings' },
 ]
 
