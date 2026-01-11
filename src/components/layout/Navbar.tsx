@@ -114,9 +114,9 @@ export function Navbar({ currentUser }: NavbarProps) {
                         {currentUser ? (
                             <Link
                                 href="/admin/profile"
-                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${isScrolled
-                                        ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                                        : 'bg-white/10 text-white hover:bg-white/20'
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors backdrop-blur-sm ${isScrolled
+                                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                                    : 'bg-black/30 text-white hover:bg-black/40 border border-white/20'
                                     }`}
                             >
                                 <User className="w-4 h-4" />
@@ -125,9 +125,9 @@ export function Navbar({ currentUser }: NavbarProps) {
                         ) : (
                             <Link
                                 href="/login"
-                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${isScrolled
-                                        ? 'bg-gray-900 text-white hover:bg-gray-800'
-                                        : 'bg-white text-gray-900 hover:bg-gray-100'
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors backdrop-blur-sm ${isScrolled
+                                    ? 'bg-gray-900 text-white hover:bg-gray-800'
+                                    : 'bg-white text-gray-900 hover:bg-gray-100'
                                     }`}
                             >
                                 <User className="w-4 h-4" />
