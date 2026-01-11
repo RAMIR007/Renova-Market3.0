@@ -19,6 +19,10 @@ export type CheckoutResponse = {
     error?: string;
 }
 
+// ... imports
+import bcrypt from "bcryptjs";
+
+// ... types
 interface CreateOrderInput {
     items: CartItem[];
     name: string;
@@ -26,6 +30,8 @@ interface CreateOrderInput {
     phone: string;
     address: string;
     total: number;
+    password?: string;
+    shouldRegister?: boolean;
 }
 
 export async function createOrder({
@@ -33,13 +39,50 @@ export async function createOrder({
     name,
     email,
     phone,
-    address
+    address,
+    password,
+    shouldRegister
 }: CreateOrderInput): Promise<CheckoutResponse> {
 
     // Construct customerDetails internally
     const customerDetails = { name, email, phone, address };
 
     try {
+        // Handle User Registration / Linking
+        let userId: string | null = null;
+
+        // Check if user exists
+        const existingUser = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if (existingUser) {
+            userId = existingUser.id;
+            // Note: We don't auto-login existing users here for security (password not verified against existing), 
+            // but we link the order.
+        } else if (shouldRegister && password) {
+            // Create new user
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newUser = await prisma.user.create({
+                data: {
+                    email,
+                    name,
+                    password: hashedPassword,
+                    role: 'USER',
+                    marketingOptIn: true // Default opt-in
+                }
+            });
+            userId = newUser.id;
+
+            // Auto-login new user
+            const cookieStore = await cookies();
+            cookieStore.set('session_token', JSON.stringify({
+                id: newUser.id,
+                role: newUser.role,
+                name: newUser.name
+            }), { httpOnly: true, path: '/' });
+        }
+
         // Store product details for the email/PDF later
         const purchasedItems: { name: string; quantity: number; price: number }[] = [];
 
@@ -90,7 +133,8 @@ export async function createOrder({
                     customerEmail: customerDetails.email,
                     customerPhone: customerDetails.phone,
                     addressLine1: customerDetails.address,
-                    referralCode: referralCode, // Link order to seller
+                    referralCode: referralCode,
+                    userId: userId, // Link to user if found/created
                     items: {
                         create: items.map(item => ({
                             productId: item.productId,
@@ -105,7 +149,7 @@ export async function createOrder({
         })
 
         // 4. Post-Sale Experience: Email & PDF (Async try-catch)
-        // ... (Email logic kept simple/commented if dependencies are tricky, or restored)
+        // ... (Email logic kept simple/commented)
 
         // Revalidate paths
         revalidatePath("/")

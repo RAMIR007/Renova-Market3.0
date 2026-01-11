@@ -17,20 +17,15 @@ import { MUNICIPALITY_DISTANCES, DEFAULT_DISTANCE } from '@/lib/delivery-zones';
 export default function CartPage() {
     const { items, removeItem, clearCart, cartTotal } = useCart();
     const [isFormVisible, setIsFormVisible] = useState(false);
+    const [createAccount, setCreateAccount] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         address: '',
         neighborhood: '',
         city: 'La Habana',
         phone: '',
-        email: 'pedido@whatsapp.temp', // Default stub if email is optional in this flow, but good to keep if possible. Let's ask user.
-        // Actually user said "fill form with their data to send delivery". 
-        // Email might be less important for WhatsApp deal, but useful for DB.
-        // Let's keep email as optional or hidden if user strictly wants "simple".
-        // The user said "remove registration". Not necessarily email field.
-        // But let's keep it simple. If we want no registration, maybe email is skippable?
-        // createOrder takes email. Let's require it for receipt or just put dummy if they don't care.
-        // Let's keep it but maybe not emphasize account creation.
+        email: '',
+        password: ''
     });
     // To simplify: I'll keep email field but maybe optional or auto-fill? 
     // Wait, createOrder SCHEME requires email. I will keep the field.
@@ -93,21 +88,18 @@ export default function CartPage() {
             // Name, Address, Phone are critical. Email is good for receipt.
 
             const result = await createOrder({
-                email: formData.email || `guest-${Date.now()}@renova.cu`, // Fallback if we make it optional
+                email: formData.email || `guest-${Date.now()}@renova.cu`, // Keep fallback if optional
                 name: formData.name,
                 phone: formData.phone,
                 address: `${formData.address}, ${formData.neighborhood}, ${formData.city}`,
                 items: items.map(item => ({
-                    productId: item.id, // Fixed: item.id holds the product ID in CartContext
+                    productId: item.id,
                     quantity: item.quantity,
                     price: item.price
                 })),
-                total: finalTotal, // Use total including delivery? Or just products? 
-                // Let's use Product Total for DB to be consistent with Item Sum, 
-                // OR save shipping separately? 
-                // DB schema doesn't have shippingCost. 
-                // I will save the RAW product total in DB for now to avoid mismatch with item sum check.
-                // And handle the "Total to Pay" in the WhatsApp message.
+                total: finalTotal,
+                password: formData.password,
+                shouldRegister: createAccount
             });
 
             if (result.success && result.orderId) {
@@ -282,6 +274,51 @@ export default function CartPage() {
                                     />
                                 </div>
                                 <div>
+                                    <label className="block text-sm font-medium mb-1">Correo Electrónico</label>
+                                    <input
+                                        required={createAccount}
+                                        type="email"
+                                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                        value={formData.email}
+                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
+                                        placeholder={createAccount ? "Tu correo para iniciar sesión" : "Opcional (para el recibo)"}
+                                    />
+                                </div>
+
+                                <div className="p-4 bg-gray-100 rounded-lg flex flex-col gap-3">
+                                    <label className="flex items-center gap-3 cursor-pointer">
+                                        <div className="relative">
+                                            <input
+                                                type="checkbox"
+                                                checked={createAccount}
+                                                onChange={(e) => setCreateAccount(e.target.checked)}
+                                                className="sr-only peer"
+                                            />
+                                            <div className="w-11 h-6 bg-gray-300 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-black"></div>
+                                        </div>
+                                        <span className="text-sm font-medium text-gray-900">
+                                            Guardar mis datos para rastrear mi pedido
+                                        </span>
+                                    </label>
+
+                                    {createAccount && (
+                                        <div className="animate-in fade-in slide-in-from-top-2">
+                                            <label className="block text-sm font-medium mb-1">Crear Contraseña</label>
+                                            <input
+                                                required={createAccount}
+                                                type="password"
+                                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none"
+                                                value={formData.password}
+                                                onChange={e => setFormData({ ...formData, password: e.target.value })}
+                                                placeholder="Mínimo 6 caracteres"
+                                                minLength={6}
+                                            />
+                                            <p className="text-xs text-gray-500 mt-1">Se creará una cuenta automáticamente con tu compra.</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                <div>
                                     <label className="block text-sm font-medium mb-1">Dirección de Entrega</label>
                                     <input
                                         required
@@ -330,14 +367,7 @@ export default function CartPage() {
                                     </select>
                                 </div>
 
-                                {/* Hidden email field for compatibility if needed, or optional visible */}
-                                <div className="hidden">
-                                    <input
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={e => setFormData({ ...formData, email: e.target.value })}
-                                    />
-                                </div>
+                                {/* Legacy email field removed, merged above */}
 
                                 <div className="pt-4 flex gap-3">
                                     <button
