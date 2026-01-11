@@ -2,6 +2,7 @@
 
 import { MessageCircle } from 'lucide-react';
 import { getSystemSettings } from '@/actions/settings';
+import { getSellerPhoneByCode } from '@/actions/referral';
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
@@ -10,19 +11,37 @@ export default function WhatsAppButton({ initialPhoneNumber }: { initialPhoneNum
     const [phoneNumber, setPhoneNumber] = useState<string | null>(initialPhoneNumber || null);
 
     useEffect(() => {
-        // Only fetch if not provided or if we want to ensure latest system setting fallback
-        // But if we have a referral number (initialPhoneNumber), we should probably stick to it?
-        // Actually, if initialPhoneNumber is passed (triggered by ref cookie), use it.
-        // If NOT passed, fetch system default.
+        const fetchPhoneNumber = async () => {
+            // 1. Priority: Check URL param or Client Cookie (for immediate feedback on first load)
+            const params = new URLSearchParams(window.location.search);
+            const refCode = params.get('ref') || getCookie('referral_code');
 
-        if (!initialPhoneNumber) {
-            getSystemSettings().then(settings => {
+            if (refCode) {
+                const sellerPhone = await getSellerPhoneByCode(refCode);
+                if (sellerPhone) {
+                    setPhoneNumber(sellerPhone);
+                    return;
+                }
+            }
+
+            // 2. Fallback: If no valid seller phone found, use System Default
+            if (!initialPhoneNumber) {
+                const settings = await getSystemSettings();
                 if (settings['STORE_WHATSAPP']) {
                     setPhoneNumber(settings['STORE_WHATSAPP']);
                 }
-            });
-        }
-    }, [initialPhoneNumber]);
+            }
+        };
+
+        fetchPhoneNumber();
+    }, [initialPhoneNumber, pathname]);
+
+    // Helper to read cookie consistently on client
+    function getCookie(name: string) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(';').shift();
+    }
 
     if (pathname?.startsWith('/admin')) {
         return null;
