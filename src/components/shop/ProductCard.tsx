@@ -97,35 +97,39 @@ export default function ProductCard({ product }: ProductCardProps) {
             </div>
 
             {/* Info */}
-            <div className="mt-4 space-y-2">
-                <div className="flex justify-between items-start">
-                    <div>
-                        {product.category && (
-                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">{product.category.name}</p>
-                        )}
-                        <h3 className="text-base font-medium text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2">
-                            {product.name}
-                        </h3>
+            {/* Info */}
+            <div className="mt-4 flex flex-col gap-2.5">
+                <div>
+                    {product.category && (
+                        <p className="text-xs text-gray-500 uppercase tracking-wide mb-1 opacity-80">{product.category.name}</p>
+                    )}
+                    <h3 className="text-base font-bold text-gray-900 group-hover:text-blue-600 transition-colors line-clamp-2 leading-snug">
+                        {product.name}
+                    </h3>
+                </div>
+
+                <div className="flex items-center justify-between gap-2">
+                    <div className="flex flex-col">
+                        <div className="flex items-center gap-2">
+                            <span className="font-extrabold text-lg text-gray-900">${price.toFixed(2)}</span>
+                            {comparePrice && comparePrice > price && (
+                                <span className="text-xs text-gray-400 line-through">${comparePrice.toFixed(2)}</span>
+                            )}
+                        </div>
                     </div>
                 </div>
 
-                <div className="flex flex-wrap gap-2 text-xs text-gray-600">
+                {/* Footer: Size & Condition */}
+                <div className="flex flex-wrap gap-2 items-center text-xs font-medium text-gray-700">
                     {product.size && (
-                        <span className="inline-flex items-center px-2 py-0.5 rounded border border-gray-200 bg-gray-50">
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-100 border border-gray-200">
                             Talla: {product.size}
                         </span>
                     )}
                     {product.condition && (
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded border ${product.condition.toLowerCase() === 'nuevo' ? 'border-blue-100 bg-blue-50 text-blue-700' : 'border-amber-100 bg-amber-50 text-amber-700'}`}>
+                        <span className={`inline-flex items-center px-2.5 py-1 rounded-md border border-transparent ${product.condition.toLowerCase() === 'nuevo' ? 'bg-blue-50 text-blue-700' : 'bg-amber-50 text-amber-700'}`}>
                             {product.condition}
                         </span>
-                    )}
-                </div>
-
-                <div className="flex items-center gap-2 pt-1">
-                    <span className="font-bold text-gray-900">${price.toFixed(2)}</span>
-                    {comparePrice && comparePrice > price && (
-                        <span className="text-sm text-gray-400 line-through">${comparePrice.toFixed(2)}</span>
                     )}
                 </div>
             </div>
