@@ -30,6 +30,9 @@ import ReferralTracker from "@/components/common/ReferralTracker";
 
 // ... (Metadata export remains)
 
+import { getCurrentUser } from "@/actions/user-session";
+import SellerToolbar from "@/components/admin/SellerToolbar";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -43,6 +46,8 @@ export default async function RootLayout({
     whatsappNumber = await getSellerPhoneByCode(referralCode);
   }
 
+  const currentUser = await getCurrentUser();
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -50,8 +55,13 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
       >
         <CartProvider>
+          {/* Seller Tools */}
+          {currentUser && (currentUser.role === 'SELLER' || currentUser.role === 'ADMIN') && currentUser.referralCode && (
+            <SellerToolbar referralCode={currentUser.referralCode} userName={currentUser.name || 'Vendedor'} />
+          )}
+
           <ReferralTracker />
-          <Navbar />
+          <Navbar currentUser={currentUser} />
           <main className="flex-grow">
             {children}
           </main>

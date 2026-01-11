@@ -9,7 +9,16 @@ import { useCart } from '@/context/CartContext';
 import SearchBar from '@/components/common/SearchBar';
 import InstallPrompt from '@/components/common/InstallPrompt';
 
-export function Navbar() {
+import { User } from 'lucide-react';
+
+interface NavbarProps {
+    currentUser?: {
+        name: string | null;
+        role: string;
+    } | null;
+}
+
+export function Navbar({ currentUser }: NavbarProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -100,6 +109,31 @@ export function Navbar() {
                         >
                             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
                         </button>
+
+                        {/* User Profile (Desktop) */}
+                        {currentUser ? (
+                            <Link
+                                href="/admin/profile"
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${isScrolled
+                                        ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                                        : 'bg-white/10 text-white hover:bg-white/20'
+                                    }`}
+                            >
+                                <User className="w-4 h-4" />
+                                <span>{currentUser.name?.split(' ')[0]}</span>
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${isScrolled
+                                        ? 'bg-gray-900 text-white hover:bg-gray-800'
+                                        : 'bg-white text-gray-900 hover:bg-gray-100'
+                                    }`}
+                            >
+                                <User className="w-4 h-4" />
+                                <span>Entrar</span>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>
