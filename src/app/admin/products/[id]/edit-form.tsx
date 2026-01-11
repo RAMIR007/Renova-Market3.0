@@ -2,8 +2,8 @@
 
 import { updateProduct } from "@/actions/products";
 import Link from "next/link";
-import { ArrowLeft, Save } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Save, Bold, Italic, List as ListIcon } from "lucide-react";
+import { useState, useRef } from "react";
 import ImageUpload from "@/components/admin/ImageUpload";
 
 interface Category {
@@ -35,6 +35,23 @@ export default function EditProductForm({ product, categories }: EditProductForm
     const [images, setImages] = useState<string[]>(product.images || []);
     const updateWithId = updateProduct.bind(null, product.id);
 
+    // Markdown Helper
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const insertFormat = (prefix: string, suffix: string = '') => {
+        if (!textareaRef.current) return;
+        const start = textareaRef.current.selectionStart;
+        const end = textareaRef.current.selectionEnd;
+        const text = textareaRef.current.value;
+
+        const before = text.substring(0, start);
+        const selection = text.substring(start, end);
+        const after = text.substring(end);
+
+        textareaRef.current.value = before + prefix + selection + suffix + after;
+        textareaRef.current.focus();
+        textareaRef.current.setSelectionRange(start + prefix.length, end + prefix.length);
+    };
+
     return (
         <div className="max-w-2xl mx-auto py-8 px-4">
             <div className="flex items-center gap-4 mb-8">
@@ -64,10 +81,39 @@ export default function EditProductForm({ product, categories }: EditProductForm
                         </div>
 
                         <div className="col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Descripción <span className="ml-2 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Formatos soportados: Markdown y Emojis 🚀</span>
-                            </label>
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Descripción <span className="text-gray-400 font-normal">(Opcional)</span>
+                                </label>
+                                <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormat('**', '**')}
+                                        className="p-1.5 hover:bg-white rounded shadow-sm text-gray-700"
+                                        title="Negrita"
+                                    >
+                                        <Bold size={16} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormat('*', '*')}
+                                        className="p-1.5 hover:bg-white rounded shadow-sm text-gray-700"
+                                        title="Cursiva"
+                                    >
+                                        <Italic size={16} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormat('\n- ', '')}
+                                        className="p-1.5 hover:bg-white rounded shadow-sm text-gray-700"
+                                        title="Lista"
+                                    >
+                                        <ListIcon size={16} />
+                                    </button>
+                                </div>
+                            </div>
                             <textarea
+                                ref={textareaRef}
                                 name="description"
                                 rows={6}
                                 defaultValue={product.description || ""}

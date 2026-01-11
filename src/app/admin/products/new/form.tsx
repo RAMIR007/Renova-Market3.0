@@ -2,8 +2,8 @@
 
 import { createProduct } from "@/actions/products";
 import Link from "next/link";
-import { ArrowLeft, Save } from "lucide-react";
-import { useState } from "react";
+import { ArrowLeft, Save, Bold, Italic, List as ListIcon } from "lucide-react";
+import { useState, useRef } from "react";
 // Import the new client component
 import ImageUpload from "@/components/admin/ImageUpload";
 
@@ -25,6 +25,34 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
     const [isCreatingCategory, setIsCreatingCategory] = useState(false);
     const [newCategoryName, setNewCategoryName] = useState("");
     const [loadingCategory, setLoadingCategory] = useState(false);
+
+    // Markdown Helper
+    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const insertFormat = (prefix: string, suffix: string = '') => {
+        if (!textareaRef.current) return;
+        const start = textareaRef.current.selectionStart;
+        const end = textareaRef.current.selectionEnd;
+        const text = textareaRef.current.value;
+
+        // If nothing selected, just insert. If selected, wrap.
+        const before = text.substring(0, start);
+        const selection = text.substring(start, end);
+        const after = text.substring(end);
+
+        // This is a controlled component technically via the 'name' prop for formData, 
+        // but we are manipulating DOM directly. Ideally we'd bind value state but 
+        // for this form we are using uncontrolled native inputs mostly. 
+        // So direct DOM manipulation is fine for the textarea content.
+
+        textareaRef.current.value = before + prefix + selection + suffix + after;
+
+        // Restore focus and selection
+        textareaRef.current.focus();
+        const newCursorPos = start + prefix.length + selection.length + suffix.length; // Move to end of insertion?
+        // Or keep selection?
+        // Let's just put cursor after insertion
+        textareaRef.current.setSelectionRange(start + prefix.length, end + prefix.length);
+    };
 
     const isAdmin = userRole === 'ADMIN';
 
@@ -91,11 +119,39 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
                         </div>
 
                         <div className="col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                Descripción <span className="text-gray-400 font-normal">(Opcional)</span>
-                                <span className="ml-2 text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">Soporta Markdown y Emojis 🚀</span>
-                            </label>
+                            <div className="flex justify-between items-center mb-2">
+                                <label className="block text-sm font-medium text-gray-700">
+                                    Descripción <span className="text-gray-400 font-normal">(Opcional)</span>
+                                </label>
+                                <div className="flex gap-1 bg-gray-100 p-1 rounded-lg">
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormat('**', '**')}
+                                        className="p-1.5 hover:bg-white rounded shadow-sm text-gray-700"
+                                        title="Negrita"
+                                    >
+                                        <Bold size={16} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormat('*', '*')}
+                                        className="p-1.5 hover:bg-white rounded shadow-sm text-gray-700"
+                                        title="Cursiva"
+                                    >
+                                        <Italic size={16} />
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => insertFormat('\n- ', '')}
+                                        className="p-1.5 hover:bg-white rounded shadow-sm text-gray-700"
+                                        title="Lista"
+                                    >
+                                        <ListIcon size={16} />
+                                    </button>
+                                </div>
+                            </div>
                             <textarea
+                                ref={textareaRef}
                                 name="description"
                                 rows={6}
                                 className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none transition-all text-base font-mono text-sm"
