@@ -47,42 +47,57 @@ export default async function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative w-full h-[80vh] min-h-[600px] flex items-center justify-center bg-gray-900 text-white overflow-hidden">
-        {/* Background Image with Overlay */}
-        <div className="absolute inset-0">
+      <section className="relative w-full h-[95vh] min-h-[600px] flex items-center justify-start overflow-hidden bg-gray-900">
+        {/* Background Image with modern overlay */}
+        <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1542385151-efd9000785a0?q=80&w=2069&auto=format&fit=crop"
-            alt="Moda con Alegría"
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
+            alt="Nueva Colección Renova"
             fill
             priority
-            className="object-cover"
+            className="object-cover object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/30 to-gray-900/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-black/20" />
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-5xl mx-auto animate-in fade-in zoom-in duration-700">
-          <span className="inline-block py-1 px-4 rounded-full bg-yellow-400/20 backdrop-blur-md border border-yellow-400/30 text-xs md:text-sm font-bold tracking-wider mb-8 uppercase text-yellow-300">
-            👋 ¡Hola! Bienvenido a tu nuevo estilo
-          </span>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 drop-shadow-2xl text-white">
-            DA VIDA A <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-400 to-pink-500">TU MEJOR VERSIÓN</span>
-          </h1>
-          <p className="text-lg md:text-2xl text-gray-100 mb-12 max-w-2xl mx-auto font-medium leading-relaxed tracking-wide drop-shadow-md">
-            Ropa increíble, precios justos y buena vibra. <br className="hidden md:block" /> Encuentra esa prenda única que te hará sonreír.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/shop"
-              className="inline-flex items-center justify-center bg-white text-black px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 hover:scale-105 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)]"
-            >
-              Ver Colección
-            </Link>
-            <Link
-              href="/about"
-              className="inline-flex items-center justify-center px-8 py-4 rounded-full font-semibold text-lg border border-white/30 bg-black/30 backdrop-blur-sm hover:bg-black/50 transition-all text-white"
-            >
-              Nuestra Historia
-            </Link>
+        <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-20">
+          <div className="max-w-3xl animate-in fade-in slide-in-from-bottom-8 duration-700">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold tracking-wide mb-8 shadow-lg">
+              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
+              NUEVA TEMPORADA 2026
+            </div>
+
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl">
+              DEFINE <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-orange-400 bg-[length:200%_auto] animate-gradient">
+                TU ESTILO
+              </span>
+            </h1>
+
+            <p className="text-xl sm:text-2xl text-gray-200 mb-10 max-w-xl font-light leading-relaxed drop-shadow-md">
+              Explora una colección donde la elegancia se encuentra con la sostenibilidad. Piezas únicas para gente auténtica.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-5">
+              <Link
+                href="/shop"
+                className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-transform active:scale-95 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.5)]"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                <span className="relative z-10 flex items-center gap-2 text-lg">
+                  Ver Colección
+                  <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </span>
+              </Link>
+
+              <Link
+                href="/about"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-white border border-white/30 hover:bg-white/10 backdrop-blur-md transition-colors text-lg"
+              >
+                Nuestra Historia
+              </Link>
+            </div>
           </div>
         </div>
       </section>
