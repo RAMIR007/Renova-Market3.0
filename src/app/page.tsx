@@ -51,24 +51,24 @@ export default async function Home() {
         {/* Background Image with Overlay */}
         <div className="absolute inset-0">
           <Image
-            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
-            alt="Hero Fashion"
+            src="https://images.unsplash.com/photo-1549420888-294c772be482?q=80&w=2070&auto=format&fit=crop"
+            alt="Cuban Luxury Fashion"
             fill
             priority
-            className="object-cover opacity-60"
+            className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/50 to-gray-900/30" />
         </div>
 
         <div className="relative z-10 text-center px-4 max-w-5xl mx-auto animate-in fade-in zoom-in duration-700">
-          <span className="inline-block py-1 px-3 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-sm font-medium tracking-wide mb-6">
-            MODA SOSTENIBLE EN CUBA
+          <span className="inline-block py-1 px-4 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs md:text-sm font-medium tracking-[0.2em] mb-8 uppercase text-gray-200">
+            Moda Sostenible • La Habana
           </span>
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6 drop-shadow-2xl">
-            RENOVA <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">MARKET</span>
+          <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter mb-8 drop-shadow-2xl">
+            RENOVA <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-purple-300 to-indigo-300">MARKET</span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 mb-10 max-w-2xl mx-auto font-light leading-relaxed">
-            Redefiniendo el estilo con piezas únicas y exclusivas.<br /> Lujo accesible a un clic de distancia.
+          <p className="text-lg md:text-2xl text-gray-200 mb-12 max-w-2xl mx-auto font-light leading-relaxed tracking-wide">
+            Donde el lujo se encuentra con la sostenibilidad. <br className="hidden md:block" />Descubre piezas únicas con historia en el corazón de Cuba.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
