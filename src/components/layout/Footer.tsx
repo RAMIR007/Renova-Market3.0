@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Facebook, Instagram, Twitter } from 'lucide-react';
+import { LogoWithText } from '@/components/common/Logo';
 
 export function Footer() {
     return (
@@ -9,9 +10,7 @@ export function Footer() {
                     {/* Brand */}
                     <div className="col-span-1 md:col-span-1">
                         <Link href="/" className="inline-block mb-4">
-                            <span className="text-2xl font-bold tracking-tighter text-gray-900 dark:text-white">
-                                Renova<span className="text-blue-600">.</span>
-                            </span>
+                            <LogoWithText variant="dark" />
                         </Link>
                         <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                             Tu tienda de confianza para moda sostenible en Cuba. Encuentra piezas únicas y dale una segunda vida al estilo.

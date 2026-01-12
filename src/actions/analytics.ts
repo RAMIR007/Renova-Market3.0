@@ -40,11 +40,11 @@ export async function getAnalyticsData() {
         });
 
         // Interaction Stats
-        const totalClicks = await prisma.analyticsEvent.count({
+        const totalClicks = await (prisma as any).analyticsEvent.count({
             where: { type: 'CLICK' }
         });
 
-        const topActions = await prisma.analyticsEvent.groupBy({
+        const topActions = await (prisma as any).analyticsEvent.groupBy({
             by: ['target'],
             where: { type: 'CLICK' },
             _count: { target: true },
@@ -63,9 +63,9 @@ export async function getAnalyticsData() {
                 views: d.views
             })),
             totalClicks,
-            topActions: topActions.map(a => ({
-                target: a.target,
-                count: a._count.target
+            topActions: topActions.map(({ target, _count }: { target: string, _count: { target: number } }) => ({
+                target: target,
+                count: _count.target
             }))
         };
 

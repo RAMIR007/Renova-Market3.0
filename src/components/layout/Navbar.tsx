@@ -8,6 +8,7 @@ import { useCart } from '@/context/CartContext';
 
 import SearchBar from '@/components/common/SearchBar';
 import InstallPrompt from '@/components/common/InstallPrompt';
+import { LogoWithText } from '@/components/common/Logo';
 
 import { User } from 'lucide-react';
 
@@ -64,9 +65,10 @@ export function Navbar({ currentUser }: NavbarProps) {
 
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0 group">
-                        <span className={`text-2xl font-bold tracking-tighter transition-colors ${isScrolled ? 'text-gray-900' : 'text-gray-900 md:text-white'}`}>
-                            Renova<span className="text-blue-600">.</span>
-                        </span>
+                        <LogoWithText
+                            variant={isScrolled ? 'dark' : 'white'}
+                            className="transition-transform group-hover:scale-105"
+                        />
                     </Link>
 
                     {/* Desktop Nav */}
