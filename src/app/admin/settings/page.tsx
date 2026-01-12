@@ -1,12 +1,17 @@
 'use client';
 
-import { updateSystemSettings } from "@/actions/settings";
+import { updateSystemSettings, getSystemSettings } from "@/actions/settings";
 import { Save, Phone } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ChangePasswordForm from "@/components/admin/ChangePasswordForm";
 
 export default function AdminSettingsPage() {
     const [loading, setLoading] = useState(false);
+    const [settings, setSettings] = useState<Record<string, string>>({});
+
+    useEffect(() => {
+        getSystemSettings().then(data => setSettings(data));
+    }, []);
 
     const handleSubmit = async (formData: FormData) => {
         setLoading(true);
@@ -40,6 +45,8 @@ export default function AdminSettingsPage() {
                             <input
                                 type="text"
                                 name="whatsapp"
+                                defaultValue={settings['STORE_WHATSAPP'] || '54143078'}
+                                key={settings['STORE_WHATSAPP'] ? 'loaded' : 'loading'}
                                 placeholder="5xxxxxxx"
                                 className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-gray-300 focus:ring-black focus:border-black sm:text-sm"
                             />
@@ -60,6 +67,8 @@ export default function AdminSettingsPage() {
                             <input
                                 type="number"
                                 name="negotiationThreshold"
+                                defaultValue={settings['NEGOTIATION_THRESHOLD'] || ''}
+                                key={settings['NEGOTIATION_THRESHOLD'] ? 'loaded-thresh' : 'loading-thresh'}
                                 placeholder="30000"
                                 className="flex-1 min-w-0 block w-full px-3 py-2 rounded-none rounded-r-lg border border-gray-300 focus:ring-black focus:border-black sm:text-sm"
                             />

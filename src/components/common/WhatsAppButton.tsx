@@ -29,6 +29,8 @@ export default function WhatsAppButton({ initialPhoneNumber }: { initialPhoneNum
                 const settings = await getSystemSettings();
                 if (settings['STORE_WHATSAPP']) {
                     setPhoneNumber(settings['STORE_WHATSAPP']);
+                } else {
+                    setPhoneNumber('54143078'); // Default fallback
                 }
             }
         };

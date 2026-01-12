@@ -135,7 +135,7 @@ export default function CartPage() {
                 // we'll rely on the WhatsAppButton logic or just fetch it here.
 
                 // Check cookies for referral
-                let targetPhone = "5354143078"; // Fallback
+                let targetPhone = "54143078"; // Default fallback (without +53)
                 const match = document.cookie.match(new RegExp('(^| )referral_code=([^;]+)'));
                 if (match) {
                     const code = match[2];
