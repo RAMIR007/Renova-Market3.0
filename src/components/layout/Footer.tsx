@@ -10,7 +10,7 @@ export function Footer() {
                     {/* Brand */}
                     <div className="col-span-1 md:col-span-1">
                         <Link href="/" className="inline-block mb-4">
-                            <LogoWithText variant="dark" />
+                            <LogoWithText variant="adaptive" />
                         </Link>
                         <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
                             Tu tienda de confianza para moda sostenible en Cuba. Encuentra piezas únicas y dale una segunda vida al estilo.

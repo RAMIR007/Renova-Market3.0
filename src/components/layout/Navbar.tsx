@@ -66,7 +66,7 @@ export function Navbar({ currentUser }: NavbarProps) {
                     {/* Logo */}
                     <Link href="/" className="flex-shrink-0 group">
                         <LogoWithText
-                            variant={isScrolled ? 'dark' : 'white'}
+                            variant={isScrolled ? 'dark' : 'gold'}
                             className="transition-transform group-hover:scale-105"
                         />
                     </Link>
