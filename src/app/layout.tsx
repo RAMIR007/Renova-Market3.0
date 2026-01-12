@@ -67,7 +67,10 @@ export default async function RootLayout({
           <main className="flex-grow">
             {children}
           </main>
-          <WhatsAppButton initialPhoneNumber={whatsappNumber} />
+
+          {(!currentUser || (currentUser.role !== 'ADMIN' && currentUser.role !== 'SELLER')) && (
+            <WhatsAppButton initialPhoneNumber={whatsappNumber} />
+          )}
           <Footer />
           <Toaster position="top-center" richColors />
         </CartProvider>
