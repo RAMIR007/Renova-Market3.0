@@ -1,6 +1,41 @@
 import { getOrderById } from '@/actions/orders';
 import Link from 'next/link';
 import Image from 'next/image';
+import { Metadata } from 'next';
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+    const { id } = await params;
+    const order = await getOrderById(id);
+
+    if (!order) {
+        return {
+            title: 'Orden no encontrada | Renova Market',
+            description: 'No se pudieron encontrar los detalles de esta orden.',
+        };
+    }
+
+    const firstProductImage = order.items[0]?.product.images && order.items[0]?.product.images.length > 0
+        ? order.items[0].product.images[0]
+        : '/images/og-default.jpg'; // Fallback image
+
+    return {
+        title: `Vale de Compra #${order.id.slice(0, 8).toUpperCase()} | Renova Market`,
+        description: `Cliente: ${order.customerName} - Total: $${Number(order.total).toFixed(2)}. ¡Gracias por tu compra!`,
+        openGraph: {
+            title: `Vale de Compra #${order.id.slice(0, 8).toUpperCase()}`,
+            description: `Orden de ${order.customerName}. ${order.items.length} productos. Total: $${Number(order.total).toFixed(2)}`,
+            images: [
+                {
+                    url: firstProductImage,
+                    width: 800,
+                    height: 600,
+                    alt: 'Producto de Renova Market',
+                },
+            ],
+            type: 'article',
+        },
+    };
+}
 
 export default async function VoucherPage({
     params,
