@@ -41,36 +41,49 @@ export default function QuickBuyModal({ isOpen, onClose, product, sellerPhone = 
         });
 
         if (result.success) {
-            toast.success("¡Producto reservado con éxito!");
+            if (result.isNewUser) {
+                toast.success(
+                    <div className="flex flex-col gap-1">
+                        <span className="font-bold">¡Cuenta Creada!</span>
+                        <span className="text-sm">Se ha creado una cuenta. Tu contraseña temporal son los dígitos de tu teléfono.</span>
+                    </div>,
+                    { duration: 6000 }
+                );
+            } else {
+                toast.success("¡Producto reservado con éxito!");
+            }
 
-            // Construir mensaje de WhatsApp
-            // Construir mensaje de WhatsApp con formato seguro
+            // Automatización: Links Inteligentes para el Vendedor
+            const origin = window.location.origin;
+            const productLink = `${origin}/product/${product.slug}`;
+            const adminOrderLink = `${origin}/admin/orders/${result.orderId}`;
+
+            // Construir mensaje de WhatsApp optimizado para gestión
             const t = {
-                intro: `👋 Hola! Acabo de realizar la orden rápida #${result.orderId?.slice(0, 8)} en Renova Market.`,
-                prod: `🛍️ *Producto:* ${product.name}`,
-                price: `💰 *Precio:* $${product.price}`,
-                dataHeader: `👤 *Mis Datos:*`,
-                name: `Nombre: ${formData.name}`,
-                phone: `Teléfono: ${formData.phone}`,
-                address: `Dirección: ${formData.address}`,
-                ref: `🔗 Ref: ${product.slug}`
+                header: `🚀 *NUEVA ORDEN RÁPIDA* #${result.orderId?.slice(0, 8)}`,
+                prodInfo: `📦 *Producto:* ${product.name}\n💰 *Precio:* $${product.price}`,
+                prodLink: `🔗 *Ver Producto:* ${productLink}`,
+
+                clientHeader: `👤 *Datos del Cliente:*`,
+                clientData: `Nombre: ${formData.name}\nTel: ${formData.phone}\nDir: ${formData.address}` + (formData.email ? `\nEmail: ${formData.email}` : ''),
+
+                adminSection: `🛠️ *PANEL DE VENDEDOR:*\nGestione esta orden aquí:\n${adminOrderLink}`
             };
 
             const fullMessage = [
-                t.intro,
+                t.header,
                 "",
-                t.prod,
-                t.price,
+                t.prodInfo,
+                t.prodLink,
                 "",
-                t.dataHeader,
-                t.name,
-                t.phone,
-                t.address,
+                t.clientHeader,
+                t.clientData,
                 "",
-                t.ref
+                "------------------",
+                t.adminSection
             ].join('\n');
 
-            console.log("WhatsApp Message:", fullMessage); // Debug log
+            console.log("WhatsApp Message:", fullMessage);
 
             const encodedMessage = encodeURIComponent(fullMessage);
 
@@ -78,8 +91,12 @@ export default function QuickBuyModal({ isOpen, onClose, product, sellerPhone = 
             const targetPhone = sellerPhone.replace(/\D/g, '');
             const finalPhone = targetPhone.length === 8 ? `53${targetPhone}` : targetPhone;
 
-            const whatsappUrl = `https://wa.me/${finalPhone}?text=${encodedMessage}`;
-            console.log("Opening URL:", whatsappUrl); // Debug log
+            // Detectar si es dispositivo móvil para usar api.whatsapp o web.whatsapp
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const baseUrl = isMobile ? 'https://api.whatsapp.com/send' : 'https://web.whatsapp.com/send';
+
+            const whatsappUrl = `${baseUrl}?phone=${finalPhone}&text=${encodedMessage}`;
+            console.log("Opening URL:", whatsappUrl);
 
             window.open(whatsappUrl, '_blank');
             onClose();
@@ -147,10 +164,10 @@ export default function QuickBuyModal({ isOpen, onClose, product, sellerPhone = 
                         />
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email <span className="text-gray-400 font-normal">(Opcional)</span></label>
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email <span className="text-gray-400 font-normal">(Opcional para cuenta)</span></label>
                         <input
                             type="email"
-                            placeholder="para recibir confirmación"
+                            placeholder="Para crear cuenta automática"
                             className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-zinc-700 bg-gray-50 dark:bg-zinc-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-green-500 outline-none transition-all"
                             value={formData.email}
                             onChange={e => setFormData({ ...formData, email: e.target.value })}

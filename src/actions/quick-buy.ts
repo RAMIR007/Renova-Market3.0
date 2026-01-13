@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma"
 import { revalidatePath } from "next/cache"
 import { cookies } from "next/headers"
+import bcrypt from 'bcryptjs';
 
 interface QuickBuyData {
     productId: string;
@@ -19,7 +20,7 @@ export async function processQuickBuy(data: QuickBuyData) {
     }
 
     try {
-        const order = await prisma.$transaction(async (tx) => {
+        const result = await prisma.$transaction(async (tx) => {
             // 1. Verificar Stock
             const product = await tx.product.findUnique({
                 where: { id: data.productId }
@@ -38,23 +39,61 @@ export async function processQuickBuy(data: QuickBuyData) {
                 } as any
             });
 
-            // 3. Crear Orden
-            const cookieStore = await cookies();
-            const referralCode = cookieStore.get('referral_code')?.value;
-
-            // Intentar enlazar usuario si existe el email
+            // 3. User Handling (Auto-Registration)
             let userId = null;
+            let tempPassword = null;
+            let isNewUser = false;
+
             if (data.customerEmail) {
                 const existingUser = await tx.user.findUnique({
                     where: { email: data.customerEmail }
                 });
-                if (existingUser) userId = existingUser.id;
+
+                if (existingUser) {
+                    userId = existingUser.id;
+                } else {
+                    // Create new user automatically
+                    // Password = digits of phone number or fallback
+                    tempPassword = data.customerPhone.replace(/\D/g, '');
+                    if (tempPassword.length < 6) tempPassword = "renova-market";
+
+                    const hashedPassword = await bcrypt.hash(tempPassword, 10);
+
+                    const newUser = await tx.user.create({
+                        data: {
+                            email: data.customerEmail,
+                            name: data.customerName,
+                            password: hashedPassword,
+                            role: 'USER',
+                            marketingOptIn: true
+                        }
+                    });
+                    userId = newUser.id;
+                    isNewUser = true;
+
+                    // Also create the address record for them
+                    await tx.address.create({
+                        data: {
+                            userId: newUser.id,
+                            street: data.customerAddress,
+                            city: "La Habana",
+                            province: "La Habana",
+                            phone: data.customerPhone,
+                            country: "Cuba",
+                            isDefault: true
+                        }
+                    });
+                }
             }
+
+            // 4. Crear Orden
+            const cookieStore = await cookies();
+            const referralCode = cookieStore.get('referral_code')?.value;
 
             const newOrder = await tx.order.create({
                 data: {
                     status: 'PENDING',
-                    total: product.price, // Asumimos cantidad 1 para compra rápida
+                    total: product.price,
                     customerName: data.customerName,
                     customerPhone: data.customerPhone,
                     addressLine1: data.customerAddress,
@@ -71,8 +110,18 @@ export async function processQuickBuy(data: QuickBuyData) {
                 }
             });
 
-            return { order: newOrder, product };
+            return { order: newOrder, product, userId, isNewUser, tempPassword };
         });
+
+        // Auto-login logic (outside transaction)
+        if (result.userId) {
+            const cookieStore = await cookies();
+            cookieStore.set('session_token', JSON.stringify({
+                id: result.userId,
+                role: 'USER',
+                name: data.customerName
+            }), { httpOnly: true, path: '/' });
+        }
 
         // Revalidaciones
         revalidatePath("/");
@@ -81,9 +130,11 @@ export async function processQuickBuy(data: QuickBuyData) {
 
         return {
             success: true,
-            orderId: order.order.id,
-            productName: order.product.name,
-            total: Number(order.order.total)
+            orderId: result.order.id,
+            productName: result.product.name,
+            total: Number(result.order.total),
+            isNewUser: result.isNewUser,
+            tempPassword: result.tempPassword
         };
 
     } catch (error: any) {
