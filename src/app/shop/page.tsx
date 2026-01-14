@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import ProductCard from "@/components/shop/ProductCard";
+import SizeFilterBar from "@/components/shop/SizeFilterBar";
 
 export const revalidate = 3600;
 
@@ -57,31 +58,6 @@ export default async function ShopPage({ searchParams }: Props) {
 
     const allSizes = uniqueSizes.map(p => p.size).filter(Boolean) as string[];
 
-    // Group sizes logic
-    const shoeSizes = allSizes
-        .filter(s => !isNaN(Number(s)) && Number(s) > 20) // Assume sizes > 20 are numeric shoe sizes usually? Or just use isNaN.
-        // Actually, some sizes might be "34", which is small clothing or shoes.
-        // But contextually for this store: 
-        // 35-46 are likely shoes. 
-        // 0-20? Maybe "US sizes" for dress?
-        // Let's stick to simple isNumeric check for now.
-        .filter(s => !isNaN(parseFloat(s)) && isFinite(Number(s)))
-        .sort((a, b) => parseFloat(a) - parseFloat(b));
-
-    const clothingSizes = allSizes
-        .filter(s => isNaN(parseFloat(s)) || !isFinite(Number(s)))
-        // Optional: Custom sort for S/M/L logic could be added here, but alphabetical is default fallback.
-        // Let's at least try basic XS, S, M, L, XL order if present.
-        .sort((a, b) => {
-            const order = ['XXS', 'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
-            const idxA = order.indexOf(a.toUpperCase());
-            const idxB = order.indexOf(b.toUpperCase());
-            if (idxA !== -1 && idxB !== -1) return idxA - idxB;
-            if (idxA !== -1) return -1;
-            if (idxB !== -1) return 1;
-            return a.localeCompare(b);
-        });
-
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 py-8 px-4 sm:px-6 lg:px-8">
             <div className="max-w-7xl mx-auto">
@@ -113,57 +89,8 @@ export default async function ShopPage({ searchParams }: Props) {
                 </div>
 
                 {/* Filters Section */}
-                <div className="space-y-4 mb-8">
-                    {/* Clear Filter Button (only if active) */}
-                    {sizeParam && (
-                        <div className="mb-2">
-                            <Link href={{ query: { ...params, size: undefined } }} className="text-sm text-red-600 hover:underline flex items-center gap-1">
-                                ✕ Limpiar filtro de talla: <b>{sizeParam}</b>
-                            </Link>
-                        </div>
-                    )}
-
-                    {/* Clothing Sizes Row */}
-                    {clothingSizes.length > 0 && (
-                        <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider shrink-0 w-16">Ropa</span>
-                            <div className="flex gap-2">
-                                {clothingSizes.map((size) => (
-                                    <Link
-                                        key={size}
-                                        href={{ query: { ...params, size: size } }}
-                                        className={`shrink-0 h-9 min-w-[36px] px-3 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${sizeParam === size
-                                                ? 'bg-gray-900 text-white shadow-md ring-2 ring-gray-900 ring-offset-2'
-                                                : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-400 hover:bg-gray-50'
-                                            }`}
-                                    >
-                                        {size}
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Shoe/Numeric Sizes Row */}
-                    {shoeSizes.length > 0 && (
-                        <div className="flex items-center gap-4 overflow-x-auto pb-2 scrollbar-hide">
-                            <span className="text-xs font-bold text-gray-500 uppercase tracking-wider shrink-0 w-16">Calzado</span>
-                            <div className="flex gap-2">
-                                {shoeSizes.map((size) => (
-                                    <Link
-                                        key={size}
-                                        href={{ query: { ...params, size: size } }}
-                                        className={`shrink-0 h-9 min-w-[36px] px-3 flex items-center justify-center rounded-lg text-sm font-medium transition-all ${sizeParam === size
-                                                ? 'bg-gray-900 text-white shadow-md ring-2 ring-gray-900 ring-offset-2'
-                                                : 'bg-white text-gray-700 border border-gray-200 hover:border-gray-400 hover:bg-gray-50'
-                                            }`}
-                                    >
-                                        {size}
-                                    </Link>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                <div className="mb-8">
+                    <SizeFilterBar sizes={allSizes} currentSize={sizeParam} baseUrl="/shop" />
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10">
