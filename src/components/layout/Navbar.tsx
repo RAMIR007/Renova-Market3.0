@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { ShoppingBag, Menu, X, Search } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
 
 import SearchBar from '@/components/common/SearchBar';
@@ -23,7 +23,9 @@ export function Navbar({ currentUser }: NavbarProps) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const pathname = usePathname();
+    const router = useRouter();
     const { cartCount } = useCart();
 
     // Handle scroll effect for glassmorphism
@@ -41,11 +43,18 @@ export function Navbar({ currentUser }: NavbarProps) {
         setIsSearchOpen(false);
     }, [pathname]);
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            router.push(`/shop?q=${encodeURIComponent(searchQuery)}`);
+        }
+    };
+
     const navLinks = [
         { name: 'Inicio', href: '/' },
         { name: 'Tienda', href: '/shop' },
         { name: 'Liquidación', href: '/shop?sort=price_asc', highlight: true },
-        { name: 'Deseos ❤️', href: '/wishlist' }, // Added Wishlist
+        { name: 'Deseos ❤️', href: '/wishlist' },
         { name: 'Pedidos', href: '/orders' },
         { name: 'Nosotros', href: '/about' },
     ];
@@ -72,7 +81,7 @@ export function Navbar({ currentUser }: NavbarProps) {
                     </Link>
 
                     {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center space-x-8">
+                    <nav className="hidden md:flex items-center space-x-6 lg:space-x-8">
                         {navLinks.map((link) => (
                             <Link
                                 key={link.href}
@@ -89,13 +98,36 @@ export function Navbar({ currentUser }: NavbarProps) {
 
                     {/* Icons */}
                     <div className="flex items-center space-x-4">
+
+                        {/* Desktop Search Bar - Always visible */}
+                        <form onSubmit={handleSearch} className="hidden md:flex items-center relative group">
+                            <input
+                                type="text"
+                                placeholder="Buscar..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                className={`
+                                    pl-4 pr-10 py-2 rounded-full text-sm transition-all duration-300 outline-none
+                                    ${isScrolled
+                                        ? 'bg-stone-100 focus:bg-white border border-transparent focus:border-stone-300 text-stone-900 placeholder-stone-500 w-40 lg:w-48 focus:w-64'
+                                        : 'bg-white/10 hover:bg-white/20 text-white placeholder-white/70 border border-white/20 focus:border-white/50 w-40 lg:w-48 focus:w-64 backdrop-blur-md'
+                                    }
+                                `}
+                            />
+                            <button type="submit" className={`absolute right-3 transition-opacity ${isScrolled ? 'text-stone-500 hover:text-stone-900' : 'text-white/70 hover:text-white'}`}>
+                                <Search className="w-4 h-4" />
+                            </button>
+                        </form>
+
+                        {/* Mobile Search Button */}
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className={`p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-gray-700' : 'text-gray-700 md:text-white'}`}
+                            className={`md:hidden p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-700' : 'text-stone-700 md:text-white'}`}
                         >
                             <Search className="w-5 h-5" />
                         </button>
-                        <Link href="/cart" className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-gray-700' : 'text-gray-700 md:text-white'}`}>
+
+                        <Link href="/cart" className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-700' : 'text-stone-700 md:text-white'}`}>
                             <ShoppingBag className="w-5 h-5" />
                             {cartCount > 0 && (
                                 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-blue-600 rounded-full">
