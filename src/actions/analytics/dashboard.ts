@@ -6,27 +6,41 @@ import { requireAdmin } from "@/lib/auth-check";
 export async function getDashboardStats() {
     await requireAdmin();
     try {
-        // 1. Total Revenue (from non-cancelled orders)
-        // Since sqlite/postgres differences in decimal aggregation can be tricky, we fetch and sum or use aggregate if supported
-        // Using Prisma aggregate:
-        const revenue = await prisma.order.aggregate({
-            _sum: {
-                total: true
-            },
-            where: {
-                status: { not: 'CANCELLED' }
+        // 1. Fetch data for Revenue and Profit calculation
+        const orders = await prisma.order.findMany({
+            where: { status: { not: 'CANCELLED' } },
+            include: {
+                items: {
+                    include: {
+                        product: {
+                            select: { cost: true }
+                        }
+                    }
+                }
             }
         });
 
-        // 2. Active Orders (Pending or Processing)
+        let revenue = 0;
+        let totalCost = 0;
+
+        orders.forEach(order => {
+            revenue += Number(order.total);
+            order.items.forEach(item => {
+                const itemCost = item.product.cost ? Number(item.product.cost) : 0;
+                totalCost += itemCost * item.quantity;
+            });
+        });
+
+        const netProfit = revenue - totalCost;
+
+        // 2. Active Orders
         const activeOrders = await prisma.order.count({
             where: {
                 status: { in: ['PENDING', 'PROCESSING'] }
             }
         });
 
-        // 3. New Customers (Total Users for now, ideally filtering by creation date)
-        // Let's just track Total Users with role USER
+        // 3. Total Customers
         const totalCustomers = await prisma.user.count({
             where: { role: 'USER' }
         });
@@ -36,20 +50,41 @@ export async function getDashboardStats() {
             where: { stock: { gt: 0 } }
         });
 
+        // 5. Visits (Page Views)
+        const visitsAgg = await prisma.dailyStat.aggregate({
+            _sum: { views: true }
+        });
+        const totalVisits = visitsAgg._sum.views || 0;
+
+        // 6. Clicks
+        const totalClicks = await prisma.analyticsEvent.count({
+            where: {
+                type: {
+                    in: ['click', 'CLICK'] // Handle case variations
+                }
+            }
+        });
+
         return {
-            revenue: Number(revenue._sum.total || 0),
+            revenue,
+            netProfit,
             activeOrders,
             totalCustomers,
-            productsCount
+            productsCount,
+            totalVisits,
+            totalClicks
         };
 
     } catch (error) {
         console.error("Error fetching dashboard stats:", error);
         return {
             revenue: 0,
+            netProfit: 0,
             activeOrders: 0,
             totalCustomers: 0,
-            productsCount: 0
+            productsCount: 0,
+            totalVisits: 0,
+            totalClicks: 0
         };
     }
 }

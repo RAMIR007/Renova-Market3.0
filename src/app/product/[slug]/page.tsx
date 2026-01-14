@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import MobileStickyBar from "@/components/shop/MobileStickyBar";
 import ShareButton from "@/components/shop/ShareButton";
+import ProductGallery from "@/components/shop/ProductGallery";
 
 export const revalidate = 3600; // ISR: Revalidate every hour
 export const dynamicParams = true; // Allow generating new pages on demand
@@ -61,36 +62,11 @@ export default async function ProductPage({ params }: Props) {
             <div className="max-w-7xl mx-auto">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
                     {/* Image Gallery */}
-                    <div className="relative aspect-square rounded-2xl overflow-hidden bg-gray-100 dark:bg-zinc-800 group">
-                        {product.images[0] ? (
-                            <>
-                                <Image
-                                    src={product.images[0]}
-                                    alt={product.name}
-                                    fill
-                                    className="object-cover"
-                                    sizes="(max-width: 768px) 100vw, 50vw"
-                                    priority
-                                />
-                                <div className="absolute bottom-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                                    <a
-                                        href={product.images[0]}
-                                        download={`renova-${product.slug}.jpg`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="bg-white/90 backdrop-blur text-gray-800 p-2 rounded-full shadow-lg hover:bg-white hover:scale-110 transition-all"
-                                        title="Descargar Foto"
-                                    >
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
-                                    </a>
-                                </div>
-                            </>
-                        ) : (
-                            <div className="flex items-center justify-center h-full text-gray-400">
-                                Sin Imagen
-                            </div>
-                        )}
-                    </div>
+                    <ProductGallery
+                        images={product.images}
+                        productName={product.name}
+                        productSlug={product.slug}
+                    />
 
                     {/* Product Info */}
                     <div className="flex flex-col space-y-6">
@@ -133,93 +109,93 @@ export default async function ProductPage({ params }: Props) {
                                 </div>
                             )}
                         </div>
-                    </div>
 
-                    {/* Unique Piece Details */}
-                    <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-xl border border-gray-100 dark:border-zinc-700 space-y-4">
-                        <h3 className="font-semibold text-gray-900 dark:text-white">Detalles de la Pieza Única</h3>
-                        <div className="grid grid-cols-2 gap-4 text-sm">
-                            <div>
-                                <span className="block text-gray-500">Talla</span>
-                                <span className="font-medium text-gray-900 dark:text-white">{product.size || 'N/A'}</span>
-                            </div>
-                            <div>
-                                <span className="block text-gray-500">Color</span>
-                                <span className="font-medium text-gray-900 dark:text-white">{product.color || 'N/A'}</span>
-                            </div>
-                            <div>
-                                <span className="block text-gray-500 mb-1">Condición</span>
-                                <div className="flex items-center gap-2">
-                                    {['BUENO', 'EXCELENTE', 'NUEVO'].includes(product.condition || '') ? (
-                                        <div className="flex gap-0.5" title={`Condición: ${product.condition}`}>
-                                            {[1, 2, 3, 4, 5].map((star) => (
-                                                <svg
-                                                    key={star}
-                                                    className={`w-4 h-4 ${(product.condition === 'NUEVO' && star <= 5) ||
-                                                        (product.condition === 'EXCELENTE' && star <= 4) ||
-                                                        (product.condition === 'BUENO' && star <= 3)
-                                                        ? "text-yellow-400 fill-yellow-400"
-                                                        : "text-gray-300 fill-gray-100"
-                                                        }`}
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                                                </svg>
-                                            ))}
-                                        </div>
-                                    ) : (
-                                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 capitalize">
-                                            {product.condition?.toLowerCase() || 'Usado'}
+                        {/* Unique Piece Details */}
+                        <div className="bg-gray-50 dark:bg-zinc-800/50 p-6 rounded-xl border border-gray-100 dark:border-zinc-700 space-y-4">
+                            <h3 className="font-semibold text-gray-900 dark:text-white">Detalles de la Pieza Única</h3>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <span className="block text-gray-500">Talla</span>
+                                    <span className="font-medium text-gray-900 dark:text-white">{product.size || 'N/A'}</span>
+                                </div>
+                                <div>
+                                    <span className="block text-gray-500">Color</span>
+                                    <span className="font-medium text-gray-900 dark:text-white">{product.color || 'N/A'}</span>
+                                </div>
+                                <div>
+                                    <span className="block text-gray-500 mb-1">Condición</span>
+                                    <div className="flex items-center gap-2">
+                                        {['BUENO', 'EXCELENTE', 'NUEVO'].includes(product.condition || '') ? (
+                                            <div className="flex gap-0.5" title={`Condición: ${product.condition}`}>
+                                                {[1, 2, 3, 4, 5].map((star) => (
+                                                    <svg
+                                                        key={star}
+                                                        className={`w-4 h-4 ${(product.condition === 'NUEVO' && star <= 5) ||
+                                                            (product.condition === 'EXCELENTE' && star <= 4) ||
+                                                            (product.condition === 'BUENO' && star <= 3)
+                                                            ? "text-yellow-400 fill-yellow-400"
+                                                            : "text-gray-300 fill-gray-100"
+                                                            }`}
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24"
+                                                    >
+                                                        <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                                    </svg>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800 capitalize">
+                                                {product.condition?.toLowerCase() || 'Usado'}
+                                            </span>
+                                        )}
+                                        <span className="text-xs text-gray-400 font-medium capitalize">
+                                            {product.condition?.toLowerCase()}
                                         </span>
-                                    )}
-                                    <span className="text-xs text-gray-400 font-medium capitalize">
-                                        {product.condition?.toLowerCase()}
+                                    </div>
+                                </div>
+                                <div>
+                                    <span className="block text-gray-500">Stock</span>
+                                    <span className={`font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                        {product.stock > 0 ? 'Disponible' : 'Agotado'}
                                     </span>
                                 </div>
                             </div>
-                            <div>
-                                <span className="block text-gray-500">Stock</span>
-                                <span className={`font-medium ${product.stock > 0 ? 'text-green-600' : 'text-red-600'}`}>
-                                    {product.stock > 0 ? 'Disponible' : 'Agotado'}
-                                </span>
-                            </div>
                         </div>
-                    </div>
 
-                    <div className="prose prose-sm dark:prose-invert text-gray-600 dark:text-gray-300">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Descripción</h3>
-                        <p>{product.description}</p>
-                    </div>
+                        <div className="prose prose-sm dark:prose-invert text-gray-600 dark:text-gray-300">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Descripción</h3>
+                            <p className="whitespace-pre-line">{product.description}</p>
+                        </div>
 
-                    <div className="flex flex-col gap-3">
-                        <AddToCartButton product={{
-                            ...product,
-                            price: Number(product.price)
-                        }} />
-                        <ShareButton
-                            title={`Mira este increíble hallazgo en Renova: ${product.name}`}
-                            text={`He encontrado este ${product.name} genial. ¡Es pieza única!`}
-                        />
-                    </div>
+                        <div className="flex flex-col gap-3">
+                            <AddToCartButton product={{
+                                ...product,
+                                price: Number(product.price)
+                            }} />
+                            <ShareButton
+                                title={`Mira este increíble hallazgo en Renova: ${product.name}`}
+                                text={`He encontrado este ${product.name} genial. ¡Es pieza única!`}
+                            />
+                        </div>
 
-                    <p className="text-xs text-center text-gray-500 mt-4">
-                        Envío disponible a toda Cuba • Garantía de devolución
-                    </p>
+                        <p className="text-xs text-center text-gray-500 mt-4">
+                            Envío disponible a toda Cuba • Garantía de devolución
+                        </p>
+                    </div>
                 </div>
-            </div>
 
-            {/* Related Products */}
-            <div className="mt-20 border-t border-gray-100 dark:border-zinc-800 pt-10">
-                <h2 className="text-2xl font-bold mb-6">Completa el Look</h2>
-                <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
-            </div>
+                {/* Related Products */}
+                <div className="mt-20 border-t border-gray-100 dark:border-zinc-800 pt-10">
+                    <h2 className="text-2xl font-bold mb-6">Completa el Look</h2>
+                    <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
+                </div>
 
-            {/* Mobile Actions */}
-            <MobileStickyBar product={{
-                ...product,
-                price: Number(product.price)
-            }} />
+                {/* Mobile Actions */}
+                <MobileStickyBar product={{
+                    ...product,
+                    price: Number(product.price)
+                }} />
+            </div>
         </div>
     );
 }

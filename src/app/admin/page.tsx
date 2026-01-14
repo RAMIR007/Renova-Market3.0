@@ -5,7 +5,10 @@ import {
     ShoppingBag,
     Package,
     ArrowUpRight,
-    ArrowDownRight
+    ArrowDownRight,
+    TrendingUp,
+    Eye,
+    MousePointer2
 } from 'lucide-react'
 import { getDashboardStats } from '@/actions/analytics/dashboard'
 import { prisma } from '@/lib/prisma'
@@ -26,10 +29,16 @@ export default async function AdminDashboard() {
         {
             label: 'Ingresos Totales',
             value: `$${statsData.revenue.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
-            // change: '+0%', // Dynamic change calc requires fetching previous period. Omitted for MVP.
             icon: DollarSign,
             color: 'text-emerald-600',
             bg: 'bg-emerald-50'
+        },
+        {
+            label: 'Ganancias Netas',
+            value: `$${statsData.netProfit.toLocaleString('en-US', { minimumFractionDigits: 2 })}`,
+            icon: TrendingUp,
+            color: 'text-green-600',
+            bg: 'bg-green-50'
         },
         {
             label: 'Órdenes Activas',
@@ -37,6 +46,20 @@ export default async function AdminDashboard() {
             icon: ShoppingBag,
             color: 'text-blue-600',
             bg: 'bg-blue-50'
+        },
+        {
+            label: 'Visitas Totales',
+            value: statsData.totalVisits.toLocaleString(),
+            icon: Eye,
+            color: 'text-indigo-600',
+            bg: 'bg-indigo-50'
+        },
+        {
+            label: 'Clicks Totales',
+            value: statsData.totalClicks.toLocaleString(),
+            icon: MousePointer2,
+            color: 'text-pink-600',
+            bg: 'bg-pink-50'
         },
         {
             label: 'Clientes',

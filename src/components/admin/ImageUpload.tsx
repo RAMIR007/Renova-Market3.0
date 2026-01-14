@@ -98,7 +98,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 onSuccess={onUpload}
                 uploadPreset="renova_preset" // IMPORTANT: User must create this in Cloudinary Settings > Upload > Add Upload Preset (Unsigned)
                 options={{
-                    maxFiles: 1,
+                    maxFiles: 10,
                     sources: ['local', 'camera', 'url'],
                 }}
             >

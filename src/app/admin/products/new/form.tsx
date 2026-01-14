@@ -358,10 +358,10 @@ export default function NewProductForm({ categories, userRole }: NewProductFormP
                         <label className="block text-sm font-medium text-gray-700 mb-2">Imágenes del Producto</label>
                         <ImageUpload
                             value={images}
-                            onChange={(url) => setImages([...images, url])}
-                            onRemove={(url) => setImages(images.filter((current) => current !== url))}
+                            onChange={(url) => setImages(prev => [...prev, url])}
+                            onRemove={(url) => setImages(prev => prev.filter((current) => current !== url))}
                             onImageUpdate={(oldUrl, newUrl) => {
-                                setImages(images.map(img => img === oldUrl ? newUrl : img));
+                                setImages(prev => prev.map(img => img === oldUrl ? newUrl : img));
                             }}
                         />
                         {/* Hidden inputs to ensure the URLs are submitted with the form */}
