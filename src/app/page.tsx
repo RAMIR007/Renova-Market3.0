@@ -141,12 +141,7 @@ export default async function Home() {
             // 1. Manually set image
             let imageUrl = category.image;
 
-            // 2. Automatic fallback from first product
-            if (!imageUrl && category.products?.length > 0 && category.products[0].images?.length > 0) {
-              imageUrl = category.products[0].images[0];
-            }
-
-            // 3. Keyword-based fallback (if no product image yet)
+            // 2. Keyword-based fallback (Prioritize generics for specific categories)
             if (!imageUrl) {
               const lowerName = category.name.toLowerCase();
               if (lowerName.includes('abrigo') || lowerName.includes('chaqueta')) {
@@ -154,6 +149,11 @@ export default async function Home() {
               } else if (lowerName.includes('mono') || lowerName.includes('jumpsuit')) {
                 imageUrl = 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=2000&auto=format&fit=crop';
               }
+            }
+
+            // 3. Automatic fallback from first product
+            if (!imageUrl && category.products?.length > 0 && category.products[0].images?.length > 0) {
+              imageUrl = category.products[0].images[0];
             }
 
             return (
