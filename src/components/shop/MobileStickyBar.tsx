@@ -2,8 +2,9 @@
 
 import { useCart, CartItem } from '@/context/CartContext';
 import { ShoppingBag } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import QuickBuyModal from './QuickBuyModal';
+import { getSellerPhoneByCode } from '@/actions/referral';
 
 interface Props {
     product: {
@@ -20,6 +21,25 @@ export default function MobileStickyBar({ product }: Props) {
     const { addItem } = useCart();
     const [isAdded, setIsAdded] = useState(false);
     const [showQuickBuy, setShowQuickBuy] = useState(false);
+    const [sellerPhone, setSellerPhone] = useState<string | undefined>(undefined);
+
+    useEffect(() => {
+        const fetchSellerPhone = async () => {
+            const params = new URLSearchParams(window.location.search);
+            let refCode = params.get('ref');
+
+            if (!refCode) {
+                const match = document.cookie.match(new RegExp('(^| )referral_code=([^;]+)'));
+                if (match) refCode = match[2];
+            }
+
+            if (refCode) {
+                const phone = await getSellerPhoneByCode(refCode);
+                if (phone) setSellerPhone(phone);
+            }
+        };
+        fetchSellerPhone();
+    }, []);
 
     const handleAddToCart = () => {
         const item: CartItem = {
@@ -67,6 +87,7 @@ export default function MobileStickyBar({ product }: Props) {
                     price: Number(product.price),
                     slug: product.slug
                 }}
+                sellerPhone={sellerPhone}
             />
         </>
     );
