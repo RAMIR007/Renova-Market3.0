@@ -41,59 +41,59 @@ export default async function Home() {
   ]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-zinc-900 text-gray-900 dark:text-gray-100">
+    <div className="flex flex-col min-h-screen bg-stone-50 dark:bg-stone-950 text-stone-900 dark:text-stone-100">
       <div className="mt-16 md:mt-20"> {/* Spacer for fixed navbar */}
         <Stories />
       </div>
 
       {/* Hero Section */}
-      <section className="relative w-full h-[95vh] min-h-[600px] flex items-center justify-start overflow-hidden bg-gray-900">
+      <section className="relative w-full h-[95vh] min-h-[600px] flex items-center justify-start overflow-hidden bg-stone-900">
         {/* Background Image with modern overlay */}
         <div className="absolute inset-0 z-0">
           <Image
-            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?q=80&w=2070&auto=format&fit=crop"
-            alt="Nueva Colección Renova"
+            src="https://images.unsplash.com/photo-1534008779836-3a5fe61ce049?q=80&w=2070&auto=format&fit=crop"
+            alt="Moda Única en La Habana"
             fill
             priority
-            className="object-cover object-center"
+            className="object-cover object-center grayscale-[0.3]"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-black/20" />
+          <div className="absolute inset-0 bg-gradient-to-r from-stone-900/90 via-stone-900/40 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-stone-900 via-transparent to-black/20" />
         </div>
 
         <div className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pt-20">
           <div className="max-w-3xl animate-in fade-in slide-in-from-bottom-8 duration-700">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white text-sm font-semibold tracking-wide mb-8 shadow-lg">
-              <span className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
-              NUEVA TEMPORADA 2026
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-stone-100/10 backdrop-blur-md border border-stone-200/20 text-stone-100 text-sm font-semibold tracking-wide mb-8 shadow-lg">
+              <span className="w-2 h-2 rounded-full bg-amber-200 animate-pulse" />
+              COLECCIÓN HABANA 2026
             </div>
 
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-white tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl">
-              DEFINE <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-200 to-orange-400 bg-[length:200%_auto] animate-gradient">
-                TU ESTILO
+            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-stone-100 tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl">
+              ESENCIA <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-orange-100 to-amber-200 bg-[length:200%_auto] animate-gradient">
+                ÚNICA
               </span>
             </h1>
 
-            <p className="text-xl sm:text-2xl text-gray-200 mb-10 max-w-xl font-light leading-relaxed drop-shadow-md">
-              Explora una colección donde la elegancia se encuentra con la sostenibilidad. Piezas únicas para gente auténtica.
+            <p className="text-xl sm:text-2xl text-stone-200 mb-10 max-w-xl font-light leading-relaxed drop-shadow-md">
+              Moda exclusiva inspirada en el alma de La Habana. Encuentra piezas seleccionadas que cuentan tu propia historia.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-5">
               <Link
                 href="/shop"
-                className="group relative inline-flex items-center justify-center px-8 py-4 bg-white text-black font-bold rounded-full overflow-hidden transition-transform active:scale-95 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.5)]"
+                className="group relative inline-flex items-center justify-center px-8 py-4 bg-stone-100 text-stone-900 font-bold rounded-full overflow-hidden transition-transform active:scale-95 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.4)]"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-r from-white to-stone-200 opacity-0 group-hover:opacity-100 transition-opacity" />
                 <span className="relative z-10 flex items-center gap-2 text-lg">
-                  Ver Colección
+                  Ver Catálogo
                   <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
                 </span>
               </Link>
 
               <Link
                 href="/about"
-                className="inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-white border border-white/30 hover:bg-white/10 backdrop-blur-md transition-colors text-lg"
+                className="inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-stone-100 border border-stone-200/30 hover:bg-stone-100/10 backdrop-blur-md transition-colors text-lg"
               >
                 Nuestra Historia
               </Link>
@@ -103,19 +103,19 @@ export default async function Home() {
       </section>
 
       {/* Benefits Banner */}
-      <section className="bg-black text-white py-12 border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-gray-800">
+      <section className="bg-stone-900 text-stone-100 py-12 border-b border-stone-800">
+        <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8 text-center divide-y md:divide-y-0 md:divide-x divide-stone-800">
           <div className="p-4">
-            <h3 className="font-bold text-xl mb-2">💎 Calidad Premium</h3>
-            <p className="text-gray-400">Selección curada de las mejores marcas y estados.</p>
+            <h3 className="font-bold text-xl mb-2 text-amber-100">💎 Calidad Premium</h3>
+            <p className="text-stone-400">Selección curada de las mejores marcas y estados.</p>
           </div>
           <div className="p-4">
-            <h3 className="font-bold text-xl mb-2">🌿 100% Sostenible</h3>
-            <p className="text-gray-400">Dale una segunda vida a la moda y cuida el planeta.</p>
+            <h3 className="font-bold text-xl mb-2 text-amber-100">🌿 100% Sostenible</h3>
+            <p className="text-stone-400">Dale una segunda vida a la moda y cuida el planeta.</p>
           </div>
           <div className="p-4">
-            <h3 className="font-bold text-xl mb-2">🚀 Envíos en La Habana</h3>
-            <p className="text-gray-400">Entrega rápida y segura a todos los municipios.</p>
+            <h3 className="font-bold text-xl mb-2 text-amber-100">🚀 Envíos en La Habana</h3>
+            <p className="text-stone-400">Entrega rápida y segura a todos los municipios.</p>
           </div>
         </div>
       </section>
@@ -124,7 +124,7 @@ export default async function Home() {
       <section className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Categorías Populares</h2>
-          <p className="text-gray-600 dark:text-gray-400">Todo lo que necesitas para completar tu outfit</p>
+          <p className="text-stone-600 dark:text-stone-400">Todo lo que necesitas para completar tu outfit</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -135,7 +135,7 @@ export default async function Home() {
               className="group relative h-80 overflow-hidden rounded-2xl shadow-md cursor-pointer"
             >
               {category.image ? (
-                <div className="absolute inset-0 bg-gray-200">
+                <div className="absolute inset-0 bg-stone-200">
                   <Image
                     src={category.image || '/images/placeholder.jpg'}
                     alt={category.name}
@@ -145,7 +145,7 @@ export default async function Home() {
                   />
                 </div>
               ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900 dark:to-purple-900" />
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-stone-200 dark:from-stone-800 dark:to-stone-700" />
               )}
 
               <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
@@ -162,14 +162,14 @@ export default async function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-24 bg-white dark:bg-zinc-800/50">
+      <section className="py-24 bg-white dark:bg-stone-900/50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-12">
             <div>
               <h2 className="text-3xl font-bold mb-2">Destacados</h2>
-              <p className="text-gray-600 dark:text-gray-400">Nuestros productos favoritos del mes</p>
+              <p className="text-stone-600 dark:text-stone-400">Nuestros productos favoritos del mes</p>
             </div>
-            <Link href="/shop" className="text-black dark:text-white font-medium hover:underline hidden sm:block decoration-2 underline-offset-4">
+            <Link href="/shop" className="text-stone-900 dark:text-stone-100 font-medium hover:underline hidden sm:block decoration-2 underline-offset-4 decoration-amber-400">
               Ver todo &rarr;
             </Link>
           </div>
@@ -181,7 +181,7 @@ export default async function Home() {
           </div>
 
           <div className="mt-12 text-center sm:hidden">
-            <Link href="/shop" className="inline-block border border-gray-300 px-6 py-3 rounded-full text-sm font-medium hover:bg-gray-50 transition-colors">
+            <Link href="/shop" className="inline-block border border-stone-300 px-6 py-3 rounded-full text-sm font-medium hover:bg-stone-50 transition-colors">
               Ver todos los productos
             </Link>
           </div>
@@ -189,14 +189,14 @@ export default async function Home() {
       </section>
 
       {/* Footer Teaser */}
-      <section className="py-20 bg-gray-900 text-white text-center px-4">
+      <section className="py-20 bg-stone-900 text-stone-100 text-center px-4">
         <h2 className="text-3xl md:text-4xl font-bold mb-6">¿Listo para renovar tu look?</h2>
-        <p className="text-gray-300 max-w-2xl mx-auto mb-8 text-lg">
+        <p className="text-stone-400 max-w-2xl mx-auto mb-8 text-lg">
           Descubre las últimas tendencias y encuentra tu estilo único.
         </p>
         <Link
           href="/shop"
-          className="inline-block bg-white text-gray-900 px-8 py-3 rounded-full font-bold hover:bg-gray-100 transition-colors"
+          className="inline-block bg-amber-100 text-stone-900 px-8 py-3 rounded-full font-bold hover:bg-white transition-colors"
         >
           Ir a la Tienda
         </Link>
