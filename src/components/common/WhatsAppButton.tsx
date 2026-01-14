@@ -51,7 +51,16 @@ export default function WhatsAppButton({ initialPhoneNumber }: { initialPhoneNum
 
     if (!phoneNumber) return null;
 
-    const whatsappUrl = `https://wa.me/53${phoneNumber}?text=Hola!%20Me%20interesa%20un%20producto%20de%20Renova%20Market.`;
+    // Sanitize: Remove any non-numeric characters (spaces, +, -, etc.)
+    const cleanPhone = phoneNumber.replace(/\D/g, '');
+
+    // Ensure it starts with 53 (Cuba)
+    const finalPhone = cleanPhone.startsWith('53') && cleanPhone.length > 8
+        ? cleanPhone
+        : `53${cleanPhone}`;
+
+    const message = encodeURIComponent("Hola, tengo una duda sobre la tienda Renova Market.");
+    const whatsappUrl = `https://wa.me/${finalPhone}?text=${message}`;
 
     return (
         <a
