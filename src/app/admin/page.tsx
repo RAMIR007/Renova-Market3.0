@@ -96,6 +96,54 @@ export default async function AdminDashboard() {
                 ))}
             </div>
 
+            {/* Quick Access Grid */}
+            <div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Accesos Rápidos</h3>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <Link href="/admin/products" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group flex flex-col items-center justify-center gap-3 text-center">
+                        <div className="p-3 bg-blue-50 text-blue-600 rounded-full group-hover:scale-110 transition-transform">
+                            <Package size={24} />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-blue-600">Productos</span>
+                    </Link>
+
+                    <Link href="/admin/products/new" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group flex flex-col items-center justify-center gap-3 text-center">
+                        <div className="p-3 bg-green-50 text-green-600 rounded-full group-hover:scale-110 transition-transform">
+                            <ArrowUpRight size={24} />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-green-600">Nuevo Producto</span>
+                    </Link>
+
+                    <Link href="/admin/orders" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group flex flex-col items-center justify-center gap-3 text-center">
+                        <div className="p-3 bg-purple-50 text-purple-600 rounded-full group-hover:scale-110 transition-transform">
+                            <ShoppingBag size={24} />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-purple-600">Órdenes</span>
+                    </Link>
+
+                    <Link href="/admin/categories" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group flex flex-col items-center justify-center gap-3 text-center">
+                        <div className="p-3 bg-orange-50 text-orange-600 rounded-full group-hover:scale-110 transition-transform">
+                            <div className="w-6 h-6 border-2 border-current rounded-md border-dashed" />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-orange-600">Categorías</span>
+                    </Link>
+
+                    <Link href="/admin/users" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group flex flex-col items-center justify-center gap-3 text-center">
+                        <div className="p-3 bg-pink-50 text-pink-600 rounded-full group-hover:scale-110 transition-transform">
+                            <Users size={24} />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-pink-600">Usuarios</span>
+                    </Link>
+
+                    <Link href="/admin/settings" className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:border-indigo-200 transition-all group flex flex-col items-center justify-center gap-3 text-center">
+                        <div className="p-3 bg-gray-50 text-gray-600 rounded-full group-hover:scale-110 transition-transform">
+                            <div className="w-6 h-6 border-2 border-current rounded-full" />
+                        </div>
+                        <span className="font-medium text-gray-700 group-hover:text-gray-900">Configuración</span>
+                    </Link>
+                </div>
+            </div>
+
             {/* Recent Activity Section */}
             <div className="grid gap-6 lg:grid-cols-3">
                 {/* Simplified Chart Area Placeholder - Dynamic Charting requires client lib like Recharts */}
