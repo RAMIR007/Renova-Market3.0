@@ -131,3 +131,16 @@ export async function deleteProduct(id: string) {
     revalidatePath("/admin/products")
     revalidatePath("/")
 }
+
+export async function updateProductStatus(id: string, status: "AVAILABLE" | "RESERVED" | "SOLD") {
+    await requireAdmin();
+
+    await prisma.product.update({
+        where: { id },
+        data: { status }
+    });
+
+    revalidatePath("/admin/products");
+    revalidatePath("/shop"); // Update shop listing
+    revalidatePath("/"); // Update home page featured/recent
+}

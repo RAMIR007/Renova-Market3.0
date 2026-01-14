@@ -3,6 +3,7 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import { deleteProduct } from "@/actions/products";
 import { Plus, Trash2, Edit } from "lucide-react";
+import ProductStatusSelect from "@/components/admin/ProductStatusSelect";
 
 // Force dynamic rendering to always show latest stock
 export const dynamic = 'force-dynamic';
@@ -76,17 +77,10 @@ export default async function AdminProductsPage() {
                                         </span>
                                     </td>
                                     <td className="px-6 py-4">
-                                        {product.stock > 0 ? (
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-100">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                                                Disponible
-                                            </span>
-                                        ) : (
-                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-100">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                                Vendido
-                                            </span>
-                                        )}
+                                        <ProductStatusSelect
+                                            productId={product.id}
+                                            currentStatus={product.status as "AVAILABLE" | "RESERVED" | "SOLD"}
+                                        />
                                     </td>
                                     <td className="px-6 py-4 font-medium text-gray-900">
                                         ${Number(product.price).toFixed(2)}
