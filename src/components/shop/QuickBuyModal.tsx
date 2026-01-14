@@ -13,6 +13,7 @@ interface Props {
         name: string;
         price: number;
         slug: string;
+        image?: string;
     };
     sellerPhone?: string; // Optional phone number to direct message to
 }
@@ -63,6 +64,7 @@ export default function QuickBuyModal({ isOpen, onClose, product, sellerPhone = 
                 header: `🚀 *NUEVA ORDEN RÁPIDA* #${result.orderId?.slice(0, 8)}`,
                 prodInfo: `📦 *Producto:* ${product.name}\n💰 *Precio:* $${product.price}`,
                 prodLink: `🔗 *Ver Producto:* ${productLink}`,
+                imageLink: product.image ? `📷 *Foto:* ${product.image}` : '',
 
                 clientHeader: `👤 *Datos del Cliente:*`,
                 clientData: `Nombre: ${formData.name}\nTel: ${formData.phone}\nDir: ${formData.address}` + (formData.email ? `\nEmail: ${formData.email}` : ''),
@@ -75,13 +77,14 @@ export default function QuickBuyModal({ isOpen, onClose, product, sellerPhone = 
                 "",
                 t.prodInfo,
                 t.prodLink,
+                t.imageLink,
                 "",
                 t.clientHeader,
                 t.clientData,
                 "",
                 "------------------",
                 t.adminSection
-            ].join('\n');
+            ].filter(Boolean).join('\n'); // filter(Boolean) removes empty lines created by empty imageLink
 
             console.log("WhatsApp Message:", fullMessage);
 

@@ -24,6 +24,23 @@ export async function generateStaticParams() {
     }));
 }
 
+export async function generateMetadata({ params }: Props) {
+    const { slug } = await params;
+    const product = await getProduct(slug);
+
+    if (!product) return {};
+
+    return {
+        title: `${product.name} | Renova Market`,
+        description: product.description?.slice(0, 160) || `Compra ${product.name} en Renova Market.`,
+        openGraph: {
+            title: product.name,
+            description: product.description?.slice(0, 160),
+            images: product.images[0] ? [{ url: product.images[0] }] : [],
+        },
+    };
+}
+
 async function getProduct(slug: string) {
     return await prisma.product.findUnique({
         where: { slug },

@@ -93,9 +93,13 @@ export default async function Home() {
 
               <Link
                 href="/about"
+                className="hidden" // Hiding the old button temporarily or removing it implies easier diff
+              />
+              <Link
+                href="#categories"
                 className="inline-flex items-center justify-center px-8 py-4 rounded-full font-bold text-stone-100 border border-stone-200/30 hover:bg-stone-100/10 backdrop-blur-md transition-colors text-lg"
               >
-                Nuestra Historia
+                Explorar Categorías
               </Link>
             </div>
           </div>
@@ -121,43 +125,56 @@ export default async function Home() {
       </section>
 
       {/* Categories Section */}
-      <section className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+      <section id="categories" className="py-16 md:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full scroll-mt-20">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold mb-4">Categorías Populares</h2>
           <p className="text-stone-600 dark:text-stone-400">Todo lo que necesitas para completar tu outfit</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/category/${category.slug}`}
-              className="group relative h-80 overflow-hidden rounded-2xl shadow-md cursor-pointer"
-            >
-              {category.image ? (
-                <div className="absolute inset-0 bg-stone-200">
-                  <Image
-                    src={category.image || '/images/placeholder.jpg'}
-                    alt={category.name}
-                    fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                  />
+          {categories.map((category) => {
+            // Fallback images for specific categories if missing
+            let imageUrl = category.image;
+            if (!imageUrl) {
+              const lowerName = category.name.toLowerCase();
+              if (lowerName.includes('abrigo') || lowerName.includes('chaqueta')) {
+                imageUrl = 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?q=80&w=2000&auto=format&fit=crop';
+              } else if (lowerName.includes('mono') || lowerName.includes('jumpsuit')) {
+                imageUrl = 'https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?q=80&w=2000&auto=format&fit=crop';
+              }
+            }
+
+            return (
+              <Link
+                key={category.id}
+                href={`/category/${category.slug}`}
+                className="group relative h-80 overflow-hidden rounded-2xl shadow-md cursor-pointer"
+              >
+                {imageUrl ? (
+                  <div className="absolute inset-0 bg-stone-200">
+                    <Image
+                      src={imageUrl}
+                      alt={category.name}
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-110"
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                    />
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-stone-200 dark:from-stone-800 dark:to-stone-700" />
+                )}
+
+                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
+
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-4">
+                  <h3 className="text-3xl font-bold mb-2">{category.name}</h3>
+                  <p className="opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300">
+                    Explorar
+                  </p>
                 </div>
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-amber-100 to-stone-200 dark:from-stone-800 dark:to-stone-700" />
-              )}
-
-              <div className="absolute inset-0 bg-black/30 group-hover:bg-black/40 transition-colors" />
-
-              <div className="absolute inset-0 flex flex-col items-center justify-center text-white p-4">
-                <h3 className="text-3xl font-bold mb-2">{category.name}</h3>
-                <p className="opacity-0 group-hover:opacity-100 transition-opacity transform translate-y-4 group-hover:translate-y-0 duration-300">
-                  Explorar
-                </p>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       </section>
 
