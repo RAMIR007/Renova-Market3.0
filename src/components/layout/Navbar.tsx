@@ -62,8 +62,8 @@ export function Navbar({ currentUser }: NavbarProps) {
     return (
         <header
             className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-                ? 'bg-white/80 backdrop-blur-md shadow-sm border-b border-white/20'
-                : 'bg-transparent'
+                ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-stone-200/50 py-1'
+                : 'bg-gradient-to-b from-black/60 to-transparent py-3'
                 }`}
         >
             <InstallPrompt />
@@ -86,9 +86,11 @@ export function Navbar({ currentUser }: NavbarProps) {
                             <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`text-sm font-medium transition-colors hover:text-blue-500 ${link.highlight
-                                    ? 'text-red-500 hover:text-red-600'
-                                    : isScrolled ? 'text-gray-700' : 'text-gray-200 hover:text-white'
+                                className={`text-sm tracking-wide transition-all duration-200 ${link.highlight
+                                    ? 'text-red-600 font-extrabold hover:text-red-700 hover:scale-105'
+                                    : isScrolled
+                                        ? 'text-stone-800 font-bold hover:text-stone-500' // Scrolled: Dark & Bold
+                                        : 'text-white font-bold drop-shadow-sm hover:text-amber-300' // Transparent: White & Shadow
                                     }`}
                             >
                                 {link.name}
@@ -107,14 +109,14 @@ export function Navbar({ currentUser }: NavbarProps) {
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 className={`
-                                    pl-4 pr-10 py-2 rounded-full text-sm transition-all duration-300 outline-none
+                                    pl-4 pr-10 py-2 rounded-full text-sm transition-all duration-300 outline-none font-medium
                                     ${isScrolled
-                                        ? 'bg-stone-100 focus:bg-white border border-transparent focus:border-stone-300 text-stone-900 placeholder-stone-500 w-40 lg:w-48 focus:w-64'
-                                        : 'bg-white/10 hover:bg-white/20 text-white placeholder-white/70 border border-white/20 focus:border-white/50 w-40 lg:w-48 focus:w-64 backdrop-blur-md'
+                                        ? 'bg-stone-100 focus:bg-white border border-transparent focus:border-stone-400 text-stone-900 placeholder-stone-500 w-40 lg:w-48 focus:w-64'
+                                        : 'bg-black/20 hover:bg-black/40 focus:bg-black/50 text-white placeholder-white/80 border border-white/30 focus:border-white/70 w-40 lg:w-48 focus:w-64 backdrop-blur-md'
                                     }
                                 `}
                             />
-                            <button type="submit" className={`absolute right-3 transition-opacity ${isScrolled ? 'text-stone-500 hover:text-stone-900' : 'text-white/70 hover:text-white'}`}>
+                            <button type="submit" className={`absolute right-3 transition-opacity ${isScrolled ? 'text-stone-500 hover:text-stone-900' : 'text-white hover:text-amber-300 drop-shadow-md'}`}>
                                 <Search className="w-4 h-4" />
                             </button>
                         </form>
@@ -122,15 +124,15 @@ export function Navbar({ currentUser }: NavbarProps) {
                         {/* Mobile Search Button */}
                         <button
                             onClick={() => setIsSearchOpen(true)}
-                            className={`md:hidden p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-700' : 'text-stone-700 md:text-white'}`}
+                            className={`md:hidden p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-900' : 'text-white drop-shadow-md'}`}
                         >
                             <Search className="w-5 h-5" />
                         </button>
 
-                        <Link href="/cart" className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-700' : 'text-stone-700 md:text-white'}`}>
-                            <ShoppingBag className="w-5 h-5" />
+                        <Link href="/cart" className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-900' : 'text-white drop-shadow-md'}`}>
+                            <ShoppingBag className={`w-5 h-5 ${!isScrolled && 'hover:text-amber-300 transition-colors'}`} />
                             {cartCount > 0 && (
-                                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-blue-600 rounded-full">
+                                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full shadow-sm">
                                     {cartCount}
                                 </span>
                             )}
@@ -138,7 +140,7 @@ export function Navbar({ currentUser }: NavbarProps) {
 
                         {/* Mobile Menu Button */}
                         <button
-                            className={`md:hidden p-2 rounded-md ${isScrolled ? 'text-gray-700' : 'text-gray-900'}`}
+                            className={`md:hidden p-2 rounded-md ${isScrolled ? 'text-stone-900' : 'text-white drop-shadow-md'}`}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
                             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -148,9 +150,9 @@ export function Navbar({ currentUser }: NavbarProps) {
                         {currentUser ? (
                             <Link
                                 href="/admin/profile"
-                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors backdrop-blur-sm ${isScrolled
-                                    ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                                    : 'bg-black/30 text-white hover:bg-black/40 border border-white/20'
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold transition-all backdrop-blur-sm ${isScrolled
+                                    ? 'bg-stone-100 text-stone-900 hover:bg-stone-200 border border-stone-200'
+                                    : 'bg-white/10 text-white hover:bg-white/20 border border-white/30 drop-shadow-md'
                                     }`}
                             >
                                 <User className="w-4 h-4" />
@@ -159,9 +161,9 @@ export function Navbar({ currentUser }: NavbarProps) {
                         ) : (
                             <Link
                                 href="/login"
-                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors backdrop-blur-sm ${isScrolled
-                                    ? 'bg-gray-900 text-white hover:bg-gray-800'
-                                    : 'bg-white text-gray-900 hover:bg-gray-100'
+                                className={`hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-bold transition-all backdrop-blur-sm ${isScrolled
+                                    ? 'bg-stone-900 text-white hover:bg-stone-800 shadow-md'
+                                    : 'bg-white text-stone-900 hover:bg-stone-100 shadow-lg border-white/50'
                                     }`}
                             >
                                 <User className="w-4 h-4" />
