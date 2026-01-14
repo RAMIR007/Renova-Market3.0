@@ -21,6 +21,7 @@ export async function getCategories() {
 export async function createCategory(formData: FormData) {
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
+    const image = formData.get('image') as string;
 
     if (!name) return { success: false, error: "El nombre es obligatorio" };
 
@@ -29,6 +30,7 @@ export async function createCategory(formData: FormData) {
             data: {
                 name,
                 description,
+                image: image || null,
                 slug: name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
             }
         });
@@ -36,6 +38,31 @@ export async function createCategory(formData: FormData) {
         return { success: true };
     } catch (error) {
         return { success: false, error: "Error al crear categoría" };
+    }
+}
+
+export async function updateCategory(formData: FormData) {
+    const id = formData.get('id') as string;
+    const name = formData.get('name') as string;
+    const description = formData.get('description') as string;
+    const image = formData.get('image') as string;
+
+    if (!id || !name) return { success: false, error: "ID y nombre son obligatorios" };
+
+    try {
+        await prisma.category.update({
+            where: { id },
+            data: {
+                name,
+                description,
+                image: image || null,
+                slug: name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
+            }
+        });
+        revalidatePath('/admin/categories');
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: "Error al actualizar la categoría" };
     }
 }
 

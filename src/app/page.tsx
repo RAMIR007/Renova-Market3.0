@@ -10,8 +10,13 @@ export const revalidate = 3600; // Update every hour (ISR)
 async function getCategories() {
   try {
     return await prisma.category.findMany({
-      take: 3,
-      orderBy: { name: 'asc' }
+      orderBy: { name: 'asc' },
+      include: {
+        products: {
+          take: 1,
+          select: { images: true }
+        }
+      }
     });
   } catch (error) {
     console.error("Database Error (Categories):", error);
@@ -132,9 +137,16 @@ export default async function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {categories.map((category) => {
-            // Fallback images for specific categories if missing
+          {categories.map((category: any) => {
+            // 1. Manually set image
             let imageUrl = category.image;
+
+            // 2. Automatic fallback from first product
+            if (!imageUrl && category.products?.length > 0 && category.products[0].images?.length > 0) {
+              imageUrl = category.products[0].images[0];
+            }
+
+            // 3. Keyword-based fallback (if no product image yet)
             if (!imageUrl) {
               const lowerName = category.name.toLowerCase();
               if (lowerName.includes('abrigo') || lowerName.includes('chaqueta')) {
