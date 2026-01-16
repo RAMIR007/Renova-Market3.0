@@ -5,7 +5,15 @@ import ProductCard from "@/components/shop/ProductCard";
 
 export const revalidate = 3600; // Update every hour (ISR)
 
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Renova Market | Moda Circular y Sostenible en Cuba",
+  description: "Compra y vende ropa de segunda mano de marcas exclusivas en Cuba. Únete a la revolución de la moda circular.",
+  alternates: {
+    canonical: 'https://renovamarket.com',
+  }
+};
 
 async function getCategories() {
   try {

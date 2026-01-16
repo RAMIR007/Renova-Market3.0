@@ -33,6 +33,7 @@ import ReferralTracker from "@/components/common/ReferralTracker";
 import { getCurrentUser } from "@/actions/user-session";
 import SellerToolbar from "@/components/admin/SellerToolbar";
 import PageTracker from "@/components/analytics/PageTracker";
+import CartDrawer from "@/components/shop/CartDrawer";
 
 export default async function RootLayout({
   children,
@@ -61,9 +62,11 @@ export default async function RootLayout({
             <SellerToolbar referralCode={currentUser.referralCode} userName={currentUser.name || 'Vendedor'} />
           )}
 
+
           <ReferralTracker />
           <PageTracker />
           <Navbar currentUser={currentUser} />
+          <CartDrawer />
           <main className="flex-grow">
             {children}
           </main>

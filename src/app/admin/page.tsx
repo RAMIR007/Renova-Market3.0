@@ -5,18 +5,20 @@ import {
     ShoppingBag,
     Package,
     ArrowUpRight,
-    ArrowDownRight,
     TrendingUp,
     Eye,
     MousePointer2
 } from 'lucide-react'
 import { getDashboardStats } from '@/actions/analytics/dashboard'
 import { prisma } from '@/lib/prisma'
+import { getSalesChartData } from '@/actions/analytics/chart-data'
+import SalesChart from '@/components/admin/SalesChart'
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
     const statsData = await getDashboardStats();
+    const chartData = await getSalesChartData();
 
     // Fetch recent orders directly
     const recentOrders = await prisma.order.findMany({
@@ -169,10 +171,12 @@ export default async function AdminDashboard() {
 
             {/* Recent Activity Section */}
             <div className="grid gap-6 lg:grid-cols-3">
-                {/* Simplified Chart Area Placeholder - Dynamic Charting requires client lib like Recharts */}
-                <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-100 shadow-sm min-h-[400px] flex items-center justify-center text-gray-400">
-                    <p>Gráfica de ventas (Próximamente)</p>
-                    {/* Reimplementing the chart logic needs actual date-grouped data, which is complex for MVP step. Keeping placeholder. */}
+                {/* Sales Chart */}
+                <div className="lg:col-span-2 bg-white p-6 rounded-xl border border-gray-100 shadow-sm min-h-[400px]">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="font-semibold text-gray-900">Ventas (Últimos 30 días)</h3>
+                    </div>
+                    <SalesChart data={chartData} />
                 </div>
 
                 {/* Recent Orders List */}

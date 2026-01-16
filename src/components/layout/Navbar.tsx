@@ -26,7 +26,7 @@ export function Navbar({ currentUser }: NavbarProps) {
     const [searchQuery, setSearchQuery] = useState('');
     const pathname = usePathname();
     const router = useRouter();
-    const { cartCount } = useCart();
+    const { cartCount, openCart } = useCart();
 
     // Handle scroll effect for glassmorphism
     useEffect(() => {
@@ -141,14 +141,17 @@ export function Navbar({ currentUser }: NavbarProps) {
                             <Search className="w-5 h-5" />
                         </button>
 
-                        <Link href="/cart" className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-900' : 'text-white drop-shadow-md'}`}>
+                        <button
+                            onClick={openCart}
+                            className={`relative p-2 rounded-full hover:bg-black/5 transition-colors ${isScrolled ? 'text-stone-900' : 'text-white drop-shadow-md'}`}
+                        >
                             <ShoppingBag className={`w-5 h-5 ${!isScrolled && 'hover:text-amber-300 transition-colors'}`} />
                             {cartCount > 0 && (
                                 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1.5 py-0.5 text-xs font-bold leading-none text-white transform translate-x-1/4 -translate-y-1/4 bg-red-600 rounded-full shadow-sm">
                                     {cartCount}
                                 </span>
                             )}
-                        </Link>
+                        </button>
 
                         {/* Mobile Menu Button */}
                         <button
