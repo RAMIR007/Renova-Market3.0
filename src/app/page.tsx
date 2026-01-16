@@ -9,7 +9,15 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Renova Market | Moda Circular y Sostenible en Cuba",
-  description: "Compra y vende ropa de segunda mano de marcas exclusivas en Cuba. Únete a la revolución de la moda circular.",
+  description: "Descubre moda exclusiva y piezas únicas en La Habana. Compra marcas top y renueva tu estilo con entrega rápida.",
+  openGraph: {
+    title: "🔥 Renova Market: Moda Exclusiva en Cuba", // Ad-like title
+    description: "¡Encuentra tesoros únicos! Ropa de marcas, precios increíbles y entrega a domicilio. Entra y explora la colección.",
+    images: ["https://images.unsplash.com/photo-1534008779836-3a5fe61ce049?q=80&w=1200"], // Use Hero image
+    type: "website",
+    locale: "es_CU",
+    siteName: "Renova Market"
+  },
   alternates: {
     canonical: 'https://renovamarket.com',
   }

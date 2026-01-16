@@ -21,7 +21,10 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Renova Market - Moda Sostenible",
-  description: "La mejor tienda de ropa de segunda mano en Cuba.",
+  description: "Tu destino de moda circular en Cuba. Estilo, calidad y exclusividad.",
+  openGraph: {
+    images: ["https://images.unsplash.com/photo-1534008779836-3a5fe61ce049?q=80&w=1200"],
+  }
 };
 
 import { cookies } from "next/headers";

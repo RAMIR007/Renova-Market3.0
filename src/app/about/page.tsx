@@ -35,7 +35,7 @@ export default function AboutPage() {
                         </div>
                         <div className="prose dark:prose-invert text-gray-600 dark:text-gray-400 text-lg leading-relaxed space-y-4">
                             <p>
-                                <strong>Renova Market</strong> no es solo una tienda, es un movimiento. Nacimos en el corazón de La Habana con una misión clara: demostrar que la moda de segunda mano puede ser tan exclusiva y emocionante como la nueva.
+                                <strong>Renova Market</strong> no es solo una tienda, es un movimiento. Nacimos en el corazón de La Habana con una misión clara: demostrar que la moda circular puede ser tan exclusiva y emocionante como la nueva.
                             </p>
                             <p>
                                 En un mundo de moda rápida, apostamos por la <strong>calidad duradera</strong>. Cada pieza en nuestro catálogo es seleccionada a mano, inspeccionada meticulosamente y preparada para comenzar su nueva historia contigo.
