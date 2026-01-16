@@ -43,6 +43,18 @@ export function Navbar({ currentUser }: NavbarProps) {
         setIsSearchOpen(false);
     }, [pathname]);
 
+    // Prevent body scroll when mobile menu is open
+    useEffect(() => {
+        if (isMobileMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isMobileMenuOpen]);
+
     const handleSearch = (e: React.FormEvent) => {
         e.preventDefault();
         if (searchQuery.trim()) {
@@ -73,7 +85,7 @@ export function Navbar({ currentUser }: NavbarProps) {
                 <div className="flex items-center justify-between h-16 md:h-20">
 
                     {/* Logo */}
-                    <Link href="/" className="flex-shrink-0 group">
+                    <Link href="/" className="flex-shrink-0 group z-50 relative">
                         <LogoWithText
                             variant={isScrolled ? 'dark' : 'gold'}
                             className="transition-transform group-hover:scale-105"
@@ -143,7 +155,7 @@ export function Navbar({ currentUser }: NavbarProps) {
                             className={`md:hidden p-2 rounded-md ${isScrolled ? 'text-stone-900' : 'text-white drop-shadow-md'}`}
                             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                         >
-                            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                            <Menu className="w-6 h-6" />
                         </button>
 
                         {/* User Profile (Desktop) */}
@@ -174,23 +186,61 @@ export function Navbar({ currentUser }: NavbarProps) {
                 </div>
             </div>
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Overlay */}
             {isMobileMenuOpen && (
-                <div className="md:hidden absolute top-full left-0 right-0 bg-white border-b border-gray-100 shadow-xl p-4 flex flex-col space-y-4 animate-in slide-in-from-top-2">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.href}
-                            href={link.href}
-                            className={`text-base font-medium px-4 py-2 rounded-lg hover:bg-gray-50 bg-opacity-50 ${link.highlight ? 'text-red-600' : 'text-gray-900'
-                                }`}
+                <div className="md:hidden fixed inset-0 z-[60] bg-white dark:bg-zinc-950 animate-in slide-in-from-right-full duration-300 flex flex-col h-screen">
+                    {/* Header relative to overlay */}
+                    <div className="flex items-center justify-between p-4 border-b border-gray-100 dark:border-zinc-800">
+                        <span className="font-bold text-lg text-gray-900 dark:text-white">Menú</span>
+                        <button
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="p-2 -mr-2 text-gray-500 hover:bg-gray-100 dark:hover:bg-zinc-800 rounded-full"
                         >
-                            {link.name}
-                        </Link>
-                    ))}
-                    <div className="border-t border-gray-100 pt-4 mt-2">
-                        <Link href="/login" className="block text-center w-full bg-black text-white px-4 py-3 rounded-xl font-medium">
-                            Iniciar Sesión
-                        </Link>
+                            <X className="w-6 h-6" />
+                        </button>
+                    </div>
+
+                    <nav className="flex-1 overflow-y-auto p-6 flex flex-col gap-2">
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.href}
+                                href={link.href}
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className={`text-2xl font-bold py-4 border-b border-gray-100 dark:border-zinc-800 flex items-center justify-between group ${link.highlight ? 'text-red-600' : 'text-gray-900 dark:text-white'
+                                    }`}
+                            >
+                                {link.name}
+                                <span className={`text-lg opacity-0 -translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 ${link.highlight ? 'text-red-400' : 'text-gray-300'
+                                    }`}>
+                                    &rarr;
+                                </span>
+                            </Link>
+                        ))}
+
+                        {!currentUser && (
+                            <Link
+                                href="/login"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="mt-8 bg-black dark:bg-white text-white dark:text-black py-4 rounded-xl text-center font-bold text-lg shadow-lg"
+                            >
+                                Iniciar Sesión / Registrarse
+                            </Link>
+                        )}
+
+                        {currentUser && (
+                            <Link
+                                href="/admin/profile"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                                className="mt-8 bg-gray-100 dark:bg-zinc-800 text-gray-900 dark:text-white py-4 rounded-xl text-center font-bold text-lg flex items-center justify-center gap-2 shadow-sm"
+                            >
+                                <User className="w-5 h-5" />
+                                Mi Perfil
+                            </Link>
+                        )}
+                    </nav>
+
+                    <div className="p-6 border-t border-gray-100 dark:border-zinc-800 text-center text-sm text-gray-400">
+                        <p>© 2026 Renova Market</p>
                     </div>
                 </div>
             )}

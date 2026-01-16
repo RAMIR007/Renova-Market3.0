@@ -74,18 +74,18 @@ export default async function Home() {
               COLECCIÓN HABANA 2026
             </div>
 
-            <h1 className="text-5xl sm:text-7xl lg:text-8xl font-black text-stone-100 tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl">
+            <h1 className="text-4xl min-[400px]:text-5xl sm:text-7xl lg:text-8xl font-black text-stone-100 tracking-tighter leading-[0.9] mb-8 drop-shadow-2xl">
               ESENCIA <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-orange-100 to-amber-200 bg-[length:200%_auto] animate-gradient">
                 ÚNICA
               </span>
             </h1>
 
-            <p className="text-xl sm:text-2xl text-stone-200 mb-10 max-w-xl font-light leading-relaxed drop-shadow-md">
+            <p className="text-lg sm:text-2xl text-stone-200 mb-10 max-w-xl font-light leading-relaxed drop-shadow-md">
               Moda exclusiva inspirada en el alma de La Habana. Encuentra piezas seleccionadas que cuentan tu propia historia.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-5">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-5">
               <Link
                 href="/shop"
                 className="group relative inline-flex items-center justify-center px-8 py-4 bg-stone-100 text-stone-900 font-bold rounded-full overflow-hidden transition-transform active:scale-95 hover:shadow-[0_0_40px_-10px_rgba(255,255,255,0.4)]"
@@ -137,7 +137,7 @@ export default async function Home() {
           <p className="text-stone-600 dark:text-stone-400">Todo lo que necesitas para completar tu outfit</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
           {categories.map((category: any) => {
             // 1. Manually set image
             let imageUrl = category.image;
@@ -204,7 +204,7 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-10">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 lg:gap-8 gap-y-8 sm:gap-y-10">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
