@@ -29,30 +29,39 @@ export default async function CategoryPage({ params, searchParams }: Props) {
     const { size } = await searchParams;
 
     // 1. Fetch category with filtered products
-    const productWhere: any = { stock: { gt: 0 } };
+    // 1. Fetch category basics and children
+    const categoryBase = await prisma.category.findUnique({
+        where: { slug },
+        include: { children: true }
+    });
+
+    if (!categoryBase) {
+        notFound();
+    }
+
+    // Collect IDs: current category + all subcategories
+    const categoryIds = [categoryBase.id, ...categoryBase.children.map(c => c.id)];
+
+    // 2. Fetch products from ALL these categories
+    const productWhere: any = {
+        stock: { gt: 0 },
+        categoryId: { in: categoryIds }
+    };
+
     if (size) {
         productWhere.size = size;
     }
 
-    const category = await prisma.category.findUnique({
-        where: { slug },
-        include: {
-            products: {
-                where: productWhere,
-                include: { category: true }
-            }
-        }
+    const products = await prisma.product.findMany({
+        where: productWhere,
+        include: { category: true },
+        orderBy: { createdAt: 'desc' }
     });
 
-    if (!category) {
-        notFound();
-    }
-
-    // 2. Fetch ALL available sizes for this category (ignoring current filter) to populate filter bar
-    // We need a separate query because 'category.products' above is already filtered.
+    // 3. Fetch sizes for filter (from all these categories)
     const sizesQuery = await prisma.product.findMany({
         where: {
-            categoryId: category.id,
+            categoryId: { in: categoryIds },
             stock: { gt: 0 },
             size: { not: null }
         },
@@ -60,7 +69,6 @@ export default async function CategoryPage({ params, searchParams }: Props) {
         distinct: ['size']
     });
 
-    // Create a unique list of sizes
     const availableSizes = sizesQuery.map(p => p.size!).filter(Boolean);
 
     return (
@@ -70,12 +78,27 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                 {/* Header */}
                 <div className="text-center mb-8">
                     <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4 capitalize">
-                        {category.name} <span className="text-gray-400 text-2xl font-normal">({category.products.length})</span>
+                        {categoryBase.name} <span className="text-gray-400 text-2xl font-normal">({products.length})</span>
                     </h1>
                     <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
-                        Explora nuestra colección selecta de {category.name.toLowerCase()}.
+                        Explora nuestra colección selecta de {categoryBase.name.toLowerCase()}.
                     </p>
                 </div>
+
+                {/* Subcategories Navigation */}
+                {categoryBase.children.length > 0 && (
+                    <div className="flex flex-wrap justify-center gap-3 mb-10">
+                        {categoryBase.children.map((child) => (
+                            <Link
+                                key={child.id}
+                                href={`/category/${child.slug}`}
+                                className="px-4 py-2 rounded-full border border-gray-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors text-sm font-medium"
+                            >
+                                {child.name}
+                            </Link>
+                        ))}
+                    </div>
+                )}
 
                 {/* Filter Bar */}
                 {availableSizes.length > 0 && (
@@ -89,16 +112,16 @@ export default async function CategoryPage({ params, searchParams }: Props) {
                 )}
 
                 {/* Product Grid */}
-                {category.products.length > 0 ? (
+                {products.length > 0 ? (
                     <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 gap-y-10">
-                        {category.products.map((product) => (
+                        {products.map((product) => (
                             <ProductCard key={product.id} product={product} />
                         ))}
                     </div>
                 ) : (
                     <div className="text-center py-20 bg-white dark:bg-zinc-800 rounded-2xl border border-dashed border-gray-300 dark:border-zinc-700">
                         <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">No hay productos disponibles</h3>
-                        <p className="text-gray-500 mb-6">Parece que aún no hemos subido {category.name.toLowerCase()}. ¡Vuelve pronto!</p>
+                        <p className="text-gray-500 mb-6">Parece que aún no hemos subido {categoryBase.name.toLowerCase()}. ¡Vuelve pronto!</p>
                         <Link href="/" className="text-blue-600 hover:underline">
                             Volver al inicio
                         </Link>

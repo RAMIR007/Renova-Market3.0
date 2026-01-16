@@ -10,6 +10,7 @@ export const revalidate = 3600; // Update every hour (ISR)
 async function getCategories() {
   try {
     return await prisma.category.findMany({
+      where: { parentId: null },
       orderBy: { name: 'asc' },
       include: {
         products: {
