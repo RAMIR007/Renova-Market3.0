@@ -9,6 +9,7 @@ interface Category {
     name: string;
     description: string | null;
     image: string | null;
+    parentId: string | null;
     _count: { products: number };
 }
 
@@ -93,6 +94,22 @@ export default function AdminCategoriesPage() {
                                     placeholder="https://..."
                                 />
                             </div>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium mb-1">Categoría Padre (Opcional)</label>
+                            <select
+                                name="parentId"
+                                defaultValue={editingCategory?.parentId || ''}
+                                className="w-full px-4 py-2 rounded-lg border border-gray-300"
+                            >
+                                <option value="">Ninguna (Categoría Principal)</option>
+                                {categories
+                                    .filter(c => c.id !== editingCategory?.id) // Prevent self-parenting
+                                    .map(cat => (
+                                        <option key={cat.id} value={cat.id}>{cat.name}</option>
+                                    ))
+                                }
+                            </select>
                         </div>
                         <div>
                             <label className="block text-sm font-medium mb-1">Descripción</label>

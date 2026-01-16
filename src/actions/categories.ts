@@ -22,6 +22,7 @@ export async function createCategory(formData: FormData) {
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
     const image = formData.get('image') as string;
+    const parentId = formData.get('parentId') as string;
 
     if (!name) return { success: false, error: "El nombre es obligatorio" };
 
@@ -31,6 +32,7 @@ export async function createCategory(formData: FormData) {
                 name,
                 description,
                 image: image || null,
+                parentId: parentId || null,
                 slug: name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
             }
         });
@@ -46,6 +48,7 @@ export async function updateCategory(formData: FormData) {
     const name = formData.get('name') as string;
     const description = formData.get('description') as string;
     const image = formData.get('image') as string;
+    const parentId = formData.get('parentId') as string;
 
     if (!id || !name) return { success: false, error: "ID y nombre son obligatorios" };
 
@@ -56,6 +59,7 @@ export async function updateCategory(formData: FormData) {
                 name,
                 description,
                 image: image || null,
+                parentId: parentId || null,
                 slug: name.toLowerCase().replace(/ /g, '-').replace(/[^\w-]+/g, ''),
             }
         });
