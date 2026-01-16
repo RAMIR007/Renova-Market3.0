@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import ProductCard from "@/components/shop/ProductCard";
 import SizeFilterBar from "@/components/shop/SizeFilterBar";
+import CategoryFilterBar from "@/components/shop/CategoryFilterBar";
 
 export const revalidate = 3600;
 
@@ -14,6 +15,8 @@ export default async function ShopPage({ searchParams }: Props) {
     const sort = typeof params.sort === 'string' ? params.sort : undefined;
     const query = typeof params.q === 'string' ? params.q : undefined;
     const sizeParam = typeof params.size === 'string' ? params.size : undefined;
+
+    const categoryParam = typeof params.category === 'string' ? params.category : undefined;
 
     // Build orderBy clause
     let orderBy: any = { createdAt: 'desc' };
@@ -34,6 +37,15 @@ export default async function ShopPage({ searchParams }: Props) {
     // Filter by Size
     if (sizeParam) {
         where.size = sizeParam;
+    }
+
+    // Filter by Category (slug)
+    if (categoryParam) {
+        // Use 'some' for relation or 'is' depending on schema. 
+        // Schema: category Category @relation...
+        where.category = {
+            slug: categoryParam
+        };
     }
 
     // Fetch products
@@ -57,6 +69,12 @@ export default async function ShopPage({ searchParams }: Props) {
     });
 
     const allSizes = uniqueSizes.map(p => p.size).filter(Boolean) as string[];
+
+    // Fetch Categories
+    const categories = await prisma.category.findMany({
+        orderBy: { name: 'asc' },
+        where: { parentId: null } // Only show top-level categories first? Or all? Let's show all root cats.
+    });
 
     return (
         <div className="min-h-screen bg-gray-50 dark:bg-zinc-900 py-8 px-4 sm:px-6 lg:px-8">
@@ -89,7 +107,8 @@ export default async function ShopPage({ searchParams }: Props) {
                 </div>
 
                 {/* Filters Section */}
-                <div className="mb-8">
+                <div className="mb-8 space-y-4">
+                    <CategoryFilterBar categories={categories} currentCategory={categoryParam} />
                     <SizeFilterBar sizes={allSizes} currentSize={sizeParam} baseUrl="/shop" />
                 </div>
 

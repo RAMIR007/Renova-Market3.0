@@ -6,6 +6,7 @@ import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import MobileStickyBar from "@/components/shop/MobileStickyBar";
 import ShareButton from "@/components/shop/ShareButton";
 import ProductGallery from "@/components/shop/ProductGallery";
+import ProductCard from "@/components/shop/ProductCard";
 
 export const revalidate = 3600; // ISR: Revalidate every hour
 export const dynamicParams = true; // Allow generating new pages on demand
@@ -187,7 +188,11 @@ export default async function ProductPage({ params }: Props) {
                 {/* Related Products */}
                 <div className="mt-20 border-t border-gray-100 dark:border-zinc-800 pt-10">
                     <h2 className="text-2xl font-bold mb-6">Completa el Look</h2>
-                    <RelatedProducts categoryId={product.categoryId} currentProductId={product.id} />
+                    <RelatedProducts
+                        categoryId={product.categoryId}
+                        currentProductId={product.id}
+                        currentSize={product.size}
+                    />
                 </div>
 
                 {/* Mobile Actions */}
@@ -201,16 +206,43 @@ export default async function ProductPage({ params }: Props) {
 }
 
 // Component to fetch and display related products
-async function RelatedProducts({ categoryId, currentProductId }: { categoryId: string, currentProductId: string }) {
-    const related = await prisma.product.findMany({
-        where: {
-            categoryId,
-            id: { not: currentProductId },
-            stock: { gt: 0 }
-        },
-        take: 4,
-        include: { category: true }
-    });
+// Component to fetch and display related products (Smarter: Prioritizes Size)
+async function RelatedProducts({ categoryId, currentProductId, currentSize }: { categoryId: string, currentProductId: string, currentSize?: string | null }) {
+
+    let related: any[] = [];
+
+    // 1. Try to find products with same Category AND Size (High Relevance)
+    if (currentSize) {
+        related = await prisma.product.findMany({
+            where: {
+                categoryId,
+                id: { not: currentProductId },
+                stock: { gt: 0 },
+                size: currentSize
+            },
+            take: 4,
+            orderBy: { createdAt: 'desc' },
+            include: { category: true }
+        });
+    }
+
+    // 2. If we don't have enough, fill with products from same Category (Broad Relevance)
+    if (related.length < 4) {
+        const excludeIds = [currentProductId, ...related.map(p => p.id)];
+
+        const moreRelated = await prisma.product.findMany({
+            where: {
+                categoryId,
+                id: { notIn: excludeIds },
+                stock: { gt: 0 }
+            },
+            take: 4 - related.length,
+            orderBy: { createdAt: 'desc' },
+            include: { category: true }
+        });
+
+        related = [...related, ...moreRelated];
+    }
 
     if (related.length === 0) return null;
 
@@ -218,21 +250,8 @@ async function RelatedProducts({ categoryId, currentProductId }: { categoryId: s
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {related.map(p => (
                 <div key={p.id} className="h-full">
-                    {/* @ts-ignore */}
-                    <Link href={`/product/${p.slug}`} className="group block h-full">
-                        <div className="relative overflow-hidden rounded-xl bg-gray-100 aspect-[4/5] mb-3">
-                            {p.images[0] && (
-                                <Image
-                                    src={p.images[0]}
-                                    alt={p.name}
-                                    fill
-                                    className="object-cover transition-transform group-hover:scale-105"
-                                />
-                            )}
-                        </div>
-                        <h3 className="font-medium text-sm text-gray-900 line-clamp-1">{p.name}</h3>
-                        <p className="font-bold text-sm text-gray-900">${Number(p.price).toFixed(2)}</p>
-                    </Link>
+                    {/* @ts-ignore - Types are compatible for display purposes */}
+                    <ProductCard product={p} />
                 </div>
             ))}
         </div>

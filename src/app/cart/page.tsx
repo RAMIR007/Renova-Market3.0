@@ -2,6 +2,7 @@
 
 import { useCart } from '@/context/CartContext';
 import { Minus, Plus, Trash2, ArrowRight, MessageCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
@@ -15,6 +16,7 @@ import { MUNICIPALITY_DISTANCES, DEFAULT_DISTANCE } from '@/lib/delivery-zones';
 // const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
 export default function CartPage() {
+    const router = useRouter();
     const { items, removeItem, clearCart, cartTotal } = useCart();
     const [isFormVisible, setIsFormVisible] = useState(false);
     const [createAccount, setCreateAccount] = useState(false);
@@ -106,48 +108,8 @@ export default function CartPage() {
                 // 2. Clear Cart
                 clearCart();
 
-                // 3. Redirect to WhatsApp
-                const orderIdShort = result.orderId.slice(0, 8);
-                const itemsList = items.map(i => `• ${i.name} (x${i.quantity})`).join('\n');
-
-                // Get Base URL correctly (window.location.origin is fine in client)
-                const voucherLink = `${window.location.origin}/voucher/${result.orderId}`;
-
-                let message = `*¡Nuevo Pedido! (#${orderIdShort})*\n\n`;
-                message += `*Cliente:* ${formData.name}\n`;
-                message += `*Teléfono:* ${formData.phone}\n`;
-                message += `*Dirección:* ${formData.address}\n`;
-                message += `*Reparto:* ${formData.neighborhood}\n`;
-                message += `*Municipio:* ${formData.city}\n\n`;
-                message += `*Pedido:*\n${itemsList}\n\n`;
-                message += `*Total Productos:* $${cartTotal.toFixed(2)}\n`;
-                message += `*Mensajería:* A coordinar\n`;
-                message += `*TOTAL A PAGAR:* $${finalTotal.toFixed(2)}\n\n`;
-
-                message += `📄 *VER VALE DE ENTREGA (FOTO):*\n${voucherLink}\n\n`;
-
-                if (negotiationThreshold !== null && cartTotal > negotiationThreshold) {
-                    message += `_Nota: Compra > $${negotiationThreshold}. Precio de envío sujeto a descuento._\n`;
-                }
-
-                // Phone number logic (handled by referral or system default)
-                // We need the number here. Since we are inside a client component, 
-                // we'll rely on the WhatsAppButton logic or just fetch it here.
-
-                // Check cookies for referral
-                let targetPhone = "54143078"; // Default fallback (without +53)
-                const match = document.cookie.match(new RegExp('(^| )referral_code=([^;]+)'));
-                if (match) {
-                    const code = match[2];
-                    const refPhone = await getSellerPhoneByCode(code);
-                    if (refPhone) targetPhone = refPhone;
-                } else {
-                    const settings = await getSystemSettings();
-                    if (settings['STORE_WHATSAPP']) targetPhone = settings['STORE_WHATSAPP'];
-                }
-
-                const waUrl = `https://wa.me/53${targetPhone}?text=${encodeURIComponent(message)}`;
-                window.location.href = waUrl;
+                // 3. Redirect to Success Page
+                router.push(`/checkout/success/${result.orderId}`);
             } else {
                 alert(result.error || "Error al procesar el pedido.");
                 setIsSubmitting(false);
