@@ -37,3 +37,19 @@ export async function updateUserRole(userId: string, newRole: 'USER' | 'ADMIN' |
         return { success: false, error: 'Error updating user role' };
     }
 }
+export async function unbanUser(userId: string) {
+    await requireAdmin();
+    try {
+        await prisma.user.update({
+            where: { id: userId },
+            data: {
+                reservationBanUntil: null,
+                failedReservationsCount: 0
+            }
+        });
+        revalidatePath('/admin/users');
+        return { success: true };
+    } catch (error) {
+        return { success: false, error: 'Error unbanning user' };
+    }
+}

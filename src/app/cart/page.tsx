@@ -199,9 +199,13 @@ export default function CartPage() {
                             </div>
                         )}
 
-                        <div className="border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between items-center mb-8">
+                        <div className="border-t border-gray-200 dark:border-gray-700 pt-4 flex justify-between items-center mb-4">
                             <span className="text-xl font-bold">Total</span>
                             <span className="text-xl font-bold">${cartTotal.toFixed(2)}</span>
+                        </div>
+
+                        <div className="bg-blue-50 text-blue-800 p-3 rounded-lg mb-6 text-xs leading-relaxed">
+                            <strong>Método de Pago:</strong> El pago se realiza en <strong>EFECTIVO</strong> o <strong>TRANSFERENCIA</strong> al momento de la entrega o coordinarlo por WhatsApp.
                         </div>
 
                         {!isFormVisible ? (

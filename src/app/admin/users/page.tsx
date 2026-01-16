@@ -1,6 +1,6 @@
 'use client';
 
-import { getUsers, deleteUser, updateUserRole } from "@/actions/users";
+import { getUsers, deleteUser, updateUserRole, unbanUser } from "@/actions/users";
 import { useEffect, useState } from "react";
 import { User as UserIcon, Mail, Shield, Trash2, Edit } from "lucide-react";
 import { toast } from "sonner";
@@ -41,6 +41,18 @@ export default function AdminUsersPage() {
         }
     };
 
+    const handleUnban = async (id: string) => {
+        if (confirm('¿Levantar bloqueo de reservas a este usuario?')) {
+            const res = await unbanUser(id);
+            if (res.success) {
+                toast.success('Usuario desbloqueado');
+                loadUsers();
+            } else {
+                toast.error(res.error);
+            }
+        }
+    };
+
     return (
         <div className="space-y-6">
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">Usuarios del Sistema</h1>
@@ -53,6 +65,7 @@ export default function AdminUsersPage() {
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Usuario</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rol</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Referidos</th>
+                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fecha Registro</th>
                                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acciones</th>
                             </tr>
@@ -85,13 +98,34 @@ export default function AdminUsersPage() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {user.referralCode || '-'}
                                     </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                        {user.reservationBanUntil && new Date(user.reservationBanUntil) > new Date() ? (
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                                Bloqueado ({user.failedReservationsCount})
+                                            </span>
+                                        ) : (
+                                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                Activo
+                                            </span>
+                                        )}
+                                    </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                         {new Date(user.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                        {user.reservationBanUntil && new Date(user.reservationBanUntil) > new Date() && (
+                                            <button
+                                                onClick={() => handleUnban(user.id)}
+                                                className="text-amber-600 hover:text-amber-900 mr-4"
+                                                title="Desbloquear Reservas"
+                                            >
+                                                <Shield size={18} />
+                                            </button>
+                                        )}
                                         <button
                                             onClick={() => handleDelete(user.id)}
                                             className="text-red-600 hover:text-red-900"
+                                            title="Eliminar Usuario"
                                         >
                                             <Trash2 size={18} />
                                         </button>

@@ -77,9 +77,9 @@ export default async function OrderSuccessPage({ params }: Props) {
                             <MessageCircle className="w-6 h-6 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                            <h3 className="font-bold text-gray-900 dark:text-white mb-1">Último Paso Requerido</h3>
+                            <h3 className="font-bold text-gray-900 dark:text-white mb-1">Coordinar Pago y Entrega</h3>
                             <p className="text-sm text-gray-600 dark:text-gray-300 mb-3">
-                                Para coordinar el envío y finalizar el pago, es necesario que envíes los detalles de tu orden por WhatsApp.
+                                Aceptamos <strong>Efectivo</strong> (Contra Entrega) o <strong>Transferencia</strong>. Envía el detalle por WhatsApp para finalizar.
                             </p>
                             <a
                                 href={waUrl}
