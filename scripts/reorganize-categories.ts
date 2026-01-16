@@ -31,8 +31,10 @@ async function main() {
     try {
         // 1. Ensure "Ropa" category exists
         const ropa = await prisma.category.upsert({
-            where: { name: 'Ropa' },
-            update: {},
+            where: { slug: 'ropa' },
+            update: {
+                name: 'Ropa',
+            },
             create: {
                 name: 'Ropa',
                 slug: 'ropa',
@@ -42,10 +44,12 @@ async function main() {
         console.log(`Parent Category 'Ropa' ensured (ID: ${ropa.id})`)
 
         // 2. Update/Create "Abrigos" as child of "Ropa"
-        // Use upsert to handle both creation and update of existing
         const abrigos = await prisma.category.upsert({
-            where: { name: 'Abrigos' },
-            update: { parentId: ropa.id },
+            where: { slug: 'abrigos' },
+            update: {
+                parentId: ropa.id,
+                name: 'Abrigos',
+            },
             create: {
                 name: 'Abrigos',
                 slug: 'abrigos',
@@ -57,8 +61,11 @@ async function main() {
 
         // 3. Update/Create "Monos" as child of "Ropa"
         const monos = await prisma.category.upsert({
-            where: { name: 'Monos' },
-            update: { parentId: ropa.id },
+            where: { slug: 'monos' },
+            update: {
+                parentId: ropa.id,
+                name: 'Monos',
+            },
             create: {
                 name: 'Monos',
                 slug: 'monos',
@@ -70,9 +77,6 @@ async function main() {
 
     } catch (error) {
         console.error('Error organizing categories:', error)
-        // Don't exit with 1 if it's just a connection error during build to avoid failing the whole build 
-        // IF the user wants the build to succeed even if this script fails (e.g. if DB is unreachable).
-        // However, usually detailed logs are better.
         process.exit(1)
     } finally {
         await prisma.$disconnect()
