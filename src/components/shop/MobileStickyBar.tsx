@@ -86,9 +86,9 @@ export default function MobileStickyBar({ product }: Props) {
                     name: product.name,
                     price: Number(product.price),
                     slug: product.slug,
-                    image: product.images[0] // Nueva prop de imagen
+                    images: product.images,
+                    stock: product.stock
                 }}
-                sellerPhone={sellerPhone}
             />
         </>
     );

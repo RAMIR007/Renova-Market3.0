@@ -13,7 +13,7 @@ export async function getSalesChartData() {
             createdAt: {
                 gte: start
             },
-            status: { in: ['COMPLETED', 'DELIVERED', 'PAID', 'PENDING'] } // Include PENDING for now as sales, adjust if needed
+            status: { in: ['PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED'] } // Include all non-cancelled orders
         },
         select: {
             createdAt: true,

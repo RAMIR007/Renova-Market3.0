@@ -58,7 +58,7 @@ export default function SalesChart({ data }: SalesChartProps) {
                             boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)'
                         }}
                         itemStyle={{ color: '#4f46e5', fontWeight: 'bold' }}
-                        formatter={(value: number) => [`$${value.toFixed(2)}`, 'Ventas']}
+                        formatter={(value: any) => [`$${Number(value).toFixed(2)}`, 'Ventas']}
                     />
                     <Area
                         type="monotone"
