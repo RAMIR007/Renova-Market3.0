@@ -3,7 +3,8 @@ import Image from "next/image";
 import { prisma } from "@/lib/prisma";
 import ProductCard from "@/components/shop/ProductCard";
 
-export const revalidate = 3600; // Update every hour (ISR)
+// export const revalidate = 3600; // Update every hour (ISR)
+export const dynamic = 'force-dynamic'; // Temporary fix for build-time DB connection issues
 
 import { Metadata } from "next";
 

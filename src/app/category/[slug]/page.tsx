@@ -11,15 +11,8 @@ interface Props {
     searchParams: Promise<{ size?: string }>;
 }
 
-export async function generateStaticParams() {
-    const categories = await prisma.category.findMany({
-        select: { slug: true },
-    });
-
-    return categories.map((category) => ({
-        slug: category.slug,
-    }));
-}
+// generateStaticParams removed to avoid P1017 build error on heavy DB load. 
+// Pages will be generated on demand (ISR) via dynamicParams = true default.
 
 export default async function CategoryPage({ params, searchParams }: Props) {
     const { slug } = await params;

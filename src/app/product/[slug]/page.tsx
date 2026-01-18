@@ -16,15 +16,8 @@ interface Props {
 }
 
 // Pre-generate paths for existing products
-export async function generateStaticParams() {
-    const products = await prisma.product.findMany({
-        select: { slug: true },
-    });
-
-    return products.map((product) => ({
-        slug: product.slug,
-    }));
-}
+// generateStaticParams removed to avoid P1017 build error on heavy DB load. 
+// Pages will be generated on demand (ISR) via dynamicParams = true default.
 
 export async function generateMetadata({ params }: Props) {
     const { slug } = await params;
