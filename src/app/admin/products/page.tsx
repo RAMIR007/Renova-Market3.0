@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { deleteProduct } from "@/actions/products";
 import { Plus, Trash2, Edit } from "lucide-react";
 import ProductStatusSelect from "@/components/admin/ProductStatusSelect";
+import DeleteProductButton from "@/components/admin/DeleteProductButton";
 
 // Force dynamic rendering to always show latest stock
 export const dynamic = 'force-dynamic';
@@ -98,11 +99,7 @@ export default async function AdminProductsPage() {
                                             >
                                                 <Edit size={18} />
                                             </Link>
-                                            <form action={deleteProduct.bind(null, product.id)}>
-                                                <button className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-600 rounded-lg transition-colors" title="Eliminar">
-                                                    <Trash2 size={18} />
-                                                </button>
-                                            </form>
+                                            <DeleteProductButton productId={product.id} />
                                         </div>
                                     </td>
                                 </tr>
@@ -117,7 +114,7 @@ export default async function AdminProductsPage() {
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 }
