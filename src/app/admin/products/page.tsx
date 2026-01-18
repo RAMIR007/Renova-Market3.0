@@ -39,6 +39,7 @@ export default async function AdminProductsPage() {
                                 <th className="px-6 py-4 font-semibold text-gray-900">Categoría</th>
                                 <th className="px-6 py-4 font-semibold text-gray-900">Estado</th>
                                 <th className="px-6 py-4 font-semibold text-gray-900">Precio</th>
+                                <th className="px-6 py-4 font-semibold text-gray-900">Costo</th>
                                 <th className="px-6 py-4 font-semibold text-gray-900 text-right">Acciones</th>
                             </tr>
                         </thead>
@@ -84,6 +85,9 @@ export default async function AdminProductsPage() {
                                     </td>
                                     <td className="px-6 py-4 font-medium text-gray-900">
                                         ${Number(product.price).toFixed(2)}
+                                    </td>
+                                    <td className="px-6 py-4 text-gray-500">
+                                        {product.cost ? `$${Number(product.cost).toFixed(2)}` : '-'}
                                     </td>
                                     <td className="px-6 py-4 text-right">
                                         <div className="flex items-center justify-end gap-2">
