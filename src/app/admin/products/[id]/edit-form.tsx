@@ -23,6 +23,9 @@ interface Product {
     condition: "NUEVO" | "EXCELENTE" | "BUENO" | "USADO" | null; // Match Prisma enum
     categoryId: string;
     images: string[];
+    cost?: number | null;
+    sellerProfit?: number | null;
+    featured?: boolean;
 }
 
 interface EditProductFormProps {
@@ -146,6 +149,44 @@ export default function EditProductForm({ product, categories }: EditProductForm
                                 defaultValue={product.compareAtPrice ? Number(product.compareAtPrice) : ''}
                                 className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base"
                             />
+                        </div>
+
+                        {/* Cost & Profit */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Costo ($)</label>
+                            <input
+                                type="number"
+                                name="cost"
+                                step="0.01"
+                                defaultValue={product.cost ? Number(product.cost) : ''}
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base bg-gray-50"
+                                placeholder="Solo visible para admin"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Ganancia Vendedor ($)</label>
+                            <input
+                                type="number"
+                                name="sellerProfit"
+                                step="0.01"
+                                defaultValue={product.sellerProfit ? Number(product.sellerProfit) : ''}
+                                className="w-full px-4 py-3 md:py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-black focus:outline-none text-base bg-gray-50"
+                                placeholder="Para vendedores externos"
+                            />
+                        </div>
+
+                        {/* Featured Toggle */}
+                        <div className="col-span-2 flex items-center gap-3 p-4 bg-yellow-50 rounded-lg border border-yellow-100">
+                            <input
+                                type="checkbox"
+                                name="featured"
+                                id="featured"
+                                defaultChecked={product.featured}
+                                className="h-5 w-5 text-black focus:ring-black border-gray-300 rounded"
+                            />
+                            <label htmlFor="featured" className="font-medium text-gray-900 cursor-pointer select-none">
+                                Destacar este producto en la página de inicio
+                            </label>
                         </div>
                     </div>
 

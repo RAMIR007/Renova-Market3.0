@@ -2,10 +2,12 @@ import { prisma } from "@/lib/prisma";
 import { formatDistanceToNow } from "date-fns";
 import { es } from "date-fns/locale";
 
+export const dynamic = 'force-dynamic';
+
 export default async function AuditLogPage() {
     const logs = await prisma.auditLog.findMany({
         orderBy: { createdAt: 'desc' },
-        take: 100,
+        take: 20, // Reduced to prevent Vercel/Build timeouts
         include: { user: true }
     });
 

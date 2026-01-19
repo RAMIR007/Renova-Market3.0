@@ -100,6 +100,9 @@ export async function updateProduct(id: string, formData: FormData) {
             brand,
             model,
             condition,
+            cost: formData.get("cost") ? parseFloat(formData.get("cost") as string) : null,
+            sellerProfit: formData.get("sellerProfit") ? parseFloat(formData.get("sellerProfit") as string) : null,
+            featured: formData.get("featured") === 'on',
             images: images // Replace all images with current list
         }
     })
