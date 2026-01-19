@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Eye } from "lucide-react";
+import { Eye, ShoppingBag } from "lucide-react";
 import FavoriteButton from "./FavoriteButton";
 import { useState } from "react";
 import QuickBuyModal from "./QuickBuyModal";
@@ -55,13 +55,14 @@ export default function ProductCard({ product }: ProductCardProps) {
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
                         />
                     ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400 bg-gray-200">
-                            No Image
+                        <div className="w-full h-full flex flex-col items-center justify-center text-gray-300 bg-gray-50 dark:bg-zinc-800">
+                            <ShoppingBag className="w-12 h-12 mb-2 opacity-50" />
+                            <span className="text-xs font-medium">Sin Foto</span>
                         </div>
                     )}
 
-                    {/* Badges */}
-                    <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+                    {/* Badges - Adjusted Layout */}
+                    <div className="absolute top-2 left-2 flex flex-wrap gap-1.5 max-w-[80%] z-10">
                         {/* Status Badges */}
                         {product.status === 'SOLD' && (
                             <span className="bg-red-600/90 backdrop-blur-sm text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">

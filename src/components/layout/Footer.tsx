@@ -55,11 +55,13 @@ export function Footer() {
                         </div>
                         <div className="mt-6">
                             <p className="text-xs text-gray-400 mb-2">Métodos de pago aceptados:</p>
-                            <div className="flex gap-2 opacity-60 grayscale hover:grayscale-0 transition-all">
-                                {/* Placeholder icons for payment methods */}
-                                <div className="h-6 w-10 bg-gray-200 rounded"></div>
-                                <div className="h-6 w-10 bg-gray-200 rounded"></div>
-                                <div className="h-6 w-10 bg-gray-200 rounded"></div>
+                            <div className="flex flex-wrap gap-2">
+                                <span className="px-2 py-1 bg-gray-100 dark:bg-zinc-800 rounded text-xs font-semibold text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-zinc-700">
+                                    💵 Efectivo
+                                </span>
+                                <span className="px-2 py-1 bg-gray-100 dark:bg-zinc-800 rounded text-xs font-semibold text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-zinc-700">
+                                    🏦 Transferencia
+                                </span>
                             </div>
                         </div>
                     </div>

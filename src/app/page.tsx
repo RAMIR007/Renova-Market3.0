@@ -70,7 +70,7 @@ export default async function Home() {
       </div>
 
       {/* Hero Section */}
-      <section className="relative w-full h-[95vh] min-h-[600px] flex items-center justify-start overflow-hidden bg-stone-900">
+      <section className="relative w-full h-[95dvh] min-h-[600px] flex items-center justify-start overflow-hidden bg-stone-900">
         {/* Background Image with modern overlay */}
         <div className="absolute inset-0 z-0">
           <Image
